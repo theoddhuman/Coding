@@ -20,12 +20,10 @@ public class LinkedList {
     //insert data at start
     public void insertAtStart(int data) {
         Node newNode = new Node(data);
-        if(head == null) {
-            head = newNode;
-        } else {
+        if (head != null) {
             newNode.next = head;
-            head = newNode;
         }
+        head = newNode;
     }
 
     //insert data at end
@@ -94,8 +92,8 @@ public class LinkedList {
         pre.next = temp.next;
     }
 
-    //delete first occurence
-    public void deleteFirstOccurence(int data) {
+    //delete first occurrence
+    public void deleteFirstOccurrence(int data) {
         Node temp = head;
         Node pre = null;
         if(temp != null && temp.data == data) {
