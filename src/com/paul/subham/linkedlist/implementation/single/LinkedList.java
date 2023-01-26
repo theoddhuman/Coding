@@ -1,7 +1,5 @@
 package com.paul.subham.linkedlist.implementation.single;
 
-import com.paul.subham.linkedlist.implementation.single.Node;
-
 /**
  * 1. insert data at start
  * 2. insert data at end
@@ -120,5 +118,16 @@ public class LinkedList {
             System.out.print(node.data + " ");
             node = node.next;
         }
+    }
+}
+
+class Node {
+    int data;
+
+    public Node next;
+
+    public Node(int data) {
+        this.data = data;
+        next = null;
     }
 }
