@@ -1,0 +1,367 @@
+package com.paul.subham.tree.implementation.binary;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+/**
+ * 1. insert an element
+ * 2. delete an element
+ * 3. inorder traversal recursive
+ * 4. preorder traversal recursive
+ * 5. postorder traversal recursive
+ * 6. preorder traversal iterative
+ * 7. inorder traversal iterative
+ * 8. postorder traversal iterative
+ * 9. level order traversal
+ * 10. find maximum recursive
+ * 11. find maximum iterative
+ * 12. find minimum recursive
+ * 13. find minimum iterative
+ * 14. search an element recursive
+ * 15. search an element iterative
+ * 16. size of tree recursive
+ * 17. size of tree iterative
+ */
+public class BinaryTree {
+    Node root;
+
+    BinaryTree(){
+        root = null;
+    }
+
+    //insert an element, TC: O(n), SC: O(9)
+    void insert(int data) {
+        Node newNode = new Node(data);
+        if(root == null) {
+            root = newNode;
+            return;
+        }
+
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            if(current.left != null) {
+                queue.add(current.left);
+            } else {
+                current.left = newNode;
+                return;
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            } else {
+                current.right = newNode;
+                return;
+            }
+        }
+    }
+
+    //delete an element, TC: O(n), SC: O(9)
+    void delete(int data) {
+        if(root == null) {
+            return;
+        }
+        if(root.left == null && root.right == null) {
+            if(root.data == data) {
+                root = null;
+                return;
+            } else {
+                return;
+            }
+        }
+
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current = null;
+        Node keyNode = null;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            if(current.data == data) {
+                keyNode = current;
+            }
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+
+        if(keyNode != null) {
+            int x = current.data;
+            deleteDeepest(current);
+            keyNode.data = x;
+        }
+    }
+
+    private void deleteDeepest(Node node) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            if(current == node) {
+                current = null;
+                return;
+            }
+            if(current.left != null) {
+                if(current.left == node) {
+                    current.left = null;
+                    return;
+                } else {
+                    queue.add(current.left);
+                }
+            }
+            if(current.right != null) {
+                if(current.right == node) {
+                    current.right = null;
+                    return;
+                } else {
+                    queue.add(current.right);
+                }
+            }
+        }
+    }
+
+    //inorder traversal recursive, TC: O(n), SC: O(n)
+    void inOrderRecursive(Node node) {
+        if(node != null) {
+            inOrderRecursive(node.left);
+            System.out.print(node.data + " ");
+            inOrderRecursive(node.right);
+        }
+    }
+
+    //preorder traversal recursive, TC: O(n), SC: O(n)
+    void preOrderRecursive(Node node) {
+        if(node != null) {
+            System.out.print(node.data + " ");
+            preOrderRecursive(node.left);
+            preOrderRecursive(node.right);
+        }
+    }
+
+    //postorder traversal recursive, TC: O(n), SC: O(n)
+    void postOrderRecursive(Node node) {
+        if(node != null) {
+            postOrderRecursive(node.left);
+            postOrderRecursive(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
+    //preorder traversal iterative, TC: O(n), SC: O(n)
+    void preOrderIterative() {
+        Stack<Node> stack = new Stack<>();
+        Node current = root;
+        while(true) {
+            while(current != null) {
+                System.out.print(current.data + " ");
+                stack.push(current);
+                current = current.left;
+            }
+            if(stack.isEmpty()) {
+                break;
+            }
+            current = stack.pop().right;
+        }
+    }
+
+    //inorder traversal iterative, TC: O(n), SC: O(n)
+    void inOrderIterative() {
+        Stack<Node> stack = new Stack<>();
+        Node current = root;
+        while(true) {
+            while(current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+            if(stack.isEmpty()) {
+                break;
+            }
+            current = stack.pop();
+            System.out.print(current.data + " ");
+            current = current.right;
+        }
+    }
+
+    //postorder traversal iterative, TC: O(n), SC: O(n)
+    void postOrderIterative() {
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        Node current = null;
+        Node prev = null;
+        while(!stack.isEmpty()) {
+            current = stack.peek();
+            if(prev == null || prev.left == current || prev.right == current) {
+                if(current.left != null) {
+                    stack.push(current.left);
+                } else if(current.right != null) {
+                    stack.push(current.right);
+                }
+            } else if(current.left == prev) {
+                if(current.right != null) {
+                    stack.push(current.right);
+                }
+            } else {
+                System.out.print(current.data + " ");
+                stack.pop();
+            }
+            prev = current;
+        }
+    }
+
+    //levelorder traversal, TC: O(n), SC: O(n)
+    void levelOrder() {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current = null;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            System.out.print(current.data + " ");
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+    }
+
+    //find maximum recursive, TC: O(n), SC: O(n)
+    int maxRecursive(Node node) {
+        int max = Integer.MIN_VALUE;
+        if(node != null) {
+            int leftMax = maxRecursive(node.left);
+            int rightMax = maxRecursive(node.right);
+            max = Math.max(node.data, Math.max(leftMax, rightMax));
+        }
+        return max;
+    }
+
+    //find maximum iterative, TC: O(n), SC: O(n)
+    int maxIterative() {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current;
+        int max = Integer.MIN_VALUE;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            max = Math.max(current.data, max);
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return max;
+    }
+
+    //find minimum recursive, TC: O(n), SC: O(n)
+    int minRecursive(Node node) {
+        int min = Integer.MAX_VALUE;
+        if(node != null) {
+            int leftMin = minRecursive(node.left);
+            int rightMin = minRecursive(node.right);
+            min = Math.min(node.data, Math.min(leftMin, rightMin));
+        }
+        return min;
+    }
+
+    //find minimum iterative, TC: O(n), SC: O(n)
+    int minIterative() {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current;
+        int min = Integer.MAX_VALUE;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            min = Math.min(current.data, min);
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return min;
+    }
+
+    //search an element recursive, TC:O(n), SC:O(n)
+    boolean searchRecursive(Node node, int data) {
+        if(node == null) {
+            return false;
+        }
+        if(node.data == data) {
+            return true;
+        }
+        if(searchRecursive(node.left, data)) {
+            return true;
+        }
+        return searchRecursive(node.right, data);
+    }
+
+    //search an element iterative, TC:O(n), SC:O(n)
+    boolean searchIterative(int data) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            if(current.data == data) {
+                return true;
+            }
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return false;
+    }
+
+    //size of tree recursive
+    int sizeRecursive(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        return 1 + sizeRecursive(node.left) + sizeRecursive(node.right);
+    }
+
+    //size of tree iterative
+    int sizeIterative() {
+        if(root == null) {
+            return 0;
+        }
+        int count = 0;
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            count++;
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return count;
+    }
+}
+
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    Node(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
