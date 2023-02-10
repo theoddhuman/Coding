@@ -8,6 +8,7 @@ package com.paul.subham.heap.implementation;
  * 5. heapify an element
  * 6. delete an element
  * 7. insert an element
+ * 8. heapify an array
  */
 public class BinaryHeap {
     private int[] a;
@@ -19,6 +20,22 @@ public class BinaryHeap {
         this.capacity = capacity;
         a = new int[capacity];
         this.heapType = heapType;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int[] getA() {
+        return a;
+    }
+
+    public void setA(int[] a) {
+        this.a = a;
     }
 
     public void print() {
@@ -150,5 +167,22 @@ public class BinaryHeap {
     public void destroy() {
         count = 0;
         a = null;
+    }
+
+
+    /**
+     * heapify an array
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public void buildHeap(int arr[]) {
+        if(arr.length > capacity) {
+            resizeHeap();
+        }
+        System.arraycopy(arr, 0, a, 0, arr.length);
+        count = arr.length;
+        for(int i=(arr.length/2)-1; i>=0; i--){
+            percolateDown(i);
+        }
     }
 }
