@@ -7,9 +7,9 @@ public class Test {
         bst.insert(4);
         bst.insert(2);
         bst.insert(3);
-        bst.inOrder(bst.root);
+        bst.inOrder();
         bst.delete(1);
         System.out.println();
-        bst.inOrder(bst.root);
+        bst.inOrder();
     }
 }

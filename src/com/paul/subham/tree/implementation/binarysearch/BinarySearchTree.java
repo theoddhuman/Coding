@@ -13,12 +13,16 @@ package com.paul.subham.tree.implementation.binarysearch;
 public class BinarySearchTree {
     Node root;
 
+    public Node getRoot() {
+        return this.root;
+    }
+
     //insert an element, TC: O(n), SC: O(n)
-    void insert(int data) {
+    public void insert(int data) {
         root = insertUtil(root, data);
     }
 
-    Node insertUtil(Node node, int data) {
+    private Node insertUtil(Node node, int data) {
         if(node == null) {
             node = new Node(data);
             return node;
@@ -33,14 +37,14 @@ public class BinarySearchTree {
     }
 
     //searching an element recursive, TC: O(n), SC: O(n)
-    boolean searchRecursive(int data) {
+    public boolean searchRecursive(int data) {
         if(searchRecursiveUtil(root, data) != null) {
             return true;
         }
         return false;
     }
 
-    Node searchRecursiveUtil(Node node, int data) {
+    private Node searchRecursiveUtil(Node node, int data) {
         if(node == null || node.data == data) {
             return node;
         }
@@ -51,7 +55,7 @@ public class BinarySearchTree {
     }
 
     //searching an element iterative, TC: O(n), SC: O(n)
-    boolean searchIterative(int data) {
+    public boolean searchIterative(int data) {
         Node current = root;
         while(current != null) {
             if(current.data == data) {
@@ -67,7 +71,7 @@ public class BinarySearchTree {
     }
 
     //minimum recursive, TC: O(n), SC: O(n)
-    int minRecursive(){
+    public int minRecursive(){
         Node min = minRecursiveUtil(root);
         if(min == null) {
             return Integer.MIN_VALUE;
@@ -75,7 +79,7 @@ public class BinarySearchTree {
         return min.data;
     }
 
-    Node minRecursiveUtil(Node node) {
+    private Node minRecursiveUtil(Node node) {
         if(node == null || node.left == null) {
             return node;
         }
@@ -149,21 +153,16 @@ public class BinarySearchTree {
     }
 
     //inorder traversal
-    void inOrder(Node node) {
+    public void inOrder() {
+        inOrderUtil(root);
+    }
+
+    private void inOrderUtil(Node node) {
         if(node != null) {
-            inOrder(node.left);
+            inOrderUtil(node.left);
             System.out.print(node.data + " ");
-            inOrder(node.right);
+            inOrderUtil(node.right);
         }
     }
 }
 
-class Node {
-    int data;
-    Node left;
-    Node right;
-
-    Node(int data) {
-        this.data = data;
-    }
-}
