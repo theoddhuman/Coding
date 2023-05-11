@@ -15,6 +15,10 @@ package com.paul.subham.linkedlist.implementation.single;
 public class LinkedList {
     public Node head;
 
+    public Node getHead() {
+        return head;
+    }
+
     //insert data at start
     public void insertAtStart(int data) {
         Node newNode = new Node(data);
@@ -118,16 +122,5 @@ public class LinkedList {
             System.out.print(node.data + " ");
             node = node.next;
         }
-    }
-}
-
-class Node {
-    int data;
-
-    public Node next;
-
-    public Node(int data) {
-        this.data = data;
-        next = null;
     }
 }
