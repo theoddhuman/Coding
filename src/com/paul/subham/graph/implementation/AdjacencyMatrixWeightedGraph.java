@@ -8,16 +8,19 @@ package com.paul.subham.graph.implementation;
  * 3. contains a edge
  * 4. remove a edge
  * 5. get no of edges
+ * 6. Depth first search Traversal
  */
 public class AdjacencyMatrixWeightedGraph {
     int vertex;
     int edge;
     int[][] adjMatrix;
+    boolean[] visited;
 
     public AdjacencyMatrixWeightedGraph(int vertex) {
         this.vertex = vertex;
         edge = 0;
         adjMatrix = new int[vertex][vertex];
+        visited = new boolean[vertex];
     }
 
     /**
@@ -92,6 +95,29 @@ public class AdjacencyMatrixWeightedGraph {
                 System.out.print(adjMatrix[i][j] + " ");
             }
             System.out.println();
+        }
+    }
+
+    /**
+     * Depth first search Traversal
+     * TC: O(V^2)
+     * SC: O(V)
+     */
+    void DFSTraversal() {
+        for(int i=0; i<vertex; i++) {
+            if(!visited[i]) {
+                DFS(i);
+            }
+        }
+    }
+
+    void DFS(int x) {
+        System.out.println(x);
+        visited[x] = true;
+        for(int i=0; i<vertex; i++) {
+            if(adjMatrix[x][i] != 0 && !visited[i]) {
+                DFS(i);
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.paul.subham.graph.implementation;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * Implementation of graph using adjacency list
@@ -10,21 +13,26 @@ import java.util.LinkedList;
  * 3. remove an edge
  * 4. no of edges
  * 5. degree of a vertex
+ * 6. Depth first search Traversal(Recursive)
+ * 7. Depth first search Traversal(Iterative)
  */
 public class AdjacencyListGraph {
-    int vertex;
+    public int vertex;
 
     int edge;
 
-    LinkedList<Integer>[] adjListArray;
+    public LinkedList<Integer>[] adjListArray;
 
-    AdjacencyListGraph(int vertex) {
+    boolean[] visited;
+
+    public AdjacencyListGraph(int vertex) {
         this.vertex = vertex;
         edge = 0;
         adjListArray = new LinkedList[vertex];
         for(int i=0; i<vertex; i++) {
             adjListArray[i] = new LinkedList<>();
         }
+        visited = new boolean[vertex];
     }
 
     /**
@@ -47,7 +55,7 @@ public class AdjacencyListGraph {
      * TC: O(V)
      * SC: O(1)
      */
-    void addEdge(int u, int v) {
+    public void addEdge(int u, int v) {
         if(!contains(u,v)) {
             adjListArray[u].add(v);
             //for undirected graph add extra
@@ -88,6 +96,59 @@ public class AdjacencyListGraph {
      */
     int degree(int v){
         return adjListArray[v].size();
+    }
+
+    /**
+     * Depth first search Traversal(Recursive)
+     * TC: O(V+E)
+     * SC: O(V)
+     */
+    void DFSTraversal() {
+        for(int i=0; i<vertex; i++) {
+            if(!visited[i]) {
+                DFS(i);
+            }
+        }
+    }
+
+    void DFS(int x) {
+        System.out.println(x);
+        visited[x] = true;
+        List<Integer> adjList = adjListArray[x];
+        for(Integer i : adjList) {
+            if(!visited[i]) {
+                DFS(i);
+            }
+        }
+    }
+
+    /**
+     * Depth first search Traversal(Iterative)
+     * TC: O(V+E)
+     * SC: O(V)
+     */
+    void DFSTraversalIterative() {
+        for(int i=0; i<vertex; i++) {
+            if(!visited[i]) {
+                DFSIterative(i);
+            }
+        }
+    }
+
+    void DFSIterative(int x) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(x);
+        while(!stack.empty()) {
+            int current = stack.pop();
+            visited[current] = true;
+            System.out.println(current);
+            LinkedList<Integer> adjList = adjListArray[current];
+            for(Integer i : adjList) {
+                if(!visited[i]) {
+                    stack.push(i);
+                }
+            }
+        }
     }
 
     void print() {

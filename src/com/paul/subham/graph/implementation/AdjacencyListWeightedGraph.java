@@ -1,6 +1,9 @@
 package com.paul.subham.graph.implementation;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * Implementation of graph using adjacency list
@@ -10,21 +13,27 @@ import java.util.LinkedList;
  * 3. remove an edge
  * 4. no of edges
  * 5. degree of a vertex
+ * 6. Depth first search Traversal(Recursive)
+ * 7. Depth first search Traversal(Iterative)
+ * 8. Breadth first search traversal
  */
 public class AdjacencyListWeightedGraph {
-    int vertex;
+    public int vertex;
 
     int edge;
 
-    LinkedList<Edge>[] adjListArray;
+    public LinkedList<Edge>[] adjListArray;
 
-    AdjacencyListWeightedGraph(int vertex) {
+    public boolean[] visited;
+
+    public AdjacencyListWeightedGraph(int vertex) {
         this.vertex = vertex;
         edge = 0;
         adjListArray = new LinkedList[vertex];
         for(int i=0; i<vertex; i++) {
             adjListArray[i] = new LinkedList<>();
         }
+        visited = new boolean[vertex];
     }
 
     /**
@@ -47,7 +56,7 @@ public class AdjacencyListWeightedGraph {
      * TC: O(V)
      * SC: O(1)
      */
-    void addEdge(int u, int v, int w) {
+    public void addEdge(int u, int v, int w) {
         if(!contains(u,v)) {
             Edge e = new Edge(u,v,w);
             //Edge re = new Edge(v,u,w);
@@ -79,7 +88,7 @@ public class AdjacencyListWeightedGraph {
      * TC: O(1)
      * SC: O(1)
      */
-    int edgeCount() {
+    public int edgeCount() {
         return edge;
     }
 
@@ -90,6 +99,88 @@ public class AdjacencyListWeightedGraph {
      */
     int degree(int v){
         return adjListArray[v].size();
+    }
+
+    /**
+     * Depth first search Traversal(Recursive)
+     * TC: O(V+E), If V = n, total possible edge = n*(n-1)/2, O(n^2)
+     * SC: O(V)
+     */
+    void DFSTraversal() {
+        for(int i=0; i<vertex; i++) {
+            if(!visited[i]) {
+                DFS(i);
+            }
+        }
+    }
+
+    void DFS(int x) {
+        System.out.println(x);
+        visited[x] = true;
+        List<Edge> adjList = adjListArray[x];
+        for(Edge edge : adjList) {
+            if(!visited[edge.destination]) {
+                DFS(edge.destination);
+            }
+        }
+    }
+
+    /**
+     * Depth first search Traversal(Iterative)
+     * TC: O(V+E), If V = n, total possible edge = n*(n-1)/2, O(n^2)
+     * SC: O(V)
+     */
+    void DFSTraversalIterative() {
+        for(int i=0; i<vertex; i++) {
+            if(!visited[i]) {
+                DFSIterative(i);
+            }
+        }
+    }
+
+    void DFSIterative(int x) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(x);
+        while(!stack.empty()) {
+            int current = stack.pop();
+            visited[current] = true;
+            System.out.println(current);
+            LinkedList<Edge> adjList = adjListArray[current];
+            for(Edge edge : adjList) {
+                if(!visited[edge.destination]) {
+                    stack.push(edge.destination);
+                }
+            }
+        }
+    }
+
+    /**
+     * Breadth first search traversal
+     * TC: O(V+E), If V = n, total possible edge = n*(n-1)/2, O(n^2)
+     * SC: O(V)
+     */
+    void BFTraversal() {
+        for(int i=0; i<vertex; i++) {
+            if(!visited[i]) {
+                BFS(i);
+            }
+        }
+    }
+
+    void BFS(int x) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(x);
+        while(!queue.isEmpty()) {
+            int current = queue.remove();
+            visited[current] = true;
+            System.out.println(current);
+            List<Edge> adjList = adjListArray[current];
+            for(Edge edge : adjList) {
+                if(!visited[edge.destination]) {
+                    queue.add(edge.destination);
+                }
+            }
+        }
     }
 
     void print() {

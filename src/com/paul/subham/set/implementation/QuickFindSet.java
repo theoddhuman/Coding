@@ -21,7 +21,7 @@ public class QuickFindSet {
      * TC: O(n)
      * SC: O(1)
      */
-    void makeSet(int size) {
+    public void makeSet(int size) {
         s = new int[size];
         this.size = size;
         for(int i=0; i<size; i++) {
@@ -35,7 +35,7 @@ public class QuickFindSet {
      * TC: O(1)
      * SC: O(1)
      */
-    int find(int a) {
+    public int find(int a) {
         return s[a];
     }
 
@@ -44,7 +44,7 @@ public class QuickFindSet {
      * TC: O(n)
      * SC: O(1)
      */
-    void union(int a, int b) {
+    public void union(int a, int b) {
         //belong to same set
         if(find(a) == find(b)) {
             return;
