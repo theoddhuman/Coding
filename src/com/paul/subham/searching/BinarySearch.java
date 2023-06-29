@@ -15,7 +15,7 @@ public class BinarySearch {
      * TC: O(n)
      * SC: O(1)
      */
-    static int search(int[] a, int n, int data) {
+    public static int search(int[] a, int n, int data) {
         int low = 0;
         int high = n-1;
         int mid;
