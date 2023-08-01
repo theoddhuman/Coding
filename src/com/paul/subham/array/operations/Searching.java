@@ -15,11 +15,15 @@ import java.util.*;
  * 8. Finding missing number in an array (Hashing Technique)
  * 9. Finding missing number in an array (Summation Technique)
  * 10. Finding missing number in an array (XOR Technique)
+ * 11. Finding odd occurring number in an array
+ * 12. Finding two repeating elements in an array
+ * 13. Finding two repeating elements in an array (Hashing Technique)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {1,2,3,4,6};
-        System.out.println(getMissingNumberXOR(a));
+        int[] a = {1,1,2,3,4,4};
+        //System.out.println(getOddOccuringNumber(a));
+        getTwoRepeatingNumbersCountArray(a);
     }
 
     /**
@@ -193,5 +197,58 @@ public class Searching {
             y ^= i;
         }
         return x ^ y;
+    }
+
+    /**
+     * Finding odd occurring number in an array
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int getOddOccurringNumber(int[] a) {
+        int x = a[0];
+        for(int i=1; i<a.length; i++) {
+            x ^= a[i];
+        }
+        return x;
+    }
+
+    /**
+     * Finding two repeating elements in an array
+     * Given an array arr[] of N+2 elements.
+     * All elements of the array are in the range of 1 to N.
+     * And all elements occur once except two numbers which occur twice.
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void getTwoRepeatingNumber(int[] a) {
+        for(int i=0; i<a.length-1; i++) {
+            for(int j=i+1; j<a.length; j++) {
+                if(a[i] == a[j]) {
+                    System.out.print(a[i]+" ");
+                }
+            }
+        }
+    }
+
+    /**
+     * Finding two repeating elements in an array (Hashing Technique)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void getTwoRepeatingNumbersCountArray(int[] a) {
+        int[] count = new int[a.length];
+        for(int i=0; i<a.length; i++) {
+            count[a[i]]++;
+        }
+        for(int i=0; i<count.length; i++) {
+            if(count[i] == 2) {
+                System.out.print(i+" ");
+            }
+        }
+    }
+
+
+    private int factorial(int n) {
+        Finding two repeating elements in an array (Hashing Technique)
     }
 }
