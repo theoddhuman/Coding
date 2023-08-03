@@ -20,11 +20,13 @@ import java.util.*;
  * 13. Finding two repeating elements in an array (Hashing Technique)
  * 14. Finding two repeating elements in an array (Using Mathematics)
  * 15. Finding two repeating elements in an array (Using XOR)
+ * 16. Finding two repeating elements in an array (Using Index)
+ * 17. Finding two repeating elements in an array (By modifying array)
  */
 public class Searching {
     public static void main(String[] args) {
         int[] a = {1, 1, 2, 3, 2};
-        getTwoRepeatingNumbersXOR(a);
+        getTwoRepeatingNumberByModifyingArray(a);
     }
 
     /**
@@ -267,12 +269,16 @@ public class Searching {
         System.out.println((sum + diff) / 2 + " " + (sum - diff) / 2);
     }
 
+    private static int factorial(int n) {
+        return n == 0 ? 1 : n * factorial(n - 1);
+    }
+
     /**
      * Finding two repeating elements in an array (Using XOR)
      * TC: O(n)
      * SC: O(1)
      */
-    public static void getTwoRepeatingNumbersXOR(int a[]) {
+    public static void getTwoRepeatingNumbersXOR(int[] a) {
         int xor = a[0];
         int n = a.length - 2;
         for (int i = 1; i < a.length; i++) {
@@ -300,7 +306,34 @@ public class Searching {
         System.out.println(y + " " + x);
     }
 
-    private static int factorial(int n) {
-        return n == 0 ? 1 : n * factorial(n - 1);
+    /**
+     * Finding two repeating elements in an array (Using Index)
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void getTwoRepeatingNumberUsingIndex(int[] a) {
+        for(int i=0; i<a.length; i++) {
+            int absolute = Math.abs(a[i]);
+            if(a[absolute] > 0) {
+                a[absolute] = -a[absolute];
+            } else {
+                System.out.print(absolute + " ");
+            }
+        }
+    }
+
+    /**
+     * Finding two repeating elements in an array (By modifying array)
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void getTwoRepeatingNumberByModifyingArray(int[] a) {
+        int divider = a.length - 1;
+        for(int i=0; i<a.length; i++) {
+            a[a[i] % divider - 1] += divider;
+            if(a[a[i] % divider - 1] / divider == 2) {
+                System.out.print(a[i] + " ");
+            }
+        }
     }
 }
