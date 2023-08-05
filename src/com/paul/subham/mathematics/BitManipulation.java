@@ -12,12 +12,13 @@ package com.paul.subham.mathematics;
  * 9. Counting number of 1 bit in a number (By processing bit)
  * 10. Counting number of 1 bit in a number (Toggling approach)
  * 11. Counting number of 1 bit in a number (Modulo approach)
+ * 12. Masking trailing zeros
  */
 
 public class BitManipulation {
 
     public static void main(String[] args) {
-        System.out.println(countOneByModulo(13));
+        System.out.println(maskTrailingZeros(12));
     }
 
     /**
@@ -115,5 +116,12 @@ public class BitManipulation {
             n /= 2;
         }
         return count;
+    }
+
+    /**
+     * Masking trailing zeros
+     */
+    public static int maskTrailingZeros(int n) {
+        return (n & -n) - 1;
     }
 }
