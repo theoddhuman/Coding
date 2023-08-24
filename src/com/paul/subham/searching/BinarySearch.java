@@ -37,7 +37,7 @@ public class BinarySearch {
      * TC: O(log n)
      * SC: O(1)
      */
-    static int searchRecursive(int a[], int low, int high, int data) {
+    public static int searchRecursive(int a[], int low, int high, int data) {
         if(low < 0 || high >= a.length) {
             return -1;
         }
