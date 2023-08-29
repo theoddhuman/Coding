@@ -27,11 +27,13 @@ import java.util.*;
  * 20. Finding pair with given sum in array (Using binary search)
  * 21. Finding pair with given sum in array (Using hashing)
  * 22. Finding pair with given sum in array (Using Remainder)
+ * 23. Finding two elements with sum closest to zero
+ * 24. Finding two elements with sum closest to zero (By sorting and two pointer)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {1, 4, 2, 3, 2};
-        twoSumByRemainder(a, 4);
+        int[] a = {1, 4, -2, -3, 2};
+        twoSumClosestToZeroBySorting(a);
     }
 
     /**
@@ -446,5 +448,64 @@ public class Searching {
             }
 
         }
+    }
+
+    /**
+     * Finding two elements with sum closest to zero
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void twoSumClosestToZero(int[] a) {
+        if(a.length < 2) {
+            System.out.println("Invalid input");
+            return;
+        }
+        int left = 0;
+        int right = 1;
+        int minSum = a[left] + a[right];
+        for(int i=0; i<a.length-1; i++) {
+            for(int j=i+1; j<a.length; j++) {
+                int sum = a[i] + a[j];
+                if(minSum > Math.abs(sum)) {
+                    minSum = Math.abs(sum);
+                    left = i;
+                    right = j;
+                }
+            }
+        }
+        System.out.println(a[left] + " " + a[right]);
+    }
+
+    /**
+     * Finding two elements with sum closest to zero (By sorting and two pointer)
+     * TC: O(nlogn)
+     * SC: O(1)
+     */
+    public static void twoSumClosestToZeroBySorting(int[] a) {
+        if(a.length < 2) {
+            System.out.println("Invalid input");
+            return;
+        }
+        Arrays.sort(a);
+        int mini = 0;
+        int minj = a.length-1;
+        int left = 0;
+        int right = a.length-1;
+        int minSum = Integer.MAX_VALUE;
+        while(left < right) {
+            int sum = Math.abs(a[left] + a[right]);
+            if(minSum > sum) {
+                mini = left;
+                minj = right;
+                minSum = Math.abs(sum);
+                left++;
+                right--;
+            } else if (sum < 0) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        System.out.println(a[mini] + " " + a[minj]);
     }
 }
