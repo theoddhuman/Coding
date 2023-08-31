@@ -10,7 +10,8 @@ package com.paul.subham.linkedlist.implementation.single;
  * 7. delete at middle position
  * 8. delete first occurence
  * 9. delete list
- * 10.print linked list
+ * 10. length
+ * 11. print linked list
  */
 public class LinkedList {
     public Node head;
@@ -113,6 +114,17 @@ public class LinkedList {
     //delete list
     public void delete() {
         head = null;
+    }
+
+    //length of list
+    public int size() {
+        Node current = head;
+        int length = 0;
+        while(current != null) {
+            length++;
+            current = current.next;
+        }
+        return length;
     }
 
     //print linked list
