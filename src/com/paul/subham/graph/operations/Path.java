@@ -4,7 +4,9 @@ import com.paul.subham.graph.implementation.AdjacencyListGraph;
 import com.paul.subham.graph.implementation.AdjacencyListWeightedGraph;
 import com.paul.subham.graph.implementation.Edge;
 
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -14,10 +16,12 @@ import java.util.Queue;
  * 2. Shortest path in weighted graph - Dijkstra's Algorithm
  * 3. Shortest path in weighted graph - Dijkstra's Algorithm (Using Array)
  * 4. Shortest path in weighted graph - Bellman-ford Algorithm
+ * 5. Searching simple path from source to destination
+ * 6. Count all simple paths from source to destination
  */
 public class Path {
     public static void main(String[] args) {
-        AdjacencyListWeightedGraph graph = new AdjacencyListWeightedGraph(10);
+        //AdjacencyListWeightedGraph graph = new AdjacencyListWeightedGraph(10);
 //        graph.addEdge(0, 1, 4);
 //        graph.addEdge(0, 2, 3);
 //        graph.addEdge(1, 3, 2);
@@ -25,10 +29,17 @@ public class Path {
 //        graph.addEdge(3, 4, 1);
 //        graph.addEdge(3, 5, 3);
         //test for bellman ford
-        graph.addEdge(1,2,3);
-        graph.addEdge(1,3,2);
-        graph.addEdge(3,2,-4);
-        weightedShortestPathBF(graph, 1);
+//        graph.addEdge(1,2,3);
+//        graph.addEdge(1,3,2);
+//        graph.addEdge(3,2,-4);
+//        weightedShortestPathBF(graph, 1);
+        AdjacencyListGraph graph = new AdjacencyListGraph(10);
+        graph.addEdge(1,2);
+        graph.addEdge(1,4);
+        graph.addEdge(2,3);
+        graph.addEdge(2,5);
+        graph.addEdge(4,5);
+        System.out.println(countAllSimplePaths(4,5,graph));
     }
 
     /**
@@ -72,7 +83,7 @@ public class Path {
         Integer[] path = new Integer[graph.vertex];
 
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(graph.vertex,
-                (a, b) -> distance[a].compareTo(distance[b]));
+                Comparator.comparing(a -> distance[a]));
         distance[s] = 0;
         priorityQueue.add(s);
         while(!priorityQueue.isEmpty()) {
@@ -177,5 +188,64 @@ public class Path {
         for(int i=0; i< graph.vertex; i++) {
             System.out.println(i+" "+distance[i]+" "+path[i]);
         }
+    }
+
+    /**
+     * Searching simple path from source to destination
+     * TC: O(E)
+     * SC: O(V)
+     */
+    public static boolean hasSimplePath(int source, int destination, AdjacencyListGraph graph) {
+        boolean[] visited = new boolean[graph.vertex];
+        if(source == destination) {
+            return true;
+        }
+        return hasSimplePathUtil(source, destination, visited, graph);
+    }
+
+    private static boolean hasSimplePathUtil(int source, int destination, boolean[] visited, AdjacencyListGraph graph) {
+        visited[source] = true;
+        if(source == destination) {
+            return true;
+        }
+        List<Integer> adjList = graph.adjListArray[source];
+        for(Integer i : adjList) {
+            if(!visited[i]) {
+                if(hasSimplePathUtil(i, destination, visited, graph)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Count all simple paths from source to destination
+     * TC: O(E)
+     * SC: O(V)
+     */
+    public static int countAllSimplePaths(int source, int destination, AdjacencyListGraph graph) {
+        boolean[] visited = new  boolean[graph.vertex];
+        if(source == destination) {
+            return 1;
+        }
+        int count = 0;
+        return countAllSimplePathsUtil(source, destination, visited, graph, count);
+    }
+
+    private static int countAllSimplePathsUtil(int source, int destination, boolean[] visited, AdjacencyListGraph graph, int count) {
+        visited[source] = true;
+        if(source == destination) {
+            count++;
+        } else {
+            List<Integer> adjList = graph.adjListArray[source];
+            for(Integer i : adjList) {
+                if(!visited[i]) {
+                    count = countAllSimplePathsUtil(i, destination, visited, graph, count);
+                }
+            }
+        }
+        visited[source] = false;
+        return count;
     }
 }
