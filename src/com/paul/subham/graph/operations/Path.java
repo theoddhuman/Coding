@@ -15,7 +15,7 @@ import java.util.Queue;
  * 3. Shortest path in weighted graph - Dijkstra's Algorithm (Using Array)
  * 4. Shortest path in weighted graph - Bellman-ford Algorithm
  */
-public class ShortestPath {
+public class Path {
     public static void main(String[] args) {
         AdjacencyListWeightedGraph graph = new AdjacencyListWeightedGraph(10);
 //        graph.addEdge(0, 1, 4);
