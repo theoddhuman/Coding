@@ -2,8 +2,10 @@ package com.paul.subham.graph.operations;
 
 import com.paul.subham.graph.implementation.AdjacencyListGraph;
 import com.paul.subham.graph.implementation.AdjacencyListWeightedGraph;
+import com.paul.subham.graph.implementation.AdjacencyMatrixWeightedGraph;
 import com.paul.subham.graph.implementation.Edge;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,28 +20,25 @@ import java.util.Queue;
  * 4. Shortest path in weighted graph - Bellman-ford Algorithm
  * 5. Searching simple path from source to destination
  * 6. Count all simple paths from source to destination
+ * 7. Transitive closure of a graph (Using Floyd Warshall Algorithm)
+ * 8. Transitive closure of a graph (Using DFS)
  */
 public class Path {
     public static void main(String[] args) {
-        //AdjacencyListWeightedGraph graph = new AdjacencyListWeightedGraph(10);
-//        graph.addEdge(0, 1, 4);
-//        graph.addEdge(0, 2, 3);
-//        graph.addEdge(1, 3, 2);
-//        graph.addEdge(2, 3, 2);
-//        graph.addEdge(3, 4, 1);
-//        graph.addEdge(3, 5, 3);
-        //test for bellman ford
-//        graph.addEdge(1,2,3);
-//        graph.addEdge(1,3,2);
-//        graph.addEdge(3,2,-4);
-//        weightedShortestPathBF(graph, 1);
-        AdjacencyListGraph graph = new AdjacencyListGraph(10);
+//        AdjacencyListGraph graph = new AdjacencyListGraph(10);
+//        graph.addEdge(1,2);
+//        graph.addEdge(1,4);
+//        graph.addEdge(2,3);
+//        graph.addEdge(2,5);
+//        graph.addEdge(4,5);
+//        System.out.println(countAllSimplePaths(4,5,graph));
+        AdjacencyListGraph graph = new AdjacencyListGraph(4);
+        graph.addEdge(0,1);
+        graph.addEdge(0,2);
         graph.addEdge(1,2);
-        graph.addEdge(1,4);
+        graph.addEdge(2,0);
         graph.addEdge(2,3);
-        graph.addEdge(2,5);
-        graph.addEdge(4,5);
-        System.out.println(countAllSimplePaths(4,5,graph));
+        System.out.println(Arrays.deepToString(transitiveClosureDFS(graph)));
     }
 
     /**
@@ -247,5 +246,67 @@ public class Path {
         }
         visited[source] = false;
         return count;
+    }
+
+    /**
+     * Transitive closure of a graph (Using Floyd Warshall Algorithm)
+     *
+     * This is only for adjacency matrix graph.
+     *
+     * Given a directed graph, find out if a vertex j is reachable from another vertex i for all vertex pairs (i, j) in the given graph.
+     * Here reachable mean that there is a path from vertex i to j.
+     * The reach-ability matrix is called the transitive closure of a graph.
+     *
+     *
+     * TC: O(V^3)
+     * SC: O(V^2)
+     */
+    public static boolean[][] transitiveClosure(AdjacencyMatrixWeightedGraph graph) {
+        int vertex = graph.vertex;
+        boolean[][] reach = new boolean[vertex][vertex];
+        for(int i=0; i<vertex; i++) {
+            for(int j=0; j<vertex; j++) {
+                if(i==j) {
+                    reach[i][j] = true;
+                } else {
+                    if(graph.adjMatrix[i][j] != 0) {
+                        reach[i][j] = true;
+                    }
+                }
+            }
+        }
+
+        for(int k=0; k<vertex; k++) {
+            for(int i=0; i<vertex; i++) {
+                for(int j=0; j<vertex; j++) {
+                    reach[i][j] = reach[i][j] || (reach[i][k] && reach[k][j]);
+                }
+            }
+        }
+        return reach;
+    }
+
+    /**
+     * Transitive closure of a graph (Using DFS)
+     * TC: O(V(V+E))
+     * SC: O(V^2)
+     */
+    public static boolean[][] transitiveClosureDFS(AdjacencyListGraph graph) {
+        int vertex = graph.vertex;
+        boolean[][] tc = new boolean[vertex][vertex];
+        for(int i=0; i<vertex; i++) {
+            transitiveClosureDFSUtil(i, i, tc, graph);
+        }
+        return tc;
+    }
+
+    private static void transitiveClosureDFSUtil(int source, int destination, boolean[][] tc, AdjacencyListGraph graph) {
+        tc[source][destination] = true;
+        List<Integer> adjList = graph.adjListArray[destination];
+        for(Integer i : adjList) {
+            if(!tc[source][i]) {
+                transitiveClosureDFSUtil(source, i, tc, graph);
+            }
+        }
     }
 }

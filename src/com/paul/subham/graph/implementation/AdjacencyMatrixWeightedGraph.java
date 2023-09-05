@@ -11,9 +11,9 @@ package com.paul.subham.graph.implementation;
  * 6. Depth first search Traversal
  */
 public class AdjacencyMatrixWeightedGraph {
-    int vertex;
+    public int vertex;
     int edge;
-    int[][] adjMatrix;
+    public int[][] adjMatrix;
     boolean[] visited;
 
     public AdjacencyMatrixWeightedGraph(int vertex) {
@@ -42,7 +42,7 @@ public class AdjacencyMatrixWeightedGraph {
      * TC: O(1)
      * SC: O(1)
      */
-    void addEdge(int u, int v, int w) {
+    public void addEdge(int u, int v, int w) {
         if(!contains(u, v)) {
             adjMatrix[u][v] = w;
             //for undirected graph add extra
