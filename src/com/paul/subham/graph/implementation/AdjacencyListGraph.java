@@ -10,11 +10,13 @@ import java.util.Stack;
  *
  * 1. contains an edge
  * 2. add an edge
- * 3. remove an edge
- * 4. no of edges
- * 5. degree of a vertex
- * 6. Depth first search Traversal(Recursive)
- * 7. Depth first search Traversal(Iterative)
+ * 3. add an edge (undirected graph)
+ * 4. remove an edge
+ * 5. no of edges
+ * 6. degree of a vertex
+ * 7. Depth first search Traversal(Recursive)
+ * 8. Depth first search Traversal(Iterative)
+ * 9. Breadth first search traversal
  */
 public class AdjacencyListGraph {
     public int vertex;
@@ -23,7 +25,7 @@ public class AdjacencyListGraph {
 
     public LinkedList<Integer>[] adjListArray;
 
-    boolean[] visited;
+    public boolean[] visited;
 
     public AdjacencyListGraph(int vertex) {
         this.vertex = vertex;
@@ -60,6 +62,19 @@ public class AdjacencyListGraph {
             adjListArray[u].add(v);
             //for undirected graph add extra
             //adjListArray[v].add(u);
+            edge++;
+        }
+    }
+
+    /**
+     * add an edge (undirected graph)
+     * TC: O(V)
+     * SC: O(1)
+     */
+    public void addEdgeUndirected(int u, int v) {
+        if(!contains(u,v)) {
+            adjListArray[u].add(v);
+            adjListArray[v].add(u);
             edge++;
         }
     }
@@ -111,7 +126,7 @@ public class AdjacencyListGraph {
         }
     }
 
-    void DFS(int x) {
+    public void DFS(int x) {
         System.out.println(x);
         visited[x] = true;
         List<Integer> adjList = adjListArray[x];
@@ -146,6 +161,35 @@ public class AdjacencyListGraph {
             for(Integer i : adjList) {
                 if(!visited[i]) {
                     stack.push(i);
+                }
+            }
+        }
+    }
+
+    /**
+     * Breadth first search traversal
+     * TC: O(V+E), If V = n, total possible edge = n*(n-1)/2, O(n^2)
+     * SC: O(V)
+     */
+    void BFTraversal() {
+        for(int i=0; i<vertex; i++) {
+            if(!visited[i]) {
+                BFS(i);
+            }
+        }
+    }
+
+    public void BFS(int x) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(x);
+        while(!queue.isEmpty()) {
+            int current = queue.remove();
+            visited[current] = true;
+            System.out.println(current);
+            List<Integer> adjList = adjListArray[current];
+            for(Integer i : adjList) {
+                if(!visited[i]) {
+                    queue.add(i);
                 }
             }
         }
