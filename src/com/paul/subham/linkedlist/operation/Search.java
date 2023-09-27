@@ -3,8 +3,10 @@ package com.paul.subham.linkedlist.operation;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,6 +21,9 @@ import java.util.Set;
  * 9. Intersection point of two linked lists (Reversing first list)
  * 10. Intersection point of two linked lists (By hashing)
  * 11. Intersection point of two linked lists (By two pointer)
+ * 12. Search an element in a linked list (extra space)
+ * 13. Search an element in a linked list (Iterative)
+ * 14. Search an element in a linked list (Recursive)
  */
 public class Search {
     private static int nthNodeCount = 0;
@@ -29,16 +34,18 @@ public class Search {
         linkedList.insertAtEnd(3);
         linkedList.insertAtEnd(4);
 
-        LinkedList linkedList1 = new LinkedList();
-        linkedList1.insertAtEnd(5);
-        linkedList1.insertAtEnd(6);
-        linkedList1.head.next.next = linkedList.head.next.next;
-        linkedList.print();
-        System.out.println();
-        linkedList1.print();
-        System.out.println();
-        System.out.println(intersectionPointByTwoPointer(linkedList1, linkedList).data);
-        linkedList.print();
+        System.out.println(searchRecursive(linkedList, 7));
+
+//        LinkedList linkedList1 = new LinkedList();
+//        linkedList1.insertAtEnd(5);
+//        linkedList1.insertAtEnd(6);
+//        linkedList1.head.next.next = linkedList.head.next.next;
+//        linkedList.print();
+//        System.out.println();
+//        linkedList1.print();
+//        System.out.println();
+//        System.out.println(intersectionPointByTwoPointer(linkedList1, linkedList).data);
+//        linkedList.print();
 
         /*LinkedList linkedList1 = new LinkedList();
         linkedList1.insertAtEnd(11);
@@ -356,6 +363,57 @@ public class Search {
         } while(p1 != p2);
 
         return null;
+    }
+
+    /**
+     * Search an element in a linked list (extra space)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int searchExtraSpace(LinkedList linkedList, int data) {
+        List<Integer> list = new ArrayList<>();
+        Node current = linkedList.head;
+        while(current != null) {
+            list.add(current.data);
+            current = current.next;
+        }
+        return list.indexOf(data);
+    }
+
+    /**
+     * Search an element in a linked list (Iterative)
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static boolean searchIterative(LinkedList linkedList, int data) {
+        Node current = linkedList.head;
+        while(current != null) {
+            if(current.data == data) {
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+
+    /**
+     * Search an element in a linked list (Recursive)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean searchRecursive(LinkedList linkedList, int data) {
+        Node current = linkedList.head;
+        return searchUtil(current, data);
+    }
+
+    public static boolean searchUtil(Node node, int data) {
+        if(node == null) {
+            return false;
+        }
+        if(node.data == data) {
+            return true;
+        }
+        return searchUtil(node.next, data);
     }
 
 

@@ -14,7 +14,8 @@ public class Test {
         //linkedList.deleteAtEnd();
         //linkedList.deleteAtMiddle(2);
         //linkedList.deleteFirstOccurence(3);
-        linkedList.delete();
+        //linkedList.delete();
         linkedList.print();
+        System.out.println(linkedList.sizeRecursive());
     }
 }
