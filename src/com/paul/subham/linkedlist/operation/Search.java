@@ -24,6 +24,9 @@ import java.util.Set;
  * 12. Search an element in a linked list (extra space)
  * 13. Search an element in a linked list (Iterative)
  * 14. Search an element in a linked list (Recursive)
+ * 15. Number of occurrences of an element in a linked list (Iterative)
+ * 16. Number of occurrences of an element in a linked list (Recursive)
+ *
  */
 public class Search {
     private static int nthNodeCount = 0;
@@ -31,10 +34,11 @@ public class Search {
         LinkedList linkedList = new LinkedList();
         linkedList.insertAtEnd(1);
         linkedList.insertAtEnd(2);
-        linkedList.insertAtEnd(3);
+        linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(4);
+        linkedList.insertAtEnd(2);
 
-        System.out.println(searchRecursive(linkedList, 7));
+        System.out.println(countOccurrenceRecursive(linkedList, 2));
 
 //        LinkedList linkedList1 = new LinkedList();
 //        linkedList1.insertAtEnd(5);
@@ -414,6 +418,43 @@ public class Search {
             return true;
         }
         return searchUtil(node.next, data);
+    }
+
+    /**
+     * Number of occurrences of an element in a linked list (Iterative)
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int countOccurrenceIterative(LinkedList linkedList, int data) {
+        Node current = linkedList.head;
+        int count = 0;
+        while(current != null) {
+            if(current.data == data) {
+                count++;
+            }
+            current = current.next;
+        }
+        return count;
+    }
+
+    /**
+     * Number of occurrences of an element in a linked list (Recursive)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countOccurrenceRecursive(LinkedList linkedList, int data) {
+        return countUtil(linkedList.head, data);
+    }
+
+    private static int countUtil(Node node, int data) {
+        if(node == null) {
+            return 0;
+        }
+        int freq = 0;
+        if(node.data == data) {
+            freq++;
+        }
+        return freq + countUtil(node.next, data);
     }
 
 
