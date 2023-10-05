@@ -18,8 +18,8 @@ import java.util.Arrays;
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {1, 2, 3, 4, 5};
-        rotateBlockSwapIterative(a, 3);
+        int[] a = {1, 2, 3, 4, 5, 6, 7};
+        rotateBlockSwapRecursive(a, 5);
         System.out.println(Arrays.toString(a));
     }
 
@@ -122,7 +122,7 @@ public class Manipulation {
             blockSwap(a, start, size-d+start, d);
             rotateUtil(a, start, size-d, d);
         } else {
-            blockSwap(a, start, d, size-d);
+            blockSwap(a, start, d+start, size-d);
             //size - (size -d) = d, d - (size-d) = 2*d- size
             rotateUtil(a, size-d+start, d, 2*d-size);
         }
