@@ -11,13 +11,15 @@ import java.util.Arrays;
  * 2. Rotating array to left (Using temporary array)
  * 3. Rotating array to left (Juggling algorithm)
  * 4. Rotating array to left (Reversal algorithm)
- * 5. Reverse an array (Iterative)
- * 6. Reverse an array (Recursive)
+ * 5. Rotating array to left (Block swap algorithm recursive)
+ * 6. Rotating array to left (Block swap algorithm iterative)
+ * 7. Reverse an array (Iterative)
+ * 8. Reverse an array (Recursive)
  */
 public class Manipulation {
     public static void main(String[] args) {
         int[] a = {1, 2, 3, 4, 5};
-        rotateReversal(a, 3);
+        rotateBlockSwapIterative(a, 3);
         System.out.println(Arrays.toString(a));
     }
 
@@ -99,6 +101,62 @@ public class Manipulation {
         reverseIterative(a, 0, d - 1);
         reverseIterative(a, d, a.length - 1);
         reverseIterative(a, 0, a.length - 1);
+    }
+
+    /**
+     * Rotating array to left (Block swap algorithm recursive)
+     * TC: O(n)
+     * SC: O(logn)
+     */
+    public static void rotateBlockSwapRecursive(int[] a, int d) {
+        rotateUtil(a, 0, a.length, d);
+    }
+
+    private static void rotateUtil(int[] a, int start, int size, int d) {
+        if(d==0 || d==size) {
+            return;
+        }
+        if(d == size - d) {
+            blockSwap(a, start, size-d+start, d);
+        } else if (d < size-d) {
+            blockSwap(a, start, size-d+start, d);
+            rotateUtil(a, start, size-d, d);
+        } else {
+            blockSwap(a, start, d, size-d);
+            //size - (size -d) = d, d - (size-d) = 2*d- size
+            rotateUtil(a, size-d+start, d, 2*d-size);
+        }
+    }
+
+    /**
+     * Rotating array to left (Block swap algorithm iterative)
+     * TC: O(n)
+     * SC: O(logn)
+     */
+    public static void rotateBlockSwapIterative(int[] a, int d) {
+        if(d==0 || d==a.length) {
+            return;
+        }
+        int i = d;
+        int j = a.length -d;
+        while(i != j) {
+            if(i < j) {
+                blockSwap(a, d-i, d+j-i, i);
+                j-=i;
+            } else {
+                blockSwap(a, d-i, d, j);
+                i-=j;
+            }
+        }
+        blockSwap(a, d-i, d, i);
+    }
+
+    private static void blockSwap(int[] a, int startL, int startR, int d) {
+        for(int i=0; i<d; i++) {
+            int temp = a[startL + i];
+            a[startL + i] = a[startR + i];
+            a[startR + i] = temp;
+        }
     }
 
     /**
