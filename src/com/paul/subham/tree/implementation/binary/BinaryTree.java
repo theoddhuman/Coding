@@ -1,6 +1,12 @@
 package com.paul.subham.tree.implementation.binary;
 
+import com.paul.subham.tree.operations.Structure;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -14,24 +20,28 @@ import java.util.Stack;
  * 7. inorder traversal iterative
  * 8. postorder traversal iterative
  * 9. level order traversal
- * 10. find maximum recursive
- * 11. find maximum iterative
- * 12. find minimum recursive
- * 13. find minimum iterative
- * 14. search an element recursive
- * 15. search an element iterative
- * 16. size of tree recursive
- * 17. size of tree iterative
+ * 10. level order traversal (recursive)
+ * 11. find maximum recursive
+ * 12. find maximum iterative
+ * 13. find minimum recursive
+ * 14. find minimum iterative
+ * 15. search an element recursive
+ * 16. search an element iterative
+ * 17. size of tree recursive
+ * 18. size of tree iterative
+ * 19. Reverse level order traversal (recursive)
+ * 20. Reverse level order traversal (Using stack and queue)
+ * 21. Reverse level order traversal (Hashing)
  */
 public class BinaryTree {
-    Node root;
+    public Node root;
 
-    BinaryTree(){
+    public BinaryTree(){
         root = null;
     }
 
     //insert an element, TC: O(n), SC: O(9)
-    void insert(int data) {
+    public void insert(int data) {
         Node newNode = new Node(data);
         if(root == null) {
             root = newNode;
@@ -213,8 +223,12 @@ public class BinaryTree {
         }
     }
 
-    //levelorder traversal, TC: O(n), SC: O(n)
-    void levelOrder() {
+    /**
+     * level order traversal
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public void levelOrder() {
         Queue<Node> queue = new LinkedList<>();
         queue.add(root);
         Node current = null;
@@ -228,6 +242,29 @@ public class BinaryTree {
                 queue.add(current.right);
             }
         }
+    }
+
+    /**
+     * level order traversal (recursive)
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public void levelOrderRecursive() {
+        int height = Structure.heightIterative(this);
+        for(int i=1; i<=height; i++) {
+            printLevel(root, i);
+        }
+    }
+
+    private void printLevel(Node node, int level) {
+        if(node == null) {
+            return;
+        }
+        if(level == 1) {
+            System.out.print(node.data + " ");
+        }
+        printLevel(node.left, level-1);
+        printLevel(node.right, level-1);
     }
 
     //find maximum recursive, TC: O(n), SC: O(n)
@@ -353,15 +390,68 @@ public class BinaryTree {
         }
         return count;
     }
-}
 
-class Node {
-    int data;
-    Node left;
-    Node right;
+    /**
+     * Reverse level order traversal (recursive)
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public void reverseLevelOrderRecursive() {
+        int height = Structure.heightIterative(this);
+        for(int i=height; i>=1; i--) {
+            printLevel(root, i);
+        }
+    }
 
-    Node(int data) {
-        this.data = data;
-        left = right = null;
+    /**
+     * Reverse level order traversal (Using stack and queue)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public void reverseLevelOrderTraversalUsingStackAndQueue() {
+        Queue<Node> queue = new LinkedList<>();
+        Stack<Node> stack = new Stack<>();
+        queue.add(root);
+        while(!queue.isEmpty()) {
+            Node node = queue.remove();
+            stack.push(node);
+            if(node.right != null ){
+                queue.add(node.right);
+            }
+            if(node.left != null ) {
+                queue.add(node.left);
+            }
+        }
+        while(!stack.isEmpty()) {
+            System.out.print(stack.pop().data + " ");
+        }
+    }
+
+    /**
+     * Reverse level order traversal (Hashing)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public void reverseLevelOrderTraversalUsingHashing() {
+        Map<Integer, List<Node>> map = new LinkedHashMap<>();
+        addNodeToMap(root, 1, map);
+        for(int level = map.size(); level >=1; level--) {
+            for(Node node : map.get(level)) {
+                System.out.print(node.data + " ");
+            }
+        }
+    }
+
+    private void addNodeToMap(Node node, int level, Map<Integer, List<Node>> map) {
+        if(node == null) {
+            return;
+        }
+        if(!map.containsKey(level)) {
+            map.put(level, new ArrayList<>());
+        }
+        map.get(level).add(node);
+        addNodeToMap(node.left, level+1, map);
+        addNodeToMap(node.right, level+1, map);
     }
 }
+
