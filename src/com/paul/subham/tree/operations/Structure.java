@@ -16,6 +16,8 @@ import java.util.Queue;
  * 5. Deepest node of a binary tree (Using inorder)
  * 6. Deepest node of a binary tree (Using height)
  * 7. Deepest node of a binary tree (Using level order)
+ * 8. No of leaves in a binary tree (Recursive)
+ * 9. No of leaves in a binary tree (Iterative)
  */
 
 public class Structure {
@@ -28,7 +30,7 @@ public class Structure {
         bt.insert(5);
         bt.levelOrder();
         System.out.println();
-        System.out.println(deepestNodeLevelOrder(bt));
+        System.out.println(countLeavesIterative(bt));
     }
 
     /**
@@ -59,18 +61,18 @@ public class Structure {
         Queue<Node> queue = new LinkedList<>();
         queue.add(binaryTree.root);
         int height = 0;
-        while(true) {
+        while (true) {
             int nodeCount = queue.size();
-            if(nodeCount == 0) {
+            if (nodeCount == 0) {
                 return height;
             }
             height++;
-            while(nodeCount > 0) {
+            while (nodeCount > 0) {
                 Node node = queue.remove();
-                if(node.left != null) {
+                if (node.left != null) {
                     queue.add(node.left);
                 }
-                if(node.right != null) {
+                if (node.right != null) {
                     queue.add(node.right);
                 }
                 nodeCount--;
@@ -88,16 +90,16 @@ public class Structure {
     }
 
     private static int minDepthUtil(Node node) {
-        if(node == null) {
+        if (node == null) {
             return 0;
         }
-        if(node.left == null && node.right == null) {
+        if (node.left == null && node.right == null) {
             return 1;
         }
-        if(node.right == null) {
+        if (node.right == null) {
             return minDepthUtil(node.left);
         }
-        if(node.left == null) {
+        if (node.left == null) {
             return minDepthUtil(node.right);
         }
         return Math.min(minDepthUtil(node.left), minDepthUtil(node.right)) + 1;
@@ -112,25 +114,24 @@ public class Structure {
         Queue<Node> queue = new LinkedList<>();
         queue.add(binaryTree.root);
         int height = 0;
-        while(true) {
+        while (true) {
             int nodeCount = queue.size();
             height++;
-            while(nodeCount > 0) {
+            while (nodeCount > 0) {
                 Node node = queue.remove();
-                if(node.left == null && node.right == null) {
+                if (node.left == null && node.right == null) {
                     return height;
                 }
-                if(node.left != null) {
+                if (node.left != null) {
                     queue.add(node.left);
                 }
-                if(node.right != null) {
+                if (node.right != null) {
                     queue.add(node.right);
                 }
                 nodeCount--;
             }
         }
     }
-
 
 
     /**
@@ -140,6 +141,7 @@ public class Structure {
      */
     private static int maxLevel = -1;
     private static int res = Integer.MIN_VALUE;
+
     public static int deepestNodeInOrder(BinaryTree binaryTree) {
         Node node = binaryTree.root;
         deepestNodeUtil(node, 0);
@@ -147,15 +149,15 @@ public class Structure {
     }
 
     private static void deepestNodeUtil(Node node, int level) {
-        if(node == null) {
+        if (node == null) {
             return;
         }
-        deepestNodeUtil(node.left, level+1);
-        if(level >= maxLevel) {
+        deepestNodeUtil(node.left, level + 1);
+        if (level >= maxLevel) {
             maxLevel = level;
             res = node.data;
         }
-        deepestNodeUtil(node.right, level+1);
+        deepestNodeUtil(node.right, level + 1);
     }
 
     /**
@@ -169,15 +171,15 @@ public class Structure {
     }
 
     private static void deepestNodeByHeightUtil(Node node, int height) {
-        if(node == null) {
+        if (node == null) {
             return;
         }
-        if(height == 1) {
+        if (height == 1) {
             System.out.println(node.data);
         }
-        if(height > 1) {
-            deepestNodeByHeightUtil(node.left, height-1);
-            deepestNodeByHeightUtil(node.right, height-1);
+        if (height > 1) {
+            deepestNodeByHeightUtil(node.left, height - 1);
+            deepestNodeByHeightUtil(node.right, height - 1);
         }
     }
 
@@ -190,16 +192,59 @@ public class Structure {
         Queue<Node> queue = new LinkedList<>();
         queue.add(binaryTree.root);
         Node current = null;
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             current = queue.remove();
-            if(current.left != null) {
+            if (current.left != null) {
                 queue.add(current.left);
             }
-            if(current.right != null) {
+            if (current.right != null) {
                 queue.add(current.right);
             }
         }
         return current.data;
     }
 
+    /**
+     * No of leaves in a binary tree (Recursive)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countLeavesRecursive(BinaryTree binaryTree) {
+        return countLeaveRecursiveUtil(binaryTree.root);
+    }
+
+    private static int countLeaveRecursiveUtil(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        if (node.left == null && node.right == null) {
+            return 1;
+        }
+        return countLeaveRecursiveUtil(node.left) + countLeaveRecursiveUtil(node.right);
+    }
+
+    /**
+     * No of leaves in a binary tree (Iterative)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countLeavesIterative(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int count = 0;
+        Node current = null;
+        while (!queue.isEmpty()) {
+            current = queue.remove();
+            if (current.left == null && current.right == null) {
+                count++;
+            }
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return count;
+    }
 }
