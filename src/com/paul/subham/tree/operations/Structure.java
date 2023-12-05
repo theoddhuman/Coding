@@ -13,6 +13,9 @@ import java.util.Queue;
  * 2. Height of a binary tree (iterative - level order)
  * 3. Minimum depth of a binary tree (Recursive)
  * 4. Minimum depth of a binary tree (Iterative - level order)
+ * 5. Deepest node of a binary tree (Using inorder)
+ * 6. Deepest node of a binary tree (Using height)
+ * 7. Deepest node of a binary tree (Using level order)
  */
 
 public class Structure {
@@ -25,7 +28,7 @@ public class Structure {
         bt.insert(5);
         bt.levelOrder();
         System.out.println();
-        System.out.println(minDepthIterative(bt));
+        System.out.println(deepestNodeLevelOrder(bt));
     }
 
     /**
@@ -126,6 +129,77 @@ public class Structure {
                 nodeCount--;
             }
         }
+    }
+
+
+
+    /**
+     * Deepest node of a binary tree (Using inorder)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static int maxLevel = -1;
+    private static int res = Integer.MIN_VALUE;
+    public static int deepestNodeInOrder(BinaryTree binaryTree) {
+        Node node = binaryTree.root;
+        deepestNodeUtil(node, 0);
+        return res;
+    }
+
+    private static void deepestNodeUtil(Node node, int level) {
+        if(node == null) {
+            return;
+        }
+        deepestNodeUtil(node.left, level+1);
+        if(level >= maxLevel) {
+            maxLevel = level;
+            res = node.data;
+        }
+        deepestNodeUtil(node.right, level+1);
+    }
+
+    /**
+     * Deepest node of a binary tree (Using height)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void deepestNodeByHeight(BinaryTree binaryTree) {
+        int height = heightRecursive(binaryTree);
+        deepestNodeByHeightUtil(binaryTree.root, height);
+    }
+
+    private static void deepestNodeByHeightUtil(Node node, int height) {
+        if(node == null) {
+            return;
+        }
+        if(height == 1) {
+            System.out.println(node.data);
+        }
+        if(height > 1) {
+            deepestNodeByHeightUtil(node.left, height-1);
+            deepestNodeByHeightUtil(node.right, height-1);
+        }
+    }
+
+    /**
+     * Deepest node of a binary tree (Using level order)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int deepestNodeLevelOrder(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        Node current = null;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return current.data;
     }
 
 }
