@@ -18,6 +18,8 @@ import java.util.Queue;
  * 7. Deepest node of a binary tree (Using level order)
  * 8. No of leaves in a binary tree (Recursive)
  * 9. No of leaves in a binary tree (Iterative)
+ * 10. No of full nodes in a binary tree (Recursive)
+ * 11. No of full nodes in a binary tree (Iterative)
  */
 
 public class Structure {
@@ -30,7 +32,7 @@ public class Structure {
         bt.insert(5);
         bt.levelOrder();
         System.out.println();
-        System.out.println(countLeavesIterative(bt));
+        System.out.println(countFullNodesIterative(bt));
     }
 
     /**
@@ -236,6 +238,51 @@ public class Structure {
         while (!queue.isEmpty()) {
             current = queue.remove();
             if (current.left == null && current.right == null) {
+                count++;
+            }
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return count;
+    }
+
+    /**
+     * No of full nodes in a binary tree (Recursive)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countFullNodesRecursive(BinaryTree binaryTree) {
+        return countFullNodesRecursiveUtil(binaryTree.root);
+    }
+
+    private static int countFullNodesRecursiveUtil(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        int count = 0;
+        if (node.left != null && node.right != null) {
+            count++;
+        }
+        return count + countFullNodesRecursiveUtil(node.left) + countFullNodesRecursiveUtil(node.right);
+    }
+
+    /**
+     * No of full nodes in a binary tree (Iterative)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countFullNodesIterative(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int count = 0;
+        Node current = null;
+        while (!queue.isEmpty()) {
+            current = queue.remove();
+            if (current.left != null && current.right != null) {
                 count++;
             }
             if (current.left != null) {
