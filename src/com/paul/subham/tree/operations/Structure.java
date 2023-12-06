@@ -20,6 +20,8 @@ import java.util.Queue;
  * 9. No of leaves in a binary tree (Iterative)
  * 10. No of full nodes in a binary tree (Recursive)
  * 11. No of full nodes in a binary tree (Iterative)
+ * 12. No of half nodes in a binary tree (Recursive)
+ * 13. No of half nodes in a binary tree (Iterative)
  */
 
 public class Structure {
@@ -30,9 +32,10 @@ public class Structure {
         bt.root.right = new Node(3);
         bt.insert(4);
         bt.insert(5);
+        bt.insert(6);
         bt.levelOrder();
         System.out.println();
-        System.out.println(countFullNodesIterative(bt));
+        System.out.println(countHalfNodesRecursive(bt));
     }
 
     /**
@@ -283,6 +286,51 @@ public class Structure {
         while (!queue.isEmpty()) {
             current = queue.remove();
             if (current.left != null && current.right != null) {
+                count++;
+            }
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return count;
+    }
+
+    /**
+     * No of half nodes in a binary tree (Recursive)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countHalfNodesRecursive(BinaryTree binaryTree) {
+        return countHalfNodesRecursiveUtil(binaryTree.root);
+    }
+
+    private static int countHalfNodesRecursiveUtil(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        int count = 0;
+        if ((node.left != null && node.right == null) || (node.left == null && node.right != null)) {
+            count++;
+        }
+        return count + countHalfNodesRecursiveUtil(node.left) + countHalfNodesRecursiveUtil(node.right);
+    }
+
+    /**
+     * No of half nodes in a binary tree (Iterative)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countHalfNodesIterative(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int count = 0;
+        Node current = null;
+        while (!queue.isEmpty()) {
+            current = queue.remove();
+            if ((current.left != null && current.right == null) || (current.left == null && current.right != null)) {
                 count++;
             }
             if (current.left != null) {
