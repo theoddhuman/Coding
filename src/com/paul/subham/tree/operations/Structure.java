@@ -22,6 +22,8 @@ import java.util.Queue;
  * 11. No of full nodes in a binary tree (Iterative)
  * 12. No of half nodes in a binary tree (Recursive)
  * 13. No of half nodes in a binary tree (Iterative)
+ * 14. No of non-leaf nodes in a binary tree (Recursive)
+ * 15. No of non-leaf nodes in a binary tree (Iterative)
  */
 
 public class Structure {
@@ -35,7 +37,7 @@ public class Structure {
         bt.insert(6);
         bt.levelOrder();
         System.out.println();
-        System.out.println(countHalfNodesRecursive(bt));
+        System.out.println(countNonLeafNodesIterative(bt));
     }
 
     /**
@@ -331,6 +333,51 @@ public class Structure {
         while (!queue.isEmpty()) {
             current = queue.remove();
             if ((current.left != null && current.right == null) || (current.left == null && current.right != null)) {
+                count++;
+            }
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return count;
+    }
+
+    /**
+     * No of non-leaf nodes in a binary tree (Recursive)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countNonLeafNodesRecursive(BinaryTree binaryTree) {
+        return countNonLeafNodesRecursiveUtil(binaryTree.root);
+    }
+
+    private static int countNonLeafNodesRecursiveUtil(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        int count = 0;
+        if (node.left != null || node.right != null) {
+            count++;
+        }
+        return count + countNonLeafNodesRecursiveUtil(node.left) + countNonLeafNodesRecursiveUtil(node.right);
+    }
+
+    /**
+     * No of non-leaf nodes in a binary tree (Iterative)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countNonLeafNodesIterative(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int count = 0;
+        Node current = null;
+        while (!queue.isEmpty()) {
+            current = queue.remove();
+            if (current.left != null || current.right != null) {
                 count++;
             }
             if (current.left != null) {
