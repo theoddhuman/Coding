@@ -28,16 +28,28 @@ import java.util.Queue;
 
 public class Structure {
     public static void main(String[] args) {
-        BinaryTree bt = new BinaryTree();
-        bt.root = new Node(1);
-        bt.root.left = new Node(2);
-        bt.root.right = new Node(3);
-        bt.insert(4);
-        bt.insert(5);
-        bt.insert(6);
-        bt.levelOrder();
-        System.out.println();
-        System.out.println(countNonLeafNodesIterative(bt));
+//        BinaryTree bt = new BinaryTree();
+//        bt.root = new Node(1);
+//        bt.root.left = new Node(2);
+//        bt.root.right = new Node(3);
+//        bt.insert(4);
+//        bt.insert(5);
+//        bt.insert(6);
+//        bt.levelOrder();
+//        System.out.println();
+//        System.out.println(diameterOpt(bt));
+        double a = 347.89;
+        double base = (int)(a/10)*10;
+        double rem = a%10 ;
+        double res = 0;
+        if(rem > 9) {
+            res = base + 10;
+        } else if (rem > 5) {
+            res = base + 9;
+        } else {
+            res = base + 5;
+        }
+        System.out.println(res);
     }
 
     /**
@@ -388,5 +400,59 @@ public class Structure {
             }
         }
         return count;
+    }
+
+    /**
+     * Diameter of a binary tree (Recursive)
+     *
+     * The diameter of a tree is the largest of the following quantities
+     * 1. Diameter of left subtree
+     * 2. Diameter of right subtree
+     * 3. The longest path between leaves that go through the root of tree.
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static int diameterRecursive(BinaryTree binaryTree) {
+        return diameterRecursiveUtil(binaryTree.root);
+    }
+
+    private static int diameterRecursiveUtil(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        int lHeight = heightUtil(node.left);
+        int rHeight = heightUtil(node.left);
+        int lDiameter = diameterRecursiveUtil(node.left);
+        int rDiameter = diameterRecursiveUtil(node.right);
+        return Math.max(lHeight + rHeight + 1, Math.max(lDiameter, rDiameter));
+    }
+
+    /**
+     * Diameter of a binary tree (Recursive optimized approach)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int diameterOpt(BinaryTree binaryTree) {
+        Height height = new Height();
+        return diameterOptUtil(binaryTree.root, height);
+    }
+
+    private static int diameterOptUtil(Node node, Height height) {
+        if(node == null) {
+            height.value = 0;
+            return 0;
+        }
+        Height lHeight = new Height();
+        Height rHeight = new Height();
+        int lDiameter = diameterOptUtil(node.left, lHeight);
+        int rDiameter = diameterOptUtil(node.right, rHeight);
+        height.value = Math.max(lHeight.value, rHeight.value) + 1;
+        return Math.max(lHeight.value + rHeight.value + 1, Math.max(lDiameter, rDiameter));
+    }
+
+    static class Height{
+        int value;
     }
 }
