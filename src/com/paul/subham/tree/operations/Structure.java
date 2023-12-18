@@ -24,32 +24,38 @@ import java.util.Queue;
  * 13. No of half nodes in a binary tree (Iterative)
  * 14. No of non-leaf nodes in a binary tree (Recursive)
  * 15. No of non-leaf nodes in a binary tree (Iterative)
+ * 16. Width of a level in a binary tree (Recursive)
+ * 17. Width of a level in a binary tree (Iterative)
  */
 
 public class Structure {
+    /**
+     *          1
+     *        /   \
+     *      2      3
+     *    /   \
+     *  4      5
+     *       /   \
+     *      6     8
+     *        \
+     *         7
+     */
     public static void main(String[] args) {
-//        BinaryTree bt = new BinaryTree();
-//        bt.root = new Node(1);
-//        bt.root.left = new Node(2);
-//        bt.root.right = new Node(3);
+        BinaryTree bt = new BinaryTree();
+        bt.root = new Node(1);
+        bt.root.left = new Node(2);
+        bt.root.right = new Node(3);
+        bt.root.left.left = new Node(4);
+        bt.root.left.right = new Node(5);
+        bt.root.left.right.left = new Node(6);
+        bt.root.left.right.right = new Node(8);
+        bt.root.left.right.left.right = new Node(7);
 //        bt.insert(4);
 //        bt.insert(5);
 //        bt.insert(6);
-//        bt.levelOrder();
-//        System.out.println();
-//        System.out.println(diameterOpt(bt));
-        double a = 347.89;
-        double base = (int)(a/10)*10;
-        double rem = a%10 ;
-        double res = 0;
-        if(rem > 9) {
-            res = base + 10;
-        } else if (rem > 5) {
-            res = base + 9;
-        } else {
-            res = base + 5;
-        }
-        System.out.println(res);
+        bt.levelOrder();
+        System.out.println();
+        System.out.println(levelWidthIterative(bt, 1));
     }
 
     /**
@@ -454,5 +460,55 @@ public class Structure {
 
     static class Height{
         int value;
+    }
+
+    /**
+     * Width of a level in a binary tree (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int levelWidthRecursive(BinaryTree binaryTree, int level) {
+        return levelWidthUtil(binaryTree.root, level);
+    }
+
+    private static int levelWidthUtil(Node node, int level) {
+        if (node == null) {
+            return 0;
+        }
+        if (level == 1) {
+            return 1;
+        } else if (level > 1) {
+            return levelWidthUtil(node.left, level - 1) + levelWidthUtil(node.right, level - 1);
+        }
+        return 0;
+    }
+
+    /**
+     * Width of a level in a binary tree (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int levelWidthIterative(BinaryTree binaryTree, int level) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int currentLevel = 1;
+        while(true) {
+            int nodeCount = queue.size();
+            if(currentLevel == level) {
+                return nodeCount;
+            }
+            while(--nodeCount >= 0) {
+                Node current = queue.remove();
+                if(current.left != null) {
+                    queue.add(current.left);
+                }
+                if(current.right != null) {
+                    queue.add(current.right);
+                }
+            }
+            currentLevel++;
+        }
     }
 }
