@@ -26,6 +26,9 @@ import java.util.Queue;
  * 15. No of non-leaf nodes in a binary tree (Iterative)
  * 16. Width of a level in a binary tree (Recursive)
  * 17. Width of a level in a binary tree (Iterative)
+ * 18. Maximum width of a binary tree
+ * 19. Maximum width of a binary tree (Using level order)
+ * 20. Maximum width of a binary tree (Using preorder)
  */
 
 public class Structure {
@@ -55,7 +58,7 @@ public class Structure {
 //        bt.insert(6);
         bt.levelOrder();
         System.out.println();
-        System.out.println(levelWidthIterative(bt, 1));
+        System.out.println(maxWidthPreOrder(bt));
     }
 
     /**
@@ -510,5 +513,76 @@ public class Structure {
             }
             currentLevel++;
         }
+    }
+
+    /**
+     * Maximum width of a binary tree
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static int maxWidth(BinaryTree binaryTree) {
+        int max = 0;
+        int height = heightIterative(binaryTree);
+        int width;
+        for(int i=1; i<=height; i++) {
+            width = levelWidthIterative(binaryTree, i);
+            max = Math.max(max, width);
+        }
+        return max;
+    }
+
+    /**
+     * Maximum width of a binary tree (Using level order)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int maxWidthLevelOrder(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int max = 0;
+        while(true) {
+            int nodeCount = queue.size();
+            if(nodeCount == 0) {
+                return max;
+            }
+            max = Math.max(max, nodeCount);
+            while(--nodeCount >= 0) {
+                Node current = queue.remove();
+                if(current.left != null) {
+                    queue.add(current.left);
+                }
+                if(current.right != null) {
+                    queue.add(current.right);
+                }
+            }
+        }
+    }
+
+    /**
+     * Maximum width of a binary tree (Using preorder)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int maxWidthPreOrder(BinaryTree binaryTree) {
+        int max = 0;
+        int height = heightIterative(binaryTree);
+        int[] count = new int[height + 1];
+        maxWidthUtil(binaryTree.root, count, 1);
+        for(int i=0; i<count.length; i++) {
+            max = Math.max(count[i], max);
+        }
+        return max;
+    }
+
+    private static void maxWidthUtil(Node node, int[] count, int level) {
+        if(node == null) {
+            return;
+        }
+        count[level]++;
+        maxWidthUtil(node.left, count, level+1);
+        maxWidthUtil(node.right, count, level+1);
     }
 }
