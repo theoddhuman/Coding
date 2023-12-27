@@ -16,6 +16,8 @@ import java.util.Queue;
  * 5. Maximum level sum of a binary tree (Using preorder)
  * 6. Sum of all nodes in a binary tree (Recursive)
  * 7. Sum of all nodes in a binary tree (Iterative)
+ * 8. Sum of all nodes in a binary tree having child node value x (Recursive)
+ * 9. Sum of all nodes in a binary tree having child node value x (Iterative)
  */
 public class Sum {
     /**
@@ -42,7 +44,7 @@ public class Sum {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        System.out.println(sumIterative(bt));
+        System.out.println(sumWithSpecificChildRecursive(bt, 6));
     }
 
     /**
@@ -203,6 +205,52 @@ public class Sum {
         while(!queue.isEmpty()) {
             Node current = queue.remove();
             sum += current.data;
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * Sum of all nodes in a binary tree having child node value x (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int sumWithSpecificChildRecursive(BinaryTree binaryTree, int x) {
+        return sumWithSpecificChildRecursiveUtil(binaryTree.root, x);
+    }
+
+    private static int sumWithSpecificChildRecursiveUtil(Node node, int x) {
+        if(node == null) {
+            return 0;
+        }
+        int sum = 0;
+        if((node.left != null && node.left.data == x) || (node.right != null && node.right.data == x)) {
+            sum = node.data;
+        }
+        return sum + sumWithSpecificChildRecursiveUtil(node.left, x) + sumWithSpecificChildRecursiveUtil(node.right, x);
+    }
+
+    /**
+     * Sum of all nodes in a binary tree having child node value x (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int sumWithSpecificChildIterative(BinaryTree binaryTree, int x) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int sum = 0;
+        while(!queue.isEmpty()) {
+            Node current = queue.remove();
+            if((current.left != null && current.left.data == x) || (current.right != null && current.right.data == x)) {
+                sum = current.data;
+            }
             if(current.left != null) {
                 queue.add(current.left);
             }
