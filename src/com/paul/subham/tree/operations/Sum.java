@@ -14,6 +14,8 @@ import java.util.Queue;
  * 3. Maximum level sum of a binary tree
  * 4. Maximum level sum of a binary tree (Using level order)
  * 5. Maximum level sum of a binary tree (Using preorder)
+ * 6. Sum of all nodes in a binary tree (Recursive)
+ * 7. Sum of all nodes in a binary tree (Iterative)
  */
 public class Sum {
     /**
@@ -40,7 +42,7 @@ public class Sum {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        System.out.println(maxLevelSumPreOrder(bt));
+        System.out.println(sumIterative(bt));
     }
 
     /**
@@ -169,5 +171,45 @@ public class Sum {
         sum[level] += node.data;
         maxLevelSumUtil(node.left, sum, level+1);
         maxLevelSumUtil(node.right, sum, level+1);
+    }
+
+    /**
+     * Sum of all nodes in a binary tree (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int sumRecursive(BinaryTree binaryTree) {
+        return sumUtil(binaryTree.root);
+    }
+
+    private static int sumUtil(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        return node.data + sumUtil(node.left) + sumUtil(node.right);
+    }
+
+    /**
+     * Sum of all nodes in a binary tree (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int sumIterative(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int sum = 0;
+        while(!queue.isEmpty()) {
+            Node current = queue.remove();
+            sum += current.data;
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return sum;
     }
 }
