@@ -8,8 +8,8 @@ package com.paul.subham.stack.implementation;
  * 5. delete stack
  * 6. print stack
  */
-class LinkedListStack {
-    Node top = null;
+public class LinkedListStack {
+    public Node top = null;
 
     //is empty
     boolean isEmpty() {
@@ -17,7 +17,7 @@ class LinkedListStack {
     }
 
     //push an element
-    void push(int data) {
+    public void push(int data) {
         Node newNode = new Node(data);
         if(isEmpty()) {
             top = newNode;
@@ -28,7 +28,7 @@ class LinkedListStack {
     }
 
     //pop an element
-    int pop() {
+    public int pop() {
         int popped = Integer.MIN_VALUE;
         if(isEmpty()) {
             return popped;
@@ -49,21 +49,11 @@ class LinkedListStack {
     }
 
     //print stack
-    void print() {
+    public void print() {
         Node current = top;
         while(current != null) {
             System.out.print(current.data + " ");
             current = current.next;
         }
-    }
-}
-
-class Node {
-    int data;
-    Node next;
-
-    Node(int data) {
-        this.data = data;
-        this.next = null;
     }
 }
