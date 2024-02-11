@@ -3,10 +3,14 @@ package com.paul.subham.tree.operations;
 import com.paul.subham.tree.implementation.binary.BinaryTree;
 import com.paul.subham.tree.implementation.binary.Node;
 
+import java.util.Stack;
+
 /**
  * @author subham.paul
  *
  * 1. Print all root to leaf paths of a binary tree
+ * 2. Print ancestors of a node in binary tree (Using Recursion)
+ * 3. Print ancestors of a node in binary tree (Iterative)
  */
 public class Path {
     /**
@@ -33,7 +37,7 @@ public class Path {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        printPathRecursive(bt);
+        printAncestorsIterative(bt, 3);
     }
 
 
@@ -61,6 +65,62 @@ public class Path {
         } else {
             printPathRecursiveUtil(node.left, path, pathLen);
             printPathRecursiveUtil(node.right, path, pathLen);
+        }
+    }
+
+    /**
+     * Print ancestors of a node in binary tree (Using Recursion)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void printAncestorsByRecursion(BinaryTree binaryTree, int child) {
+        printAncestorsUtil(binaryTree.root, child);
+    }
+
+    private static boolean printAncestorsUtil(Node node, int child) {
+        if(node == null) {
+            return false;
+        }
+        if(node.data == child) {
+            return true;
+        }
+        if(printAncestorsUtil(node.left, child) || printAncestorsUtil(node.right, child)) {
+            System.out.print(node.data + " ");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Print ancestors of a node in binary tree (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void printAncestorsIterative(BinaryTree binaryTree, int child) {
+        Stack<Node> stack = new Stack<>();
+        Node current = binaryTree.root;
+        while(!stack.empty() || current != null) {
+            while(current != null && current.data != child) {
+                stack.push(current);
+                current = current.left;
+            }
+            if(current != null) {
+                break;
+            }
+            if(!stack.isEmpty() && stack.peek().right == null) {
+                current = stack.pop();
+                while(!stack.isEmpty() && stack.peek().right == current) {
+                    current = stack.pop();
+                }
+            }
+            current = !stack.isEmpty() ? stack.peek().right : null;
+        }
+        if(!stack.isEmpty()) {
+            while(!stack.isEmpty()) {
+                System.out.print(stack.pop().data + " ");
+            }
         }
     }
 }
