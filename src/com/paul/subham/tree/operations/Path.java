@@ -3,6 +3,8 @@ package com.paul.subham.tree.operations;
 import com.paul.subham.tree.implementation.binary.BinaryTree;
 import com.paul.subham.tree.implementation.binary.Node;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -11,6 +13,9 @@ import java.util.Stack;
  * 1. Print all root to leaf paths of a binary tree
  * 2. Print ancestors of a node in binary tree (Using Recursion)
  * 3. Print ancestors of a node in binary tree (Iterative)
+ * 4. Check if one node has path from another node (recursive)
+ * 5. Print path from root to a node in a binary tree (recursive)
+ * 6. Print path from root to a node in a binary tree (iterative - using stack)
  */
 public class Path {
     /**
@@ -37,7 +42,8 @@ public class Path {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        printAncestorsIterative(bt, 3);
+        //printAncestorsIterative(bt, 3);
+        printPathFromRootIterative(bt, 6);
     }
 
 
@@ -122,5 +128,78 @@ public class Path {
                 System.out.print(stack.pop().data + " ");
             }
         }
+    }
+
+    /**
+     * Check if one node has path from another node (recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean hasPath(Node node, List<Integer> path, int target) {
+        if(node == null) {
+            return false;
+        }
+        path.add(node.data);
+        if(node.data == target) {
+            return true;
+        }
+        if(hasPath(node.left, path, target) || hasPath(node.right, path, target)) {
+            return true;
+        }
+        path.remove(path.size()-1);
+        return false;
+    }
+
+    /**
+     * Print path from root to a node in a binary tree (recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     *
+     */
+    public static void printPathFromRoot(BinaryTree binaryTree, int target) {
+        List<Integer> list = new ArrayList<>();
+        if(hasPath(binaryTree.root, list, target)) {
+            System.out.println(list);
+        } else {
+            System.out.println("No Path");
+        }
+    }
+
+    /**
+     * Print path from root to a node in a binary tree (iterative - using stack)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     *
+     */
+    public static void printPathFromRootIterative(BinaryTree binaryTree, int target) {
+        List<Integer> list = new ArrayList<>();
+        Stack<Node> stack = new Stack<>();
+        Node current = binaryTree.root;
+        Node prev = null;
+        while(!stack.isEmpty() || current != null) {
+            while(current != null) {
+                stack.push(current);
+                list.add(current.data);
+                current = current.left;
+            }
+            current = stack.peek();
+            if(current.right != null && current.right != prev) {
+                current = current.right;
+            } else {
+                if(current.data == target) {
+                    System.out.println(list);
+                    return;
+                } else {
+                    stack.pop();
+                    list.remove(list.size() -1);
+                    prev = current;
+                    current = null;
+                }
+            }
+        }
+        System.out.println("No Path");
     }
 }
