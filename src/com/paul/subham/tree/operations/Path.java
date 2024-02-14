@@ -4,7 +4,13 @@ import com.paul.subham.tree.implementation.binary.BinaryTree;
 import com.paul.subham.tree.implementation.binary.Node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -16,6 +22,10 @@ import java.util.Stack;
  * 4. Check if one node has path from another node (recursive)
  * 5. Print path from root to a node in a binary tree (recursive)
  * 6. Print path from root to a node in a binary tree (iterative - using stack)
+ * 7. Lowest common ancestor of a binary tree ( by storing path from root )
+ * 8. Lowest common ancestor of a binary tree ( single traversal )
+ * 9. Lowest common ancestor of a binary tree ( single traversal with presence check)
+ * 10. Lowest common ancestor of a binary tree (Using hashing)
  */
 public class Path {
     /**
@@ -42,8 +52,7 @@ public class Path {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        //printAncestorsIterative(bt, 3);
-        printPathFromRootIterative(bt, 6);
+        System.out.println(lowestCommonAncestorUsingHashing(bt, 11,7));
     }
 
 
@@ -202,4 +211,155 @@ public class Path {
         }
         System.out.println("No Path");
     }
+
+    /**
+     * Lowest common ancestor of a binary tree ( by storing path from root )
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int lowestCommonAncestorByPath(BinaryTree bt, int a, int b) {
+        List<Integer> path1 = new ArrayList<>();
+        List<Integer> path2 = new ArrayList<>();
+        if(!hasPath(bt.root, path1, a) || !hasPath(bt.root, path2, b)) {
+            return -1;
+        }
+        int i;
+        for(i=0; i<path1.size() && i<path2.size(); i++) {
+            if(path1.get(i) != path2.get(i)) {
+                break;
+            }
+        }
+        return path1.get(i-1);
+    }
+
+    /**
+     * Lowest common ancestor of a binary tree ( single traversal )
+     *
+     * This method assumes that keys are present in Binary Tree. If one key is present and the other is absent,
+     * then it returns the present key as LCA (Ideally should have returned NULL)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int lowestCommonAncestorSingleTraversal(BinaryTree bt, int a, int b) {
+        return lcaUtil(bt.root, a, b).data;
+    }
+
+    private static Node lcaUtil(Node node, int a, int b) {
+        if(node == null) {
+            return null;
+        }
+        if(node.data == a || node.data == b) {
+            return node;
+        }
+        Node leftLca = lcaUtil(node.left, a, b);
+        Node rightLca = lcaUtil(node.right, a, b);
+        if(leftLca != null && rightLca != null) {
+            return node;
+        }
+        return leftLca != null ? leftLca : rightLca;
+    }
+
+    /**
+     * Lowest common ancestor of a binary tree ( single traversal with presence check)
+     *
+     * This method traverse the complete binary tree to check nodes are present or not.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static boolean v1 = false;
+    private static boolean v2 = false;
+    public static int lowestCommonAncestorSingleTraversalCorrect(BinaryTree bt, int a, int b) {
+        Node lca = lcaCorrectUtil(bt.root, a, b);
+        if(v1 && v2) {
+            return lca.data;
+        }
+        return -1;
+    }
+
+    private static Node lcaCorrectUtil(Node node, int a, int b) {
+        if(node == null) {
+            return null;
+        }
+        Node temp = null;
+        if(node.data == a) {
+            v1 = true;
+            temp = node;
+        }
+        if(node.data == b) {
+            v2 = true;
+            temp = node;
+        }
+        Node leftLca = lcaCorrectUtil(node.left, a, b);
+        Node rightLca = lcaCorrectUtil(node.right, a, b);
+        if(temp != null) {
+            return temp;
+        }
+        if(leftLca != null && rightLca != null) {
+            return node;
+        }
+        return leftLca != null ? leftLca : rightLca;
+    }
+
+    /**
+     * Lowest common ancestor of a binary tree (Using hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int lowestCommonAncestorUsingHashing(BinaryTree binaryTree, int a, int b) {
+        Map<Node, Node> parentMap = buildParentMap(binaryTree);
+        Queue<Node> queue = new LinkedList<>();
+        Node p = null;
+        Node q = null;
+        queue.add(binaryTree.root);
+        while(!queue.isEmpty()) {
+            Node current = queue.remove();
+            if(current.data == a) {
+                p = current;
+            }
+            if(current.data == b) {
+                q = current;
+            }
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        Set<Node> ancestors = new HashSet<>();
+        while(p != null) {
+            ancestors.add(p);
+            p = parentMap.get(p);
+        }
+        while(q != null) {
+            if(ancestors.contains(q)) {
+                return q.data;
+            }
+            q = parentMap.get(q);
+        }
+        return -1;
+    }
+
+    private static Map<Node, Node> buildParentMap(BinaryTree binaryTree) {
+        Map<Node, Node> map = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        while(!queue.isEmpty()) {
+            Node current = queue.remove();
+            if(current.left != null) {
+                map.put(current.left, current);
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                map.put(current.right, current);
+                queue.add(current.right);
+            }
+        }
+        return map;
+    }
+
 }
