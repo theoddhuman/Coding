@@ -29,6 +29,8 @@ import java.util.Queue;
  * 18. Maximum width of a binary tree
  * 19. Maximum width of a binary tree (Using level order)
  * 20. Maximum width of a binary tree (Using preorder)
+ * 21. Level of a node in a binary tree (Recursive)
+ * 22. Level of a node in a binary tree (Iterative)
  */
 
 public class Structure {
@@ -58,7 +60,7 @@ public class Structure {
 //        bt.insert(6);
         bt.levelOrder();
         System.out.println();
-        System.out.println(maxWidthPreOrder(bt));
+        System.out.println(levelOfNodeIterative(bt, 6));
     }
 
     /**
@@ -584,5 +586,59 @@ public class Structure {
         count[level]++;
         maxWidthUtil(node.left, count, level+1);
         maxWidthUtil(node.right, count, level+1);
+    }
+
+    /**
+     * Level of a node in a binary tree (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int levelOfNodeRecursive(BinaryTree binaryTree, int data) {
+        return levelOfNodeRecursiveUtil(binaryTree.root, data, 1);
+    }
+
+    private static int levelOfNodeRecursiveUtil(Node node, int data, int level) {
+        if(node ==null) {
+            return 0;
+        }
+        if(node.data == data) {
+            return level;
+        }
+        int downLevel = levelOfNodeRecursiveUtil(node.left, data, level+1);
+        if(downLevel != 0) {
+            return downLevel;
+        }
+        return  levelOfNodeRecursiveUtil(node.right, data, level+1);
+    }
+
+    /**
+     * Level of a node in a binary tree (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int levelOfNodeIterative(BinaryTree binaryTree, int data) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int level = 0;
+        while(!queue.isEmpty()) {
+            int nodeCount = queue.size();
+            level++;
+            while(nodeCount > 0) {
+                Node current = queue.remove();
+                if(current.data == data) {
+                    return level;
+                }
+                if(current.left != null) {
+                    queue.add(current.left);
+                }
+                if(current.right != null) {
+                    queue.add(current.right);
+                }
+                nodeCount--;
+            }
+        }
+        return 0;
     }
 }
