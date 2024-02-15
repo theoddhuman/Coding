@@ -26,6 +26,9 @@ import java.util.Stack;
  * 8. Lowest common ancestor of a binary tree ( single traversal )
  * 9. Lowest common ancestor of a binary tree ( single traversal with presence check)
  * 10. Lowest common ancestor of a binary tree (Using hashing)
+ * 11. Distance between two nodes of a binary tree (Using the lowest common ancestor)
+ * 12. Distance between two nodes of a binary tree (Using the lowest common ancestor - efficient)
+ * 13. Distance between two nodes of a binary tree (Single traversal)
  */
 public class Path {
     /**
@@ -52,7 +55,7 @@ public class Path {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        System.out.println(lowestCommonAncestorUsingHashing(bt, 11,7));
+        System.out.println(distanceSingleTraversal(bt, 11,1));
     }
 
 
@@ -360,6 +363,71 @@ public class Path {
             }
         }
         return map;
+    }
+
+    /**
+     * Distance between two nodes of a binary tree (Using the lowest common ancestor)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int distanceUsingLca(BinaryTree binaryTree, int a, int b) {
+        int distanceA = Structure.levelOfNodeRecursive(binaryTree, a)-1;
+        int distanceB = Structure.levelOfNodeRecursive(binaryTree, b)-1;
+        int lca = lowestCommonAncestorSingleTraversalCorrect(binaryTree, a, b);
+        int distanceLca = Structure.levelOfNodeRecursive(binaryTree, lca)-1;
+        return  distanceA + distanceB - 2*distanceLca;
+    }
+
+    /**
+     * Distance between two nodes of a binary tree (Using the lowest common ancestor - efficient)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int distanceUsingLcaEfficient(BinaryTree binaryTree, int a, int b) {
+        Node lca = lcaCorrectUtil(binaryTree.root, a, b);
+        int distanceA = Structure.levelOfNodeRecursiveUtil(lca, a, 0);
+        int distanceB = Structure.levelOfNodeRecursiveUtil(lca, b, 0);
+        return distanceA + distanceB;
+    }
+
+    /**
+     * Distance between two nodes of a binary tree (Single traversal)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int distanceSingleTraversal(BinaryTree binaryTree, int a, int b) {
+        ans = 0;
+        distanceUtil(binaryTree.root, a , b);
+        return ans;
+    }
+
+    private static int ans;
+
+    private static int distanceUtil(Node node, int a, int b) {
+        if(node == null) {
+            return 0;
+        }
+        int left = distanceUtil(node.left, a, b);
+        int right = distanceUtil(node.right, a, b);
+        if(node.data == a || node.data == b) {
+            if (left != 0 || right != 0) {
+                ans = Math.max(left, right);
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+        if( left != 0 && right != 0) {
+            ans = left + right;
+            return 0;
+        }
+        if(left != 0 || right != 0) {
+            return Math.max(left, right) + 1;
+        }
+        return 0;
     }
 
 }
