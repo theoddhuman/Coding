@@ -18,20 +18,21 @@ import java.util.Stack;
  * 5. postorder traversal recursive
  * 6. preorder traversal iterative
  * 7. inorder traversal iterative
- * 8. postorder traversal iterative
- * 9. level order traversal
- * 10. level order traversal (recursive)
- * 11. find maximum recursive
- * 12. find maximum iterative
- * 13. find minimum recursive
- * 14. find minimum iterative
- * 15. search an element recursive
- * 16. search an element iterative
- * 17. size of tree recursive
- * 18. size of tree iterative
- * 19. Reverse level order traversal (recursive)
- * 20. Reverse level order traversal (Using stack and queue)
- * 21. Reverse level order traversal (Hashing)
+ * 8. Inorder traversal (Morris)
+ * 9. postorder traversal iterative
+ * 10. level order traversal
+ * 11. level order traversal (recursive)
+ * 12. find maximum recursive
+ * 13. find maximum iterative
+ * 14. find minimum recursive
+ * 15. find minimum iterative
+ * 16. search an element recursive
+ * 17. search an element iterative
+ * 18. size of tree recursive
+ * 19. size of tree iterative
+ * 20. Reverse level order traversal (recursive)
+ * 21. Reverse level order traversal (Using stack and queue)
+ * 22. Reverse level order traversal (Hashing)
  */
 public class BinaryTree {
     public Node root;
@@ -197,6 +198,35 @@ public class BinaryTree {
         }
     }
 
+    /**
+     * Inorder traversal (Morris)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    void inOrderMorris() {
+        Node current = root;
+        while(current != null) {
+            if(current.left == null) {
+                System.out.print(current.data + " ");
+                current = current.right;
+            } else {
+                Node pred = current.left;
+                while(pred.right != null && pred.right != current ) {
+                    pred = pred.right;
+                }
+                if(pred.right == null) {
+                    pred.right = current;
+                    current = current.left;
+                } else {
+                    pred.right = null;
+                    System.out.print(current.data +" ");
+                    current = current.right;
+                }
+            }
+        }
+    }
+
     //postorder traversal iterative, TC: O(n), SC: O(n)
     void postOrderIterative() {
         Stack<Node> stack = new Stack<>();
@@ -268,7 +298,7 @@ public class BinaryTree {
     }
 
     //find maximum recursive, TC: O(n), SC: O(n)
-    int maxRecursive(Node node) {
+    public int maxRecursive(Node node) {
         int max = Integer.MIN_VALUE;
         if(node != null) {
             int leftMax = maxRecursive(node.left);
@@ -298,7 +328,7 @@ public class BinaryTree {
     }
 
     //find minimum recursive, TC: O(n), SC: O(n)
-    int minRecursive(Node node) {
+    public int minRecursive(Node node) {
         int min = Integer.MAX_VALUE;
         if(node != null) {
             int leftMin = minRecursive(node.left);

@@ -15,7 +15,8 @@ public class Test {
         //bt.preOrderIterative();
         //bt.inOrderIterative();
         //bt.postOrderIterative();
-        System.out.println(bt.sizeIterative());
+        bt.inOrderMorris();
+        System.out.println();
         bt.levelOrder();
     }
 }

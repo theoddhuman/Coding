@@ -31,36 +31,41 @@ import java.util.Queue;
  * 20. Maximum width of a binary tree (Using preorder)
  * 21. Level of a node in a binary tree (Recursive)
  * 22. Level of a node in a binary tree (Iterative)
+ * 23. Check if given binary tree is a BST (Naive approach)
+ * 24. Check if given binary tree is a BST (Efficient recursive)
+ * 25. Check if given binary tree is a BST (Inorder)
+ * 26. Check if given binary tree is a BST (Using nodes)
+ * 27. Check if given binary tree is a BST (Using Morris Traversal)
  */
 
 public class Structure {
     /**
-     *          1
+     *          7
      *        /   \
-     *      2      3
+     *      2      8
      *    /   \
-     *  4      5
+     *  1      5
      *       /   \
-     *      6     8
+     *      3     6
      *        \
-     *         7
+     *         4
      */
     public static void main(String[] args) {
         BinaryTree bt = new BinaryTree();
-        bt.root = new Node(1);
+        bt.root = new Node(7);
         bt.root.left = new Node(2);
-        bt.root.right = new Node(3);
-        bt.root.left.left = new Node(4);
+        bt.root.right = new Node(8);
+        bt.root.left.left = new Node(1);
         bt.root.left.right = new Node(5);
-        bt.root.left.right.left = new Node(6);
-        bt.root.left.right.right = new Node(8);
-        bt.root.left.right.left.right = new Node(7);
+        bt.root.left.right.left = new Node(3);
+        bt.root.left.right.right = new Node(6);
+        bt.root.left.right.left.right = new Node(4);
 //        bt.insert(4);
 //        bt.insert(5);
 //        bt.insert(6);
         bt.levelOrder();
         System.out.println();
-        System.out.println(levelOfNodeIterative(bt, 6));
+        System.out.println(isValidBSTMorris(bt));
     }
 
     /**
@@ -598,7 +603,7 @@ public class Structure {
         return levelOfNodeRecursiveUtil(binaryTree.root, data, 1);
     }
 
-    private static int levelOfNodeRecursiveUtil(Node node, int data, int level) {
+    public static int levelOfNodeRecursiveUtil(Node node, int data, int level) {
         if(node ==null) {
             return 0;
         }
@@ -640,5 +645,132 @@ public class Structure {
             }
         }
         return 0;
+    }
+
+    /**
+     * Check if given binary tree is a BST (Naive approach)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static boolean isBSTNaive(BinaryTree binaryTree) {
+        return isBSTNaive(binaryTree.root, binaryTree);
+    }
+
+    private static boolean isBSTNaive(Node node, BinaryTree binaryTree) {
+        if(node == null) {
+            return true;
+        }
+        if(node.left != null && binaryTree.maxRecursive(node.left) > node.data) {
+            return false;
+        }
+        if(node.right != null && binaryTree.minRecursive(node.right) < node.data) {
+            return false;
+        }
+        return isBSTNaive(node.left, binaryTree) && isBSTNaive(node.right, binaryTree);
+    }
+
+    /**
+     * Check if given binary tree is a BST (Efficient recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isBSTRecursive(BinaryTree binaryTree) {
+        return isBSTRecursive(binaryTree.root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    private static boolean isBSTRecursive(Node node, int min, int max) {
+        if(node == null) {
+            return true;
+        }
+        if(node.data < min || node.data > max) {
+            return false;
+        }
+        return isBSTRecursive(node.left, min, node.data-1) && isBSTRecursive(node.right, node.data + 1, max);
+    }
+
+    /**
+     * Check if given binary tree is a BST (Inorder)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isBSTInorder(BinaryTree binaryTree) {
+        return isBSTInorder(binaryTree.root);
+    }
+    private static int prev = Integer.MIN_VALUE;
+    private static boolean isBSTInorder(Node node) {
+        if(node == null) {
+            return true;
+        }
+        if(!isBSTInorder(node.left)) {
+            return false;
+        }
+        if(node.data < prev) {
+            return false;
+        }
+        prev = node.data;
+        return isBSTInorder(node.right);
+    }
+
+    /**
+     * Check if given binary tree is a BST (Using nodes)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isBSTUsingNode(BinaryTree binaryTree) {
+        return isBSTUsingNode(binaryTree.root, null, null);
+    }
+
+    private static boolean isBSTUsingNode(Node node, Node left, Node right) {
+        if(node == null) {
+            return true;
+        }
+        if(left != null && node.data < left.data) {
+            return false;
+        }
+        if(right != null && node.data > right.data) {
+            return false;
+        }
+        return isBSTUsingNode(node.left, left, node) && isBSTUsingNode(node.right, node, right);
+    }
+
+    /**
+     * Check if given binary tree is a BST (Using Morris Traversal)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static boolean isValidBSTMorris(BinaryTree binaryTree) {
+        Node current = binaryTree.root;
+        Node prev = null;
+        while(current != null) {
+            if(current.left == null) {
+                if(prev != null && current.data < prev.data) {
+                    return false;
+                }
+                prev = current;
+                current = current.right;
+            } else {
+                Node pred = current.left;
+                while(pred.right != null && pred.right != current ) {
+                    pred = pred.right;
+                }
+                if(pred.right == null) {
+                    pred.right = current;
+                    current = current.left;
+                } else {
+                    pred.right = null;
+                    if(prev != null && current.data < prev.data) {
+                        return false;
+                    }
+                    prev = current;
+                    current = current.right;
+                }
+            }
+        }
+        return true;
     }
 }
