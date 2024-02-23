@@ -29,11 +29,15 @@ import java.util.*;
  * 22. Finding pair with given sum in array (Using Remainder)
  * 23. Finding two elements with sum closest to zero
  * 24. Finding two elements with sum closest to zero (By sorting and two pointer)
+ * 25. Finding an element which appears odd no of times in an array (Nested loop)
+ * 26. Finding an element which appears odd no of times in an array (Hashing)
+ * 27. Finding an element which appears odd no of times in an array (Bit manipulation - XOR)
+ * 28. Finding an element which appears odd no of times in an array (Binary search)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {1, 4, -2, -3, 2};
-        twoSumClosestToZeroBySorting(a);
+        int[] a = {1, 1, 2, 3, 3, 5, 5, 2, 2, 6, 6};
+        System.out.println(oddAppearingElementBinarySearch(a,0,a.length-1));
     }
 
     /**
@@ -507,5 +511,95 @@ public class Searching {
             }
         }
         System.out.println(a[mini] + " " + a[minj]);
+    }
+
+    /**
+     * Finding an element which appears odd no of times in an array (Nested loop)
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int oddAppearingElement(int[] a) {
+        for (int k : a) {
+            int count = 0;
+            for (int i : a) {
+                if (k == i) {
+                    count++;
+                }
+            }
+            if (count % 2 != 0) {
+                return k;
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Finding an element which appears odd no of times in an array (Hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int oddAppearingElementHashing(int[] a) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int j : a) {
+            if (map.containsKey(j)) {
+                map.put(j, map.get(j) + 1);
+            } else {
+                map.put(j, 1);
+            }
+        }
+        for(Integer i : map.keySet()) {
+            if(map.get(i)%2 != 0) {
+                return i;
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Finding an element which appears odd no of times in an array (Bit manipulation - XOR)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int oddAppearingElementXor(int[] a) {
+        int res = 0;
+        for(int i: a) {
+            res = res ^ i;
+        }
+        return res;
+    }
+
+    /**
+     * Finding an element which appears odd no of times in an array (Binary search)
+     * 
+     * Given an array where all elements appear even number of times except one. 
+     * All repeating occurrences of elements appear in pairs and these pairs are not adjacent.
+     * 
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int oddAppearingElementBinarySearch(int[] a, int low, int high) {
+        if(low > high) {
+            return Integer.MIN_VALUE;
+        }
+        if(low == high) {
+            return a[low];
+        }
+        int mid = low + (high - low)/2;
+        if(mid%2 == 0) {
+            if(a[mid] == a[mid+1]){
+                return oddAppearingElementBinarySearch(a, mid+2, high);
+            } else {
+                return oddAppearingElementBinarySearch(a, low, mid);
+            }
+        } else {
+            if(a[mid] == a[mid-1]) {
+                return oddAppearingElementBinarySearch(a, mid+1,high);
+            } else {
+                return oddAppearingElementBinarySearch(a, low, mid-1);
+            }
+        }
     }
 }
