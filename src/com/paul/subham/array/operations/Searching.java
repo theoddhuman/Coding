@@ -33,11 +33,16 @@ import java.util.*;
  * 26. Finding an element which appears odd no of times in an array (Hashing)
  * 27. Finding an element which appears odd no of times in an array (Bit manipulation - XOR)
  * 28. Finding an element which appears odd no of times in an array (Binary search)
+ * 29. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Recursive)
+ * 30. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Iterative)
+ * 31. Searching an element in sorted and rotated array (Using pivot)
+ * 32. Searching an element in sorted and rotated array (Binary Search - Recursive)
+ * 33. Searching an element in sorted and rotated array (Binary Search - Iterative)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {1, 1, 2, 3, 3, 5, 5, 2, 2, 6, 6};
-        System.out.println(oddAppearingElementBinarySearch(a,0,a.length-1));
+        int[] a = {3, 4, 5, 6};
+        System.out.println(searchSortedAndRotatedBinaryIterative(a, 6, 0, a.length-1));
     }
 
     /**
@@ -573,10 +578,10 @@ public class Searching {
 
     /**
      * Finding an element which appears odd no of times in an array (Binary search)
-     * 
-     * Given an array where all elements appear even number of times except one. 
+     *
+     * Given an array where all elements appear even number of times except one.
      * All repeating occurrences of elements appear in pairs and these pairs are not adjacent.
-     * 
+     *
      * TC: O(logn)
      * SC: O(1)
      */
@@ -601,5 +606,155 @@ public class Searching {
                 return oddAppearingElementBinarySearch(a, low, mid-1);
             }
         }
+    }
+
+    /**
+     * Finding maximum in an array which is increasing then decreasing (Bitonic Search - Recursive)
+     *
+     * TC: O(logn)
+     * SC: O(logn)
+     */
+    public static int maxBitonicRecursive(int[] a, int low, int high) {
+        if(low == high) {
+            return a[low];
+        }
+        if(low + 1== high) {
+            return Math.max(a[low], a[high]);
+        }
+        int mid = low + (high - low)/2;
+        if(a[mid] > a[mid-1] && a[mid] > a[mid+1]) {
+            return a[mid];
+        }
+        if(a[mid] > a[mid-1] && a[mid] < a[mid+1]) {
+            return maxBitonicRecursive(a, mid+1, high);
+        } else {
+            return maxBitonicRecursive(a, low, mid-1);
+        }
+    }
+
+    /**
+     * Finding maximum in an array which is increasing then decreasing (Bitonic Search - Iterative)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int maxBitonicIterative(int[] a, int low, int high) {
+        if(low == high) {
+            return a[low];
+        }
+        while(low <= high) {
+            if(low + 1== high) {
+                return Math.max(a[low], a[high]);
+            }
+            int mid = low + (high-low)/2;
+            if(a[mid] > a[mid-1] && a[mid] > a[mid+1]) {
+                return a[mid];
+            }
+            if(a[mid] > a[mid-1] && a[mid] < a[mid+1]) {
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return a[high];
+    }
+
+    /**
+     * Searching an element in sorted and rotated array (Using pivot)
+     *
+     * TC: O(logn)
+     * SC: O(logn)
+     */
+    public static int searchSortedAndRotatedPivot(int[] a, int data) {
+        int pivot = findPivot(a, 0, a.length-1);
+        if(pivot == -1) {
+            return BinarySearch.searchRecursive(a, 0, a.length-1, data);
+        }
+        if(a[pivot] == data) {
+            return pivot;
+        }
+        if(a[0] <= data) {
+            return BinarySearch.searchRecursive(a, 0, pivot-1, data);
+        } else {
+            return BinarySearch.searchRecursive(a, pivot+1, a.length-1, data);
+        }
+    }
+
+    private static int findPivot(int[] a, int low, int high) {
+        if(low > high) {
+            return -1;
+        }
+        if(low == high) {
+            return low;
+        }
+        int mid = low + (high-low)/2;
+        if(mid < high && a[mid] > a[mid+1]) {
+            return mid;
+        }
+        if(mid > low && a[mid] < a[mid-1]) {
+            return mid-1;
+        }
+        if(a[low] >= a[mid]) {
+            return findPivot(a, low, mid-1);
+        } else {
+            return findPivot(a, mid+1, high);
+        }
+    }
+    /**
+     * Searching an element in sorted and rotated array (Binary Search - Recursive)
+     *
+     * TC: O(logn)
+     * SC: O(logn)
+     */
+    public static int searchSortedAndRotatedBinaryRecursive(int[] a, int data, int low, int high) {
+        if(low>high) {
+            return -1;
+        }
+        int mid = low + (high-low)/2;
+        if(a[mid] == data) {
+            return mid;
+        }
+        if(a[low] <= a[mid]) {
+            if(a[low] <= data && data < a[mid]) {
+                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid-1);
+            } else {
+                return searchSortedAndRotatedBinaryRecursive(a, data, mid+1, high);
+            }
+        } else {
+            if(a[mid] < data && data <= a[high]) {
+                return searchSortedAndRotatedBinaryRecursive(a, data, mid+1, high);
+            } else {
+                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid-1);
+            }
+        }
+    }
+
+    /**
+     * Searching an element in sorted and rotated array (Binary Search - Iterative)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int searchSortedAndRotatedBinaryIterative(int[] a, int data, int low, int high) {
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (a[mid] == data) {
+                return mid;
+            }
+            if (a[low] <= a[mid]) {
+                if (a[low] <= data && data < a[mid]) {
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            } else {
+                if (a[mid] < data && data <= a[high]) {
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return -1;
     }
 }
