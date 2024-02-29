@@ -38,6 +38,7 @@ import java.util.*;
  * 31. Searching an element in sorted and rotated array (Using pivot)
  * 32. Searching an element in sorted and rotated array (Binary Search - Recursive)
  * 33. Searching an element in sorted and rotated array (Binary Search - Iterative)
+ * 34. Median of sequence of elements
  */
 public class Searching {
     public static void main(String[] args) {
@@ -756,5 +757,20 @@ public class Searching {
             }
         }
         return -1;
+    }
+
+    /**
+     * Median of sequence of elements
+     *
+     * TC: O(1)
+     * SC: O(1)
+     */
+    public static double median(int[] a) {
+        int n = a.length;
+        if(n%2 != 0) {
+            return a[n/2];
+        } else {
+            return (double)(a[(n-1)/2] + a[n/2])/2.0;
+        }
     }
 }
