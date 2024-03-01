@@ -39,11 +39,15 @@ import java.util.*;
  * 32. Searching an element in sorted and rotated array (Binary Search - Recursive)
  * 33. Searching an element in sorted and rotated array (Binary Search - Iterative)
  * 34. Median of sequence of elements
+ * 35. First occurrence of an element in an array (Binary Search - Recursive)
+ * 36. First occurrence of an element in an array (Binary Search - Iterative)
+ * 37. Last occurrence of an element in an array (Binary Search - Recursive)
+ * 38. Last occurrence of an element in an array (Binary Search - Iterative)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {3, 4, 5, 6};
-        System.out.println(searchSortedAndRotatedBinaryIterative(a, 6, 0, a.length-1));
+        int[] a = {2,2,3,4,5,5,6,7};
+        System.out.println(lastOccurrenceIterative(a, 2));
     }
 
     /**
@@ -772,5 +776,89 @@ public class Searching {
         } else {
             return (double)(a[(n-1)/2] + a[n/2])/2.0;
         }
+    }
+
+    /**
+     * First occurrence of an element in an array (Binary Search - Recursive)
+     *
+     * TC: O(logn)
+     * SC: O(logn)
+     */
+    public static int firstOccurrenceRecursive(int[] a, int low, int high, int data) {
+        if(low > high) {
+            return -1;
+        }
+        int mid = low + (high-low) / 2;
+        if((mid == low && a[mid] == data) || (a[mid] == data && a[mid-1] < data)) {
+            return mid;
+        } else if (a[mid] >= data) {
+            return firstOccurrenceRecursive(a, low, mid-1, data);
+        } else {
+            return firstOccurrenceRecursive(a, mid+1, high, data);
+        }
+    }
+
+    /**
+     * First occurrence of an element in an array (Binary Search - Iterative)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int firstOccurrenceIterative(int[] a, int data) {
+        int low = 0;
+        int high = a.length - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if ((mid == low && a[mid] == data) || (a[mid] == data && a[mid - 1] < data)) {
+                return mid;
+            } else if (a[mid] >= data) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Last occurrence of an element in an array (Binary Search - Recursive)
+     *
+     * TC: O(logn)
+     * SC: O(logn)
+     */
+    public static int lastOccurrenceRecursive(int[] a, int low, int high, int data) {
+        if(low > high) {
+            return -1;
+        }
+        int mid = low + (high-low) / 2;
+        if((mid == high && a[mid] == data) || (a[mid] == data && a[mid+1] > data)) {
+            return mid;
+        } else if (a[mid] >= data) {
+            return lastOccurrenceRecursive(a, low, mid-1, data);
+        } else {
+            return lastOccurrenceRecursive(a, mid+1, high, data);
+        }
+    }
+
+    /**
+     * Last occurrence of an element in an array (Binary Search - Iterative)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int lastOccurrenceIterative(int[] a, int data) {
+        int low = 0;
+        int high = a.length - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if((mid == high && a[mid] == data) || (a[mid] == data && a[mid+1] > data)) {
+                return mid;
+            } else if (a[mid] >= data) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
     }
 }
