@@ -43,11 +43,14 @@ import java.util.*;
  * 36. First occurrence of an element in an array (Binary Search - Iterative)
  * 37. Last occurrence of an element in an array (Binary Search - Recursive)
  * 38. Last occurrence of an element in an array (Binary Search - Iterative)
+ * 39. Count no of occurrences of an element in an array (Linear search)
+ * 40. Count no of occurrences of an element in an array (Binary Search)
+ * 41. Count no of occurrences of an element in an array (Binary Search - improved)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {2,2,3,4,5,5,6,7};
-        System.out.println(lastOccurrenceIterative(a, 2));
+        int[] a = {2,2,3,5,5,5,6,7};
+        System.out.println(countOccurrencesBinarySearch(a, 2));
     }
 
     /**
@@ -860,5 +863,58 @@ public class Searching {
             }
         }
         return -1;
+    }
+
+    /**
+     * Count no of occurrences of an element in an array (Linear search)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int countOccurrences(int[] a, int data) {
+        int count = 0;
+        for(int i: a) {
+            if(i == data) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Count no of occurrences of an element in an array (Binary Search)
+     *
+     * TC: O(logn + k), where k is no of occurrences
+     * SC: O(1)
+     */
+    public static int countOccurrencesBinarySearch(int[] a, int data) {
+        int index = BinarySearch.search(a, a.length, data);
+        int count = 1;
+        int left = index-1;
+        while(left>=0 && a[left] == data) {
+            count++;
+            left--;
+        }
+        int right = index+1;
+        while(index<a.length && a[right] == data) {
+            count++;
+            right++;
+        }
+        return count;
+    }
+
+    /**
+     * Count no of occurrences of an element in an array (Binary Search - improved)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int countOccurrencesBinarySearchImproved(int[] a, int data) {
+        int firstIndex = firstOccurrenceIterative(a, data);
+        if(firstIndex == -1) {
+            return 0;
+        }
+        int lastIndex = lastOccurrenceIterative(a, data);
+        return lastIndex - firstIndex  + 1;
     }
 }
