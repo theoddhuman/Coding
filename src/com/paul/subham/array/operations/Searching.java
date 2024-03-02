@@ -46,11 +46,15 @@ import java.util.*;
  * 39. Count no of occurrences of an element in an array (Linear search)
  * 40. Count no of occurrences of an element in an array (Binary Search)
  * 41. Count no of occurrences of an element in an array (Binary Search - improved)
+ * 42. Find smallest and second-smallest elements in an array (Sorting)
+ * 43. Find smallest and second-smallest elements in an array (Scanning twice)
+ * 44. Find smallest and second-smallest elements in an array (Scanning once)
+ * 45. Find smallest and second-smallest elements in an array (Using priority queue)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {2,2,3,5,5,5,6,7};
-        System.out.println(countOccurrencesBinarySearch(a, 2));
+        int[] a = {11, 3, 4,5,2,2};
+        findSmallestAndSecondSmallestPriorityQueue(a);
     }
 
     /**
@@ -916,5 +920,99 @@ public class Searching {
         }
         int lastIndex = lastOccurrenceIterative(a, data);
         return lastIndex - firstIndex  + 1;
+    }
+
+    /**
+     * Find smallest and second-smallest elements in an array (Sorting)
+     *
+     * TC: O(nlogn)
+     * SC: O(1)
+     */
+    public static void findSmallestAndSecondSmallest(int[] a) {
+        Arrays.sort(a);
+        int smallest = a[0];
+        int secondSmallest = Integer.MAX_VALUE;
+        for(int i=1; i<a.length; i++) {
+            if(a[i] > smallest) {
+                secondSmallest = a[i];
+                break;
+            }
+        }
+        System.out.println("Smallest: "+smallest);
+        if(secondSmallest < Integer.MAX_VALUE) {
+            System.out.println("Second Smallest " + secondSmallest);
+        }
+    }
+
+    /**
+     * Find smallest and second-smallest elements in an array (Scanning twice)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void findSmallestAndSecondSmallestTwoScan(int[] a) {
+        int smallest = Integer.MAX_VALUE;
+        for(int i=0; i<a.length; i++) {
+            smallest = Math.min(smallest, a[i]);
+        }
+        int secondSmallest = Integer.MAX_VALUE;
+        for(int i=0; i<a.length; i++) {
+            if(a[i] > smallest) {
+                secondSmallest = Math.min(secondSmallest, a[i]);
+            }
+        }
+        System.out.println("Smallest: "+smallest);
+        if(secondSmallest < Integer.MAX_VALUE) {
+            System.out.println("Second Smallest " + secondSmallest);
+        }
+    }
+
+    /**
+     * Find smallest and second-smallest elements in an array (Scanning once)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void findSmallestAndSecondSmallestSingleScan(int[] a) {
+        int smallest = Integer.MAX_VALUE;
+        int secondSmallest = Integer.MAX_VALUE;
+        for(int i=0; i<a.length; i++) {
+            if(a[i] < smallest) {
+                secondSmallest = smallest;
+                smallest = a[i];
+            } else if(a[i] < secondSmallest && a[i] != smallest) {
+                secondSmallest = a[i];
+            }
+        }
+        System.out.println("Smallest: "+smallest);
+        if(secondSmallest < Integer.MAX_VALUE) {
+            System.out.println("Second Smallest " + secondSmallest);
+        }
+    }
+
+    /**
+     * Find smallest and second-smallest elements in an array (Using priority queue)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void findSmallestAndSecondSmallestPriorityQueue(int[] a) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        for(int i=0; i<a.length; i++) {
+            priorityQueue.add(a[i]);
+        }
+        int smallest = priorityQueue.poll();
+        int secondSmallest = Integer.MAX_VALUE;
+        while(!priorityQueue.isEmpty()) {
+            int x = priorityQueue.poll();
+            if(x != smallest) {
+                secondSmallest = x;
+                break;
+            }
+        }
+        System.out.println("Smallest " + smallest);
+        if(secondSmallest < Integer.MAX_VALUE) {
+            System.out.println("Second Smallest " + secondSmallest);
+        }
     }
 }
