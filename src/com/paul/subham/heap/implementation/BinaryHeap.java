@@ -5,10 +5,11 @@ package com.paul.subham.heap.implementation;
  * 2. left child of a node
  * 3. right child of a node
  * 4. maximum element
- * 5. heapify an element
+ * 5. Heapify an element (Max heap)
+ * 6. Heapify an element (Min heap)
  * 6. delete an element
  * 7. insert an element
- * 8. heapify an array
+ * 8. Heapify an array (Max heap)
  */
 public class BinaryHeap {
     private int[] a;
@@ -96,11 +97,11 @@ public class BinaryHeap {
     }
 
     /**
-     * heapify an element
+     * heapify an element (Max heap)
      * TC: O(log n)
      * SC: O(log n)
      */
-    public void percolateDown(int i) {
+    public void percolateDownMax(int i) {
         int max = i;
         int left = leftChild(i);
         int right = rightChild(i);
@@ -114,7 +115,30 @@ public class BinaryHeap {
             int temp = a[i];
             a[i] = a[max];
             a[max] = temp;
-            percolateDown(max);
+            percolateDownMax(max);
+        }
+    }
+
+    /**
+     * Heapify an element (Min heap)
+     * TC: O(log n)
+     * SC: O(log n)
+     */
+    public void percolateDownMin(int i) {
+        int min = i;
+        int left = leftChild(i);
+        int right = rightChild(i);
+        if (left != -1 && a[left] < a[i]) {
+            min = left;
+        }
+        if (right != -1 && a[right] < a[min]) {
+            min = right;
+        }
+        if (min != i) {
+            int temp = a[i];
+            a[i] = a[min];
+            a[min] = temp;
+            percolateDownMin(min);
         }
     }
 
@@ -130,7 +154,11 @@ public class BinaryHeap {
         int data = a[0];
         a[0] = a[count - 1];
         count--;
-        percolateDown(0);
+        if(HeapType.MAX.equals(heapType)) {
+            percolateDownMax(0);
+        } else {
+            percolateDownMin(0);
+        }
         return data;
     }
 
@@ -157,9 +185,16 @@ public class BinaryHeap {
             a[i] = data;
             return;
         }
-        while (i > 0 && data > a[(i - 1) / 2]) {
-            a[i] = a[(i - 1) / 2];
-            i = (i - 1) / 2;
+        if(HeapType.MAX.equals(heapType)) {
+            while (i > 0 && data > a[(i - 1) / 2]) {
+                a[i] = a[(i - 1) / 2];
+                i = (i - 1) / 2;
+            }
+        } else {
+            while (i > 0 && data < a[(i - 1) / 2]) {
+                a[i] = a[(i - 1) / 2];
+                i = (i - 1) / 2;
+            }
         }
         a[i] = data;
     }
@@ -171,7 +206,7 @@ public class BinaryHeap {
 
 
     /**
-     * heapify an array
+     * Heapify an array (Max heap)
      * TC: O(n)
      * SC: O(1)
      */
@@ -182,7 +217,7 @@ public class BinaryHeap {
         System.arraycopy(arr, 0, a, 0, arr.length);
         count = arr.length;
         for(int i=(arr.length/2)-1; i>=0; i--){
-            percolateDown(i);
+            percolateDownMax(i);
         }
     }
 }
