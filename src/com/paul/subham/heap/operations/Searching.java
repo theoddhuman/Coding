@@ -7,6 +7,7 @@ import com.paul.subham.heap.implementation.HeapType;
  * @author subham.paul
  *
  * 1. Find max in Min Heap
+ * 2. Print all elements less than K in Min Heap
  */
 public class Searching {
     public static void main(String[] args) {
@@ -19,7 +20,7 @@ public class Searching {
         heap.insert(6);
         heap.print();
         System.out.println();
-        System.out.println(findMaxInMinHeap(heap));
+        printLessThan(22, 0, heap);
     }
 
     /**
@@ -33,5 +34,22 @@ public class Searching {
             max = Math.max(binaryHeap.getA()[i], max);
         }
         return max;
+    }
+
+    /**
+     * Print all elements less than K in Min Heap
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void printLessThan(int k, int pos, BinaryHeap binaryHeap) {
+        if(binaryHeap.getCount() <= pos || pos == -1) {
+            return;
+        }
+        if(binaryHeap.getA()[pos] >= k) {
+            return;
+        }
+        System.out.print(binaryHeap.getA()[pos] + " ");
+        printLessThan(k, binaryHeap.leftChild(pos), binaryHeap);
+        printLessThan(k, binaryHeap.rightChild(pos), binaryHeap);
     }
 }
