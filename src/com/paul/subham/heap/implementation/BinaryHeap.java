@@ -7,9 +7,11 @@ package com.paul.subham.heap.implementation;
  * 4. maximum element
  * 5. Heapify an element (Max heap)
  * 6. Heapify an element (Min heap)
- * 6. delete an element
- * 7. insert an element
- * 8. Heapify an array (Max heap)
+ * 7. delete max element in max heap
+ * 8. Delete an element
+ * 9. Delete an element at ith position
+ * 10. insert an element
+ * 11. Heapify an array (Max heap)
  */
 public class BinaryHeap {
     private int[] a;
@@ -143,7 +145,7 @@ public class BinaryHeap {
     }
 
     /**
-     * delete an element
+     * delete max element in max heap
      * TC: O(n)
      * SC: O(n)
      */
@@ -160,6 +162,41 @@ public class BinaryHeap {
             percolateDownMin(0);
         }
         return data;
+    }
+
+    /**
+     * Delete an element
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public void delete(int data) {
+        for(int i=0; i<count; i++) {
+            if(a[i] == data) {
+                a[i] = a[count - 1];
+                count--;
+                break;
+            }
+        }
+        if(HeapType.MAX.equals(heapType)) {
+            percolateDownMax(0);
+        } else {
+            percolateDownMin(0);
+        }
+    }
+
+    /**
+     * Delete an element at ith position
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public void deleteAtIndex(int i) {
+        a[i] = a[count - 1];
+        count--;
+        if (HeapType.MAX.equals(heapType)) {
+            percolateDownMax(0);
+        } else {
+            percolateDownMin(0);
+        }
     }
 
     private void resizeHeap() {

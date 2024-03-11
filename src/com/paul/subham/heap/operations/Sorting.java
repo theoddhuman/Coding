@@ -28,7 +28,7 @@ public class Sorting {
             binaryHeap.getA()[0] = binaryHeap.getA()[i];
             binaryHeap.getA()[i] = temp;
             binaryHeap.setCount(binaryHeap.getCount()-1);
-            binaryHeap.percolateDown(0);
+            binaryHeap.percolateDownMax(0);
         }
         return binaryHeap.getA();
     }
