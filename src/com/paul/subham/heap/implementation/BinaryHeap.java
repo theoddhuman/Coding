@@ -146,8 +146,8 @@ public class BinaryHeap {
 
     /**
      * delete max element in max heap
-     * TC: O(n)
-     * SC: O(n)
+     * TC: O(logn)
+     * SC: O(logn)
      */
     public int delete() {
         if (count == 0) {
@@ -166,8 +166,8 @@ public class BinaryHeap {
 
     /**
      * Delete an element
-     * TC: O(n)
-     * SC: O(n)
+     * TC: O(logn)
+     * SC: O(logn)
      */
     public void delete(int data) {
         for(int i=0; i<count; i++) {
@@ -186,8 +186,8 @@ public class BinaryHeap {
 
     /**
      * Delete an element at ith position
-     * TC: O(n)
-     * SC: O(n)
+     * TC: O(logn)
+     * SC: O(logn)
      */
     public void deleteAtIndex(int i) {
         a[i] = a[count - 1];
@@ -209,7 +209,7 @@ public class BinaryHeap {
 
     /**
      * insert an element
-     * TC: O(n)
+     * TC: O(logn)
      * SC: O(1)
      */
     public void insert(int data) {
@@ -245,7 +245,7 @@ public class BinaryHeap {
     /**
      * Heapify an array (Max heap)
      * TC: O(n)
-     * SC: O(1)
+     * SC: O(n)
      */
     public void buildHeap(int arr[]) {
         if(arr.length > capacity) {

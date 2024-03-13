@@ -8,6 +8,8 @@ import com.paul.subham.heap.implementation.HeapType;
  *
  * 1. Find max in Min Heap
  * 2. Print all elements less than K in Min Heap
+ * 3. Find kth smallest element in min heap (by deletion)
+ * 4. Find kth smallest element in min heap (By reducing heap size)
  */
 public class Searching {
     public static void main(String[] args) {
@@ -51,5 +53,38 @@ public class Searching {
         System.out.print(binaryHeap.getA()[pos] + " ");
         printLessThan(k, binaryHeap.leftChild(pos), binaryHeap);
         printLessThan(k, binaryHeap.rightChild(pos), binaryHeap);
+    }
+
+    /**
+     * Find kth smallest element in min heap (by deletion)
+     *
+     * TC: O(k*logn)
+     * SC: O(k*logn)
+     */
+    public static int kthSmallestByDeletion(BinaryHeap heap, int k) {
+        for(int i=0; i<k-1; i++) {
+            heap.delete();
+        }
+        return heap.delete();
+    }
+
+    /**
+     * Find kth smallest element in min heap (By reducing heap size)
+     *
+     * An element x at ith level has i – 1 ancestor.
+     * By the property of min-heaps, these i – 1 ancestors are guaranteed to be less than x.
+     * This implies that x cannot be among the least i – 1 element of the heap.
+     * Using this property, we can conclude that the kth least element can have a level of at most k.
+     * If n >> k, then this approach performs better than the previous one
+     *
+     * TC: O(k^2), Size of the heap is reduced to a maximum of 2k – 1, therefore each heapify operation will take O(log 2k) = O(k) time.
+     * SC: O(k^2)
+     */
+    public static int kthSmallestByLeveling(BinaryHeap binaryHeap, int k) {
+        binaryHeap.setCount(Math.min(binaryHeap.getCount(), (int) (Math.pow(2, k) - 1)));
+        for(int i=0; i<k-1; i++) {
+            binaryHeap.delete();
+        }
+        return binaryHeap.delete();
     }
 }
