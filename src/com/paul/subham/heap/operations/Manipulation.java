@@ -26,7 +26,7 @@ public class Manipulation {
 //        heap1.insert(130);
 //        heap1.insert(24);
 //        heap1.print();
-        System.out.println(kthSmallestByLeveling(heap, 4));
+        //System.out.println(kthSmallestByLeveling(heap, 4));
     }
 
     /**
