@@ -3,6 +3,8 @@ package com.paul.subham.array.operations;
 import com.paul.subham.mathematics.Basic;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
  * @author subham.paul
@@ -15,12 +17,21 @@ import java.util.Arrays;
  * 6. Rotating array to left (Block swap algorithm iterative)
  * 7. Reverse an array (Iterative)
  * 8. Reverse an array (Recursive)
+ * 9. Merge k sorted arrays (By sorting)
+ * 10. Merge k sorted arrays (Merging)
+ * 11. Merge k sorted arrays (Using priority queue)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {1, 2, 3, 4, 5, 6, 7};
-        rotateBlockSwapRecursive(a, 5);
-        System.out.println(Arrays.toString(a));
+//        int[] a = {1, 2, 13, 14};
+//        rotateBlockSwapRecursive(a, 5);
+//        System.out.println(Arrays.toString(a));
+        int[][] a = {{1, 3, 45, 46},
+                {21, 34, 35, 89},
+                {1, 2, 3, 11},
+                {4, 6, 7, 8}};
+        int[] output = mergeKSortedArraysPQ(a);
+        System.out.println(Arrays.toString(output));
     }
 
     /**
@@ -188,5 +199,105 @@ public class Manipulation {
         a[low] = a[high];
         a[high] = temp;
         reverseRecursive(a, low + 1, high - 1);
+    }
+
+    /**
+     * Merge k sorted arrays (By sorting)
+     * All arrays are of same size
+     *
+     * TC: O(nk*log(nk))
+     * SC: O(nk)
+     */
+    public static int[] mergeKSortedArrays(int[][] a, int n, int k) {
+        int[] output = new int[n*k];
+        int index = 0;
+        for(int i=0; i<k; i++) {
+            for(int j=0; j<n; j++) {
+                output[index] = a[i][j];
+                index++;
+            }
+        }
+        Arrays.sort(output);
+        return output;
+    }
+
+    /**
+     * Merge k sorted arrays (Merging)
+     * All arrays are of same size
+     *
+     * TC: O(nk*log(k))
+     * SC: O(nk*log(k))
+     */
+    public static int[] mergeKSortedArraysMerging(int[][] a, int n, int k) {
+        return mergeKSortedArraysUtil(a, 0, k-1, n);
+    }
+
+    public static int[] mergeKSortedArraysUtil(int[][] a, int i, int j, int n) {
+        if(i==j) {
+            return a[i];
+        }
+        if(j-i==1) {
+            return merge(a[i], a[j], n, n);
+        }
+        int mid = (i+j)/2;
+        int[] output1 = mergeKSortedArraysUtil(a, 0, mid, n);
+        int[] output2 = mergeKSortedArraysUtil(a, mid+1, j, n);
+        return merge(output1, output2, output1.length, output2.length);
+    }
+
+    private static int[] merge(int[] a, int[] b, int m, int n) {
+        int[] output = new int[m + n];
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while(i<m && j<n) {
+            if(a[i] > b[j]) {
+                output[k++] = b[j++];
+            } else {
+                output[k++] = a[i++];
+            }
+        }
+        while (i < m) {
+            output[k++] = a[i++];
+        }
+        while (j < n) {
+            output[k++] = b[j++];
+        }
+        return output;
+    }
+
+    /**
+     * Merge k sorted arrays (Using priority queue)
+     * All arrays may be of different size
+     *
+     * TC: O(nk*log(k))
+     * SC: O(nk*log(k))
+     */
+    public static int[] mergeKSortedArraysPQ(int[][] a) {
+        PriorityQueue<ArrayContainer> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> a[o.aIndex][o.index]));
+        int total = 0;
+        for(int i=0; i<a.length; i++) {
+            priorityQueue.add(new ArrayContainer(i, 0));
+            total+= a[i].length;
+        }
+        int[] output = new int[total];
+        int oIndex = 0;
+        while(!priorityQueue.isEmpty()) {
+            ArrayContainer arrayContainer = priorityQueue.poll();
+            output[oIndex++] = a[arrayContainer.aIndex][arrayContainer.index];
+            if(arrayContainer.index < a[arrayContainer.aIndex].length - 1) {
+                priorityQueue.add(new ArrayContainer(arrayContainer.aIndex, arrayContainer.index+1));
+            }
+        }
+        return output;
+    }
+
+    static class ArrayContainer {
+        Integer aIndex;
+        Integer index;
+        ArrayContainer(Integer aIndex, Integer index) {
+            this.aIndex = aIndex;
+            this.index = index;
+        }
     }
 }
