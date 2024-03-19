@@ -11,6 +11,9 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 5. Merge two sorted linked lists in sorted order (iterative)
  * 6. Reverse a linked list in pair (recursive)
  * 7. Reverse a linked list in pair (iterative)
+ * 8. Pairwise swap elements of a linked list (iterative)
+ * 9. Pairwise swap elements of a linked list (Recursive)
+ * 10. Swap nodes of a linked list (Changing link)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -22,15 +25,15 @@ public class Manipulation {
 //        insertInSortedList(linkedList, 7);
 //        reverseRecursive(linkedList);
         LinkedList linkedList1 = new LinkedList();
+        linkedList1.insertAtEnd(1);
         linkedList1.insertAtEnd(2);
+        linkedList1.insertAtEnd(3);
+        linkedList1.insertAtEnd(4);
         linkedList1.insertAtEnd(5);
-        linkedList1.insertAtEnd(6);
-        linkedList1.insertAtEnd(7);
-        linkedList1.insertAtEnd(9);
-        linkedList1.insertAtEnd(10);
-        reverseInPairIterative(linkedList1);
         linkedList1.print();
-
+        pairwiseSwapChangingLinkRecursive(linkedList1);
+        System.out.println();
+        linkedList1.print();
     }
 
     /**
@@ -181,6 +184,7 @@ public class Manipulation {
 
     /**
      * Reverse a linked list in pair (iterative)
+     *
      * TC: O(n)
      * SC: O(1)
      */
@@ -201,6 +205,122 @@ public class Manipulation {
             node = current;
             current = current.next;
         }
+    }
+
+    /**
+     * Pairwise swap elements of a linked list (iterative)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void pairwiseSwapIterative(LinkedList linkedList) {
+        Node current = linkedList.head;
+        while(current != null && current.next != null) {
+            int temp = current.data;
+            current.data = current.next.data;
+            current.next.data = temp;
+            current = current.next.next;
+        }
+    }
+
+    /**
+     * Pairwise swap elements of a linked list (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void pairwiseSwapRecursive(LinkedList linkedList) {
+        pairwiseSwapRecursiveUtil(linkedList.head);
+    }
+
+    public static void pairwiseSwapRecursiveUtil(Node node) {
+        if(node != null && node.next != null) {
+            int temp = node.data;
+            node.data = node.next.data;
+            node.next.data = temp;
+            pairwiseSwapRecursiveUtil(node.next.next);
+        }
+    }
+
+    /**
+     * Swap nodes of a linked list (Changing link)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void swapNode(LinkedList linkedList, int x, int y) {
+        if(x==y) {
+            return;
+        }
+        Node prevX = null, currX = linkedList.head, prevY = null, currY = linkedList.head;
+        while(currX != null && currX.data != x) {
+            prevX = currX;
+            currX = currX.next;
+        }
+        while(currY != null && currY.data != y) {
+            prevY = currY;
+            currY = currY.next;
+        }
+        if(prevX != null) {
+            prevX.next = currY;
+        } else {
+            linkedList.head = currY;
+        }
+        if(prevY != null) {
+            prevY.next = currX;
+        } else {
+            linkedList.head = currX;
+        }
+        Node temp = currX.next;
+        currX.next = currY.next;
+        currY.next = temp;
+    }
+
+    /**
+     * Pairwise swap elements of a linked list (Changing link - Iterative)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void pairwiseSwapChangingLinkIterative(LinkedList linkedList) {
+        Node current = linkedList.head;
+        Node temp1 = null, temp2 = null;
+        while(current != null && current.next != null) {
+            if(temp1 != null) {
+                temp1.next.next = current.next;
+            }
+            temp1 = current.next;
+            current.next = temp1.next;
+            temp1.next = current;
+            if(temp2 == null) {
+                temp2 = temp1;
+            }
+            current = current.next;
+        }
+        linkedList.head = temp2;
+    }
+
+    /**
+     * Pairwise swap elements of a linked list (Changing link - Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void pairwiseSwapChangingLinkRecursive(LinkedList linkedList) {
+        linkedList.head = pairwiseSwapChangingLinkRecursiveUtil(linkedList.head, null);
+    }
+
+    public static Node pairwiseSwapChangingLinkRecursiveUtil(Node current, Node temp1) {
+        if(current != null && current.next != null) {
+            if(temp1 != null) {
+                temp1.next.next = current.next;
+            }
+            temp1 = current.next;
+            current.next = temp1.next;
+            temp1.next = current;
+            pairwiseSwapChangingLinkRecursiveUtil(current.next, temp1);
+        }
+        return temp1;
     }
 
 }
