@@ -14,6 +14,8 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 8. Pairwise swap elements of a linked list (iterative)
  * 9. Pairwise swap elements of a linked list (Recursive)
  * 10. Swap nodes of a linked list (Changing link)
+ * 11. Reverse a linked list in group (Iterative)
+ * 12. Reverse a linked list in group (Recursive)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -31,7 +33,7 @@ public class Manipulation {
         linkedList1.insertAtEnd(4);
         linkedList1.insertAtEnd(5);
         linkedList1.print();
-        pairwiseSwapChangingLinkRecursive(linkedList1);
+        reverseInGroupRecursive(linkedList1, 6);
         System.out.println();
         linkedList1.print();
     }
@@ -321,6 +323,62 @@ public class Manipulation {
             pairwiseSwapChangingLinkRecursiveUtil(current.next, temp1);
         }
         return temp1;
+    }
+
+    /**
+     * Reverse a linked list in group (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void reverseInGroupIterative(LinkedList linkedList, int K) {
+        Node current = linkedList.head;
+        Node prevCurrent = current;
+        Node prevTail = null;
+        while(current != null) {
+            Node tail = null;
+            int count = K;
+            while(current != null && count-- > 0 ) {
+                Node next = current.next;
+                current.next = tail;
+                tail = current;
+                current = next;
+            }
+            if(prevTail != null) {
+                prevTail.next = tail;
+            } else {
+                linkedList.head = tail;
+            }
+            prevTail = prevCurrent;
+            prevCurrent = current;
+        }
+    }
+
+    /**
+     * Reverse a linked list in group (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void reverseInGroupRecursive(LinkedList linkedList, int K) {
+        linkedList.head = reverseInGroupRecursiveUtil(linkedList.head, K);
+    }
+
+    public static Node reverseInGroupRecursiveUtil(Node current, int K) {
+        if(current == null) {
+            return null;
+        }
+        Node tail = null;
+        Node prevCurrent = current;
+        int count = K;
+        while (current != null && count-- > 0) {
+            Node next = current.next;
+            current.next = tail;
+            tail = current;
+            current = next;
+        }
+        prevCurrent.next = reverseInGroupRecursiveUtil(current, K);
+        return tail;
     }
 
 }
