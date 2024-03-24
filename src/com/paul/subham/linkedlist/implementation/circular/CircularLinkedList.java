@@ -10,12 +10,17 @@ package com.paul.subham.linkedlist.implementation.circular;
  */
 public class CircularLinkedList {
     public Node head;
+    private int size;
 
+    public CircularLinkedList() {
+        size = 0;
+    }
     //insert at start
     public void insertAtStart(int data) {
         Node newNode = new Node(data);
         if(head == null) {
             head = newNode;
+            size++;
             return;
         }
         Node last = head;
@@ -25,6 +30,7 @@ public class CircularLinkedList {
         newNode.next = head;
         last.next = newNode;
         head = newNode;
+        size++;
     }
 
     //insert at end
@@ -32,6 +38,7 @@ public class CircularLinkedList {
         Node newNode = new Node(data);
         if(head == null) {
             head = newNode;
+            size++;
             return;
         }
         Node last = head;
@@ -40,6 +47,7 @@ public class CircularLinkedList {
         }
         last.next = newNode;
         newNode.next = head;
+        size++;
     }
 
     //delete at start
@@ -50,6 +58,7 @@ public class CircularLinkedList {
         }
         head = head.next;
         last.next = head;
+        size--;
     }
 
     //delete at end
@@ -61,6 +70,7 @@ public class CircularLinkedList {
             current = current.next;
         }
         last.next = head;
+        size--;
     }
 
     //deletion of an element
@@ -89,6 +99,7 @@ public class CircularLinkedList {
         } else {
             prev.next = current.next;
         }
+        size--;
     }
 
     //print list
@@ -99,13 +110,9 @@ public class CircularLinkedList {
             current = current.next;
         } while(current != head);
     }
-}
 
-class Node {
-    int data;
-    public Node next;
-    public Node(int data) {
-        this.data = data;
-        this.next = this;
+    public int size() {
+        return this.size;
     }
 }
+
