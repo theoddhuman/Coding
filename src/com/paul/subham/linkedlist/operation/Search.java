@@ -3,6 +3,7 @@ package com.paul.subham.linkedlist.operation;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,19 +27,20 @@ import java.util.Set;
  * 14. Search an element in a linked list (Recursive)
  * 15. Number of occurrences of an element in a linked list (Iterative)
  * 16. Number of occurrences of an element in a linked list (Recursive)
- *
+ * 17. Find modular node of a linked list
+ * 18. Find fractional node of a linked list
  */
 public class Search {
     private static int nthNodeCount = 0;
     public static void main(String[] args) {
         LinkedList linkedList = new LinkedList();
         linkedList.insertAtEnd(1);
-        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(3);
         linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(4);
-        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(5);
 
-        System.out.println(countOccurrenceRecursive(linkedList, 2));
+        System.out.println(fractionalNode(linkedList, 3).data);
 
 //        LinkedList linkedList1 = new LinkedList();
 //        linkedList1.insertAtEnd(5);
@@ -455,6 +457,60 @@ public class Search {
             freq++;
         }
         return freq + countUtil(node.next, data);
+    }
+
+    /**
+     * Find modular node of a linked list
+     *
+     * Given a singly linked list and a number k, find the last node whose n%k == 0, where n is the number of nodes in the list.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node modularNode(LinkedList linkedList, int k) {
+        if(k < 0) {
+            return null;
+        }
+        Node modularNode = null;
+        Node current = linkedList.head;
+        int i = 1;
+        while(current != null) {
+            if(i%k == 0) {
+                modularNode = current;
+            }
+            i++;
+            current = current.next;
+        }
+        return modularNode;
+    }
+
+    /**
+     * Find fractional node of a linked list
+     *
+     * Given a singly linked list and a number k, find the (n/k)-th element, where n is the number of elements in the list.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node fractionalNode(LinkedList linkedList, int k) {
+        if(k < 0) {
+            return null;
+        }
+        Node fractionalNode = null;
+        Node current = linkedList.head;
+        int i = 0;
+        while(current != null) {
+            if(i%k == 0) {
+                if(fractionalNode == null) {
+                    fractionalNode = linkedList.head;
+                } else {
+                    fractionalNode = fractionalNode.next;
+                }
+            }
+            i++;
+            current = current.next;
+        }
+        return fractionalNode;
     }
 
 
