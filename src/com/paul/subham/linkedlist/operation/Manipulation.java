@@ -16,6 +16,8 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 10. Swap nodes of a linked list (Changing link)
  * 11. Reverse a linked list in group (Iterative)
  * 12. Reverse a linked list in group (Recursive)
+ * 13. Rotate a linked list k times right (by changing head)
+ * 14. Rotate a linked list k times right (by k rotation)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -26,8 +28,9 @@ public class Manipulation {
         linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        insertInSortedList(linkedList, 1);
+        rotateByKRotation(linkedList, 2);
         linkedList.print();
+        System.out.println();
 //        insertInSortedList(linkedList, 7);
 //        reverseRecursive(linkedList);
         LinkedList linkedList1 = new LinkedList();
@@ -384,6 +387,53 @@ public class Manipulation {
         }
         prevCurrent.next = reverseInGroupRecursiveUtil(current, K);
         return tail;
+    }
+
+    /**
+     * Rotate a linked list k times right (by changing head)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void rotateByChangingHead(LinkedList linkedList, int k) {
+        Node current = linkedList.head;
+        int count = 1;
+        while(count < k && current != null) {
+            current = current.next;
+            count ++ ;
+        }
+        if(current == null) {
+            return;
+        }
+        Node kthNode = current;
+        while(current.next != null) {
+            current = current.next;
+        }
+        current.next = linkedList.head;
+        linkedList.head = kthNode.next;
+        kthNode.next = null;
+    }
+
+    /**
+     * Rotate a linked list k times right (by k rotation)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void rotateByKRotation(LinkedList linkedList, int k) {
+        Node temp = linkedList.head;
+        Node last = linkedList.head;
+        while(last.next != null) {
+            last = last.next;
+        }
+        while(k > 0) {
+            linkedList.head = linkedList.head.next;
+            temp.next = null;
+            last.next = temp;
+            last = temp;
+            temp = linkedList.head;
+            k--;
+        }
     }
 
 }
