@@ -3,6 +3,9 @@ package com.paul.subham.linkedlist.operation;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 1. Inserting data in sorted linked list
  * 2. Reverse a linked list iterative
@@ -20,17 +23,23 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 14. Rotate a linked list k times right (by k rotation)
  * 15. Partition a linked list such that nodes smaller than k at one side and greater than k at the other.
  * 16. Partition a linked list such that odd nodes at one side and even nodes at the other.
+ * 17. Remove duplicates in a linked list (Two loop)
+ * 18. Remove duplicates in a linked list (Hashing)
  */
 public class Manipulation {
     public static void main(String[] args) {
         LinkedList linkedList = new LinkedList();
         linkedList.insertAtEnd(2);
-        linkedList.insertAtEnd(7);
+        linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(1);
+        linkedList.insertAtEnd(5);
+        linkedList.insertAtEnd(7);
+        linkedList.insertAtEnd(5);
+        linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        partitionOddEven(linkedList);
+        removeDuplicatesByHashing(linkedList);
         linkedList.print();
         System.out.println();
 //        insertInSortedList(linkedList, 7);
@@ -492,6 +501,48 @@ public class Manipulation {
         }
         oddLast.next = even.next;
         linkedList.head = odd.next;
+    }
+
+    /**
+     * Remove duplicates in a linked list (Two loop)
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void removeDuplicates(LinkedList linkedList) {
+        Node ptr1 = linkedList.head;
+        Node ptr2;
+        while (ptr1 != null && ptr1.next != null) {
+            ptr2 = ptr1;
+            while (ptr2.next != null) {
+                if (ptr1.data == ptr2.next.data) {
+                    ptr2.next = ptr2.next.next;
+                } else {
+                    ptr2 = ptr2.next;
+                }
+            }
+            ptr1 = ptr1.next;
+        }
+    }
+
+    /**
+     * Remove duplicates in a linked list (Hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void removeDuplicatesByHashing(LinkedList linkedList) {
+        Node current = linkedList.head;
+        Set<Integer> set = new HashSet<>();
+        set.add(current.data);
+        while(current.next != null) {
+            if(set.contains(current.next.data)) {
+                current.next = current.next.next;
+            } else {
+                set.add(current.next.data);
+                current = current.next;
+            }
+        }
     }
 
 }
