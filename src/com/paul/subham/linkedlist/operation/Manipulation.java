@@ -18,17 +18,19 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 12. Reverse a linked list in group (Recursive)
  * 13. Rotate a linked list k times right (by changing head)
  * 14. Rotate a linked list k times right (by k rotation)
+ * 15. Partition a linked list such that nodes smaller than k at one side and greater than k at the other.
+ * 16. Partition a linked list such that odd nodes at one side and even nodes at the other.
  */
 public class Manipulation {
     public static void main(String[] args) {
         LinkedList linkedList = new LinkedList();
         linkedList.insertAtEnd(2);
-        linkedList.insertAtEnd(3);
+        linkedList.insertAtEnd(7);
         linkedList.insertAtEnd(5);
-        linkedList.insertAtEnd(11);
+        linkedList.insertAtEnd(1);
         linkedList.print();
         System.out.println();
-        rotateByKRotation(linkedList, 2);
+        partitionOddEven(linkedList);
         linkedList.print();
         System.out.println();
 //        insertInSortedList(linkedList, 7);
@@ -434,6 +436,62 @@ public class Manipulation {
             temp = linkedList.head;
             k--;
         }
+    }
+
+    /**
+     * Partition a linked list such that nodes smaller than k at one side and greater than k at the other.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void partitionSmallerGreater(LinkedList linkedList, int k) {
+        Node smaller = new Node(0);
+        Node greater = new Node(k);
+        Node smallerLast = smaller;
+        Node greaterLast = greater;
+        Node current = linkedList.head;
+        while(current != null) {
+            Node next = current.next;
+            if(current.data < k ) {
+                smallerLast.next = current;
+                smallerLast = current;
+            } else {
+                greaterLast.next = current;
+                greaterLast = current;
+                greaterLast.next = null;
+            }
+            current = next;
+        }
+        smallerLast.next = greater.next;
+        linkedList.head = smaller.next;
+    }
+
+    /**
+     * Partition a linked list such that odd nodes at one side and even nodes at the other.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void partitionOddEven(LinkedList linkedList) {
+        Node odd = new Node(0);
+        Node even = new Node(0);
+        Node oddLast = odd;
+        Node evenLast = even;
+        Node current = linkedList.head;
+        while(current != null) {
+            Node next = current.next;
+            if(current.data%2 != 0 ) {
+                oddLast.next = current;
+                oddLast = current;
+            } else {
+                evenLast.next = current;
+                evenLast = current;
+                evenLast.next = null;
+            }
+            current = next;
+        }
+        oddLast.next = even.next;
+        linkedList.head = odd.next;
     }
 
 }
