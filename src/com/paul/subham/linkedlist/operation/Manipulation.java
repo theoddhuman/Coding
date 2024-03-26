@@ -20,10 +20,14 @@ import com.paul.subham.linkedlist.implementation.single.Node;
 public class Manipulation {
     public static void main(String[] args) {
         LinkedList linkedList = new LinkedList();
-        linkedList.insertAtEnd(1);
+        linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(3);
         linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(11);
+        linkedList.print();
+        System.out.println();
+        insertInSortedList(linkedList, 1);
+        linkedList.print();
 //        insertInSortedList(linkedList, 7);
 //        reverseRecursive(linkedList);
         LinkedList linkedList1 = new LinkedList();
@@ -41,11 +45,12 @@ public class Manipulation {
     /**
      * Inserting data in sorted linked list
      * TC: O(n)
-     * SC: O(n)
+     * SC: O(1)
      */
     public static void insertInSortedList(LinkedList linkedList, int data) {
         Node newNode = new Node(data);
-        if(linkedList.head == null) {
+        if(linkedList.head == null || linkedList.head.data > data) {
+            newNode.next = linkedList.head;
             linkedList.head = newNode;
             return;
         }
