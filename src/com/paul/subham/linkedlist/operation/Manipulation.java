@@ -27,23 +27,20 @@ import java.util.Set;
  * 18. Remove duplicates in a linked list (Hashing)
  * 19. Remove duplicates in a sorted linked list (Iterative)
  * 20. Remove duplicates in a sorted linked list (Recursive)
+ * 21. Create a linked list with common elements of two linked lists
  */
 public class Manipulation {
     public static void main(String[] args) {
         LinkedList linkedList = new LinkedList();
         linkedList.insertAtEnd(2);
-        linkedList.insertAtEnd(2);
-        linkedList.insertAtEnd(5);
-        linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(7);
         linkedList.insertAtEnd(11);
-        linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        removeDuplicatesSortedListRecursive(linkedList);
-        linkedList.print();
-        System.out.println();
+//        removeDuplicatesSortedListRecursive(linkedList);
+//        linkedList.print();
+//        System.out.println();
 //        insertInSortedList(linkedList, 7);
 //        reverseRecursive(linkedList);
         LinkedList linkedList1 = new LinkedList();
@@ -53,9 +50,12 @@ public class Manipulation {
         linkedList1.insertAtEnd(4);
         linkedList1.insertAtEnd(5);
         linkedList1.print();
-        reverseInGroupRecursive(linkedList1, 6);
         System.out.println();
-        linkedList1.print();
+//        reverseInGroupRecursive(linkedList1, 6);
+//        System.out.println();
+//        linkedList1.print();
+        LinkedList ll = commonElementList(linkedList, linkedList1);
+        ll.print();
     }
 
     /**
@@ -587,6 +587,34 @@ public class Manipulation {
                 removeDupRecUtil(node.next);
             }
         }
+    }
+
+    /**
+     * Create a linked list with common elements of two linked lists
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static LinkedList commonElementList(LinkedList linkedList1, LinkedList linkedList2) {
+        Node common = new Node(0);
+        Node temp = common;
+        Node node1 = linkedList1.head;
+        Node node2 = linkedList2.head;
+        while(node1 != null && node2 != null) {
+            if(node1.data == node2.data) {
+                temp.next = new Node(node1.data);
+                temp = temp.next;
+                node1 = node1.next;
+                node2 = node2.next;
+            } else if(node1.data > node2.data) {
+                node2 = node2.next;
+            } else {
+                node1 = node1.next;
+            }
+        }
+        LinkedList linkedList = new LinkedList();
+        linkedList.head = common.next;
+        return linkedList;
     }
 
 }
