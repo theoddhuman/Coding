@@ -25,6 +25,8 @@ import java.util.Set;
  * 16. Partition a linked list such that odd nodes at one side and even nodes at the other.
  * 17. Remove duplicates in a linked list (Two loop)
  * 18. Remove duplicates in a linked list (Hashing)
+ * 19. Remove duplicates in a sorted linked list (Iterative)
+ * 20. Remove duplicates in a sorted linked list (Recursive)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -32,14 +34,14 @@ public class Manipulation {
         linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(5);
-        linkedList.insertAtEnd(1);
+        linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(7);
-        linkedList.insertAtEnd(5);
+        linkedList.insertAtEnd(11);
         linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        removeDuplicatesByHashing(linkedList);
+        removeDuplicatesSortedListRecursive(linkedList);
         linkedList.print();
         System.out.println();
 //        insertInSortedList(linkedList, 7);
@@ -541,6 +543,48 @@ public class Manipulation {
             } else {
                 set.add(current.next.data);
                 current = current.next;
+            }
+        }
+    }
+
+    /**
+     * Remove duplicates in a sorted linked list (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void removeDuplicatesSortedListIterative(LinkedList linkedList) {
+        Node current = linkedList.head;
+        while(current != null) {
+            Node temp = current;
+            while(temp != null && temp.data == current.data) {
+                temp = temp.next;
+            }
+            current.next = temp;
+            current = current.next;
+        }
+    }
+
+    /**
+     * Remove duplicates in a sorted linked list (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void removeDuplicatesSortedListRecursive(LinkedList linkedList) {
+        removeDupRecUtil(linkedList.head);
+    }
+
+    private static void removeDupRecUtil(Node node) {
+        if(node == null) {
+            return;
+        }
+        if(node.next != null) {
+            if(node.data == node.next.data) {
+                node.next = node.next.next;
+                removeDupRecUtil(node);
+            } else {
+                removeDupRecUtil(node.next);
             }
         }
     }
