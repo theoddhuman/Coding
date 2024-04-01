@@ -91,8 +91,9 @@ public class Rotation {
             }
             if(a[mid] < a[high]) {
                 high = mid-1;
+            } else {
+                low = mid + 1;
             }
-            low = mid+1;
         }
         return 0;
      }

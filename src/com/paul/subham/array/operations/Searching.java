@@ -50,11 +50,13 @@ import java.util.*;
  * 43. Find smallest and second-smallest elements in an array (Scanning twice)
  * 44. Find smallest and second-smallest elements in an array (Scanning once)
  * 45. Find smallest and second-smallest elements in an array (Using priority queue)
+ * 46. Find the smallest element in sorted and rotated array (Binary search - iterative)
+ * 47. Find the smallest element in sorted and rotated array (Binary search - recursive)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {11, 3, 4,5,2,2};
-        findSmallestAndSecondSmallestPriorityQueue(a);
+        int[] a = {5, 6, 2,3,4};
+        System.out.println(minSortedRotated(a, 0, a.length-1));
     }
 
     /**
@@ -1014,5 +1016,55 @@ public class Searching {
         if(secondSmallest < Integer.MAX_VALUE) {
             System.out.println("Second Smallest " + secondSmallest);
         }
+    }
+
+    /**
+     * Find the smallest element in sorted and rotated array (Binary search - iterative)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int minSortedRotated(int[] a) {
+        int low = 0;
+        int high = a.length-1;
+        while(low < high) {
+            int mid = low + (high-low)/2;
+            if(low < mid && a[mid] < a[mid-1]) {
+                return a[mid];
+            }
+            if(high > mid && a[mid] > a[mid+1]) {
+                return a[mid+1];
+            }
+            if(a[mid] < a[high]) {
+                high = mid-1;
+            } else {
+                low = mid+1;
+            }
+        }
+        return a[0];
+    }
+
+    /**
+     * Find the smallest element in sorted and rotated array (Binary search - recursive)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int minSortedRotated(int[] a, int low, int high) {
+        if(low < high) {
+            int mid = low + (high-low)/2;
+            if(low < mid && a[mid] < a[mid-1]) {
+                return a[mid];
+            }
+            if(high > mid && a[mid] > a[mid+1]) {
+                return a[mid+1];
+            }
+            if(a[mid] < a[high]) {
+                return minSortedRotated(a, low, mid-1);
+            } else {
+                return minSortedRotated(a, mid+1, high);
+            }
+        }
+        return a[low];
     }
 }
