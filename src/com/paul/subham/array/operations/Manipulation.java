@@ -4,7 +4,9 @@ import com.paul.subham.mathematics.Basic;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * @author subham.paul
@@ -20,18 +22,22 @@ import java.util.PriorityQueue;
  * 9. Merge k sorted arrays (By sorting)
  * 10. Merge k sorted arrays (Merging)
  * 11. Merge k sorted arrays (Using priority queue)
+ * 12. Re-arrange an array such that a[i] = i
+ * 13. Re-arrange an array such that a[i] = i (Efficient)
+ * 14. Re-arrange an array such that a[i] = i (Hashing)
+ * 15. Re-arrange an array such that a[i] = i (Swapping)
  */
 public class Manipulation {
     public static void main(String[] args) {
-//        int[] a = {1, 2, 13, 14};
-//        rotateBlockSwapRecursive(a, 5);
-//        System.out.println(Arrays.toString(a));
-        int[][] a = {{1, 3, 45, 46},
-                {21, 34, 35, 89},
-                {1, 2, 3, 11},
-                {4, 6, 7, 8}};
-        int[] output = mergeKSortedArraysPQ(a);
-        System.out.println(Arrays.toString(output));
+        int[] a = {5, -1, 2, 4, 1, -1};
+        reArrangeSwap(a);
+        System.out.println(Arrays.toString(a));
+//        int[][] a = {{1, 3, 45, 46},
+//                {21, 34, 35, 89},
+//                {1, 2, 3, 11},
+//                {4, 6, 7, 8}};
+//        int[] output = mergeKSortedArraysPQ(a);
+//        System.out.println(Arrays.toString(output));
     }
 
     /**
@@ -52,6 +58,7 @@ public class Manipulation {
         }
         a[n - 1] = temp;
     }
+
 
     /**
      * Rotating array to left (Using temporary array)
@@ -298,6 +305,95 @@ public class Manipulation {
         ArrayContainer(Integer aIndex, Integer index) {
             this.aIndex = aIndex;
             this.index = index;
+        }
+    }
+
+    /**
+     * Re-arrange an array such that a[i] = i
+     *
+     * Given an array of elements of length N, ranging from 0 to N – 1. All elements may not be present in the array.
+     * If the element is not present then there will be -1 present in the array.
+     * Rearrange the array such that A[i] = i and if i is not present, display -1 at that place.
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void reArrange(int[] a) {
+        for(int i=0; i<a.length; i++) {
+            for(int j=0; j<a.length; j++) {
+                if(a[j] == i) {
+                    int temp = a[j];
+                    a[j] = a[i];
+                    a[i] = temp;
+                    break;
+                }
+            }
+        }
+        for(int i=0; i<a.length; i++) {
+            if(a[i] != i) {
+                a[i] = -1;
+            }
+        }
+    }
+
+    /**
+     * Re-arrange an array such that a[i] = i (Efficient)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void reArrangeEfficient(int[] a) {
+        for(int i=0; i<a.length; i++) {
+            if(a[i] != -1 && a[i] != i) {
+                int x = a[i];
+                while(a[x] != -1 && a[x] != x) {
+                    int y = a[x];
+                    a[x] = x;
+                    x = y;
+                }
+                a[x] = x;
+            }
+            if(a[i] != i) {
+                a[i] = -1;
+            }
+        }
+    }
+
+    /**
+     * Re-arrange an array such that a[i] = i (Hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void reArrangeHashing(int[] a) {
+        Set<Integer> set = new HashSet<>();
+        for(int i=0; i<a.length; i++) {
+            set.add(a[i]);
+        }
+        for(int i=0; i<a.length; i++) {
+            if(set.contains(i)) {
+                a[i] = i;
+            } else {
+                a[i] = -1;
+            }
+        }
+    }
+
+    /**
+     * Re-arrange an array such that a[i] = i (Swapping)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void reArrangeSwap(int[] a) {
+        for(int i=0; i<a.length;) {
+            if(a[i] != -1 && a[i] != i) {
+                int temp = a[a[i]];
+                a[a[i]] = a[i];
+                a[i] = temp;
+            } else {
+                i++;
+            }
         }
     }
 }
