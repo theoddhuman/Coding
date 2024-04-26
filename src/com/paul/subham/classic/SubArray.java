@@ -1,8 +1,7 @@
-package com.paul.subham.array.operations;
+package com.paul.subham.classic;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import java.util.PriorityQueue;
