@@ -11,15 +11,21 @@ import java.util.Stack;
  * @author subham.paul
  *
  * 1. Sliding window maximum sum
- * 2. Sliding window maximum
- * 3. Sliding window maximum (Using priority queue)
- * 4. Sliding window maximum (Using priority dequeue)
- * 5. Sliding window maximum (Using stack)
+ * 2. Sliding window maximum sum (efficient)
+ * 3. Sliding window maximum
+ * 4. Sliding window maximum (Using priority queue)
+ * 5. Sliding window maximum (Using priority dequeue)
+ * 6. Sliding window maximum (Using stack)
+ * 7. Largest Sum Contiguous Sub array
+ * 8. Largest Sum Contiguous Sub array (Improved)
+ * 9. Largest Sum Contiguous Sub array (Dynamic Programming)
+ * 10. Largest Sum Contiguous Sub array (Dynamic Programming - Space optimized)
+ * 11. Largest Sum Contiguous Sub array (Kadane's algorithm)
  */
 public class SubArray {
     public static void main(String[] args) {
-        int[] a = {2,3,1,6,2,1,5,6,-5};
-        System.out.println(slidingWindowMaxUsingDeque(a, a.length, 3));
+        int[] a = { -2, -3, 4, -1, -2, 1, 5, -3 };
+        System.out.println(maxContiguousSumKadane(a, a.length));
     }
 
     /**
@@ -38,6 +44,28 @@ public class SubArray {
             for(int j = i; j<i+k; j++) {
                 sum+=a[j];
             }
+            max = Math.max(sum, max);
+        }
+        return max;
+    }
+
+    /**
+     * Sliding window maximum sum (efficient)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int slidingWindowMaxSumEfficient(int[] a, int n, int k) {
+        if(n < k) {
+            return -1;
+        }
+        int sum = 0;
+        for(int i=0; i<k; i++) {
+            sum += a[i];
+        }
+        int max = sum;
+        for(int i=k; i<n; i++) {
+            sum  = sum + a[i] - a[i-k];
             max = Math.max(sum, max);
         }
         return max;
@@ -142,5 +170,95 @@ public class SubArray {
             result.add(a[j]);
         }
         return result;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array
+     *
+     * TC: O(n^3)
+     * SC: O(1)
+     */
+    public static int maxContiguousSum(int[] a, int n) {
+        int maxSum = Integer.MIN_VALUE;
+        for(int i=0; i<n; i++) {
+            for(int j=i; j<n; j++) {
+                int sum = 0;
+                for(int k = i; k<=j; k++) {
+                    sum += a[k];
+                }
+                maxSum = Math.max(maxSum, sum);
+            }
+        }
+        return maxSum;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Improved)
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int maxContiguousSumImproved(int[] a, int n) {
+        int maxSum = Integer.MIN_VALUE;
+        for(int i=0; i<n; i++) {
+            int sum = 0;
+            for(int j=i; j<n; j++) {
+                sum += a[j];
+                maxSum = Math.max(maxSum, sum);
+            }
+        }
+        return maxSum;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Dynamic Programming)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int maxContiguousSumDP(int[] a, int n) {
+        int[] dp = new int[n];
+        dp[0] = a[0];
+        int maxSum = dp[0];
+        for(int i=1; i<n; i++) {
+            dp[i] = Math.max(dp[i-1] + a[i], a[i]);
+            maxSum = Math.max(maxSum, dp[i]);
+        }
+        return maxSum;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Dynamic Programming - Space optimized)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int maxContiguousSumDPSpaceOptimized(int[] a, int n) {
+        int sum = a[0];
+        int maxSum = sum;
+        for(int i=1; i<n; i++) {
+            sum = Math.max(sum + a[i], a[i]);
+            maxSum = Math.max(maxSum, sum);
+        }
+        return maxSum;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Kadane's algorithm)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int maxContiguousSumKadane(int[] a, int n) {
+        int maxSum = Integer.MIN_VALUE;
+        int sum = 0;
+        for(int i=0; i<n; i++) {
+            sum += a[i];
+            maxSum = Math.max(sum, maxSum);
+            if(sum < 0) {
+                sum = 0;
+            }
+        }
+        return maxSum;
     }
 }
