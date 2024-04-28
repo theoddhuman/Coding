@@ -26,11 +26,12 @@ import java.util.Set;
  * 13. Re-arrange an array such that a[i] = i (Efficient)
  * 14. Re-arrange an array such that a[i] = i (Hashing)
  * 15. Re-arrange an array such that a[i] = i (Swapping)
+ * 16. Remove adjacent duplicates from an array
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {5, -1, 2, 4, 1, -1};
-        reArrangeSwap(a);
+        int[] a = {5, 2,2,3,1,2,2,2,4,5};
+        removeAdjacentDuplicates(a);
         System.out.println(Arrays.toString(a));
 //        int[][] a = {{1, 3, 45, 46},
 //                {21, 34, 35, 89},
@@ -394,6 +395,25 @@ public class Manipulation {
             } else {
                 i++;
             }
+        }
+    }
+
+    /**
+     * Remove adjacent duplicates from an array
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void removeAdjacentDuplicates(int[] a) {
+        int stack = 0;
+        for(int i=1; i<a.length; i++) {
+            if(a[i] != a[stack]) {
+                stack++;
+                a[stack] = a[i];
+            }
+        }
+        for(int i=stack+1; i<a.length; i++) {
+            a[i] = -1;
         }
     }
 }
