@@ -1,5 +1,6 @@
 package com.paul.subham.linkedlist.operation;
 
+import com.paul.subham.linkedlist.implementation.circular.CircularLinkedList;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
@@ -28,34 +29,41 @@ import java.util.Set;
  * 19. Remove duplicates in a sorted linked list (Iterative)
  * 20. Remove duplicates in a sorted linked list (Recursive)
  * 21. Create a linked list with common elements of two linked lists
+ * 22. Splitting a circular linked list in two halves
  */
 public class Manipulation {
     public static void main(String[] args) {
-        LinkedList linkedList = new LinkedList();
+        CircularLinkedList linkedList = new CircularLinkedList();
         linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(7);
         linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
+        CircularLinkedList part1 = new CircularLinkedList();
+        CircularLinkedList part2 = new CircularLinkedList();
+        splitCircularList(linkedList, part1, part2);
+        part1.print();
+        System.out.println();
+        part2.print();
 //        removeDuplicatesSortedListRecursive(linkedList);
 //        linkedList.print();
 //        System.out.println();
 //        insertInSortedList(linkedList, 7);
 //        reverseRecursive(linkedList);
-        LinkedList linkedList1 = new LinkedList();
-        linkedList1.insertAtEnd(1);
-        linkedList1.insertAtEnd(2);
-        linkedList1.insertAtEnd(3);
-        linkedList1.insertAtEnd(4);
-        linkedList1.insertAtEnd(5);
-        linkedList1.print();
-        System.out.println();
+//        LinkedList linkedList1 = new LinkedList();
+//        linkedList1.insertAtEnd(1);
+//        linkedList1.insertAtEnd(2);
+//        linkedList1.insertAtEnd(3);
+//        linkedList1.insertAtEnd(4);
+//        linkedList1.insertAtEnd(5);
+//        linkedList1.print();
+//        System.out.println();
 //        reverseInGroupRecursive(linkedList1, 6);
 //        System.out.println();
 //        linkedList1.print();
-        LinkedList ll = commonElementList(linkedList, linkedList1);
-        ll.print();
+//        LinkedList ll = commonElementList(linkedList, linkedList1);
+//        ll.print();
     }
 
     /**
@@ -615,6 +623,30 @@ public class Manipulation {
         LinkedList linkedList = new LinkedList();
         linkedList.head = common.next;
         return linkedList;
+    }
+
+    /**
+     * Splitting a circular linked list in two halves
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void splitCircularList(CircularLinkedList linkedList, CircularLinkedList part1, CircularLinkedList part2) {
+        com.paul.subham.linkedlist.implementation.circular.Node slow = linkedList.head;
+        com.paul.subham.linkedlist.implementation.circular.Node fast = linkedList.head;
+        while(fast.next != linkedList.head && fast.next.next != linkedList.head) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if(fast.next.next == linkedList.head) {
+            fast = fast.next;
+        }
+        if(linkedList.head.next != linkedList.head) {
+            part2.head = slow.next;
+        }
+        fast.next = part2.head;
+        part1.head = linkedList.head;
+        slow.next = part1.head;
     }
 
 }
