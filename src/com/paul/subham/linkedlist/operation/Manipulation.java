@@ -41,12 +41,14 @@ public class Manipulation {
         linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        CircularLinkedList part1 = new CircularLinkedList();
-        CircularLinkedList part2 = new CircularLinkedList();
-        splitCircularList(linkedList, part1, part2);
-        part1.print();
-        System.out.println();
-        part2.print();
+        sortedInsertCircularList(linkedList, 1);
+        linkedList.print();
+//        CircularLinkedList part1 = new CircularLinkedList();
+//        CircularLinkedList part2 = new CircularLinkedList();
+//        splitCircularList(linkedList, part1, part2);
+//        part1.print();
+//        System.out.println();
+//        part2.print();
 //        removeDuplicatesSortedListRecursive(linkedList);
 //        linkedList.print();
 //        System.out.println();
@@ -648,6 +650,27 @@ public class Manipulation {
         fast.next = part2.head;
         part1.head = linkedList.head;
         slow.next = part1.head;
+    }
+
+    public static void sortedInsertCircularList(CircularLinkedList linkedList, int data) {
+        CircularNode newNode = new CircularNode(data);
+        CircularNode current = linkedList.head;
+        if(current == null) {
+            linkedList.head = newNode;
+        } else if (current.data > data) {
+            while(current.next != linkedList.head) {
+                current = current.next;
+            }
+            current.next = newNode;
+            newNode.next = linkedList.head;
+            linkedList.head = newNode;
+        } else {
+            while(current.next != linkedList.head && current.next.data < data) {
+                current = current.next;
+            }
+            newNode.next = current.next;
+            current.next = newNode;
+        }
     }
 
 }
