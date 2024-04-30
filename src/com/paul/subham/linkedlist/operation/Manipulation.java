@@ -31,6 +31,7 @@ import java.util.Set;
  * 20. Remove duplicates in a sorted linked list (Recursive)
  * 21. Create a linked list with common elements of two linked lists
  * 22. Splitting a circular linked list in two halves
+ * 23. Sorted insert in a circular linked list
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -652,6 +653,12 @@ public class Manipulation {
         slow.next = part1.head;
     }
 
+    /**
+     * Sorted insert in a circular linked list
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
     public static void sortedInsertCircularList(CircularLinkedList linkedList, int data) {
         CircularNode newNode = new CircularNode(data);
         CircularNode current = linkedList.head;
