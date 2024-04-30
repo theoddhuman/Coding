@@ -3,11 +3,11 @@ package com.paul.subham.linkedlist.implementation.circular;
 /**
  * @author subham.paul
  */
-public class Node {
+public class CircularNode {
     public int data;
-    public Node next;
+    public CircularNode next;
 
-    public Node(int data) {
+    public CircularNode(int data) {
         this.data = data;
         this.next = this;
     }

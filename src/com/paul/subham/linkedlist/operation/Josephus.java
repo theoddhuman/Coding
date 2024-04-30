@@ -1,7 +1,7 @@
 package com.paul.subham.linkedlist.operation;
 
 import com.paul.subham.linkedlist.implementation.circular.CircularLinkedList;
-import com.paul.subham.linkedlist.implementation.circular.Node;
+import com.paul.subham.linkedlist.implementation.circular.CircularNode;
 
 /**
  * @author subham.paul
@@ -32,12 +32,12 @@ public class Josephus {
     }
 
     private static int size;
-    private static Node josephusRecurUtil(Node node, int skip) {
+    private static CircularNode josephusRecurUtil(CircularNode circularNode, int skip) {
         if(size == 1) {
-            return node;
+            return circularNode;
         }
-        Node prev = null;
-        Node current = node;
+        CircularNode prev = null;
+        CircularNode current = circularNode;
         for(int i=0; i<skip; i++) {
             prev = current;
             current = current.next;
@@ -48,18 +48,18 @@ public class Josephus {
     }
 
     private static int josephusIterative(CircularLinkedList linkedList, int skip) {
-        Node node = linkedList.head;
-        Node prev = null;
+        CircularNode circularNode = linkedList.head;
+        CircularNode prev = null;
         int size = linkedList.size();
-        while(node.next != null && size > 1) {
+        while(circularNode.next != null && size > 1) {
             for(int i=0; i<skip; i++) {
-                prev = node;
-                node = node.next;
+                prev = circularNode;
+                circularNode = circularNode.next;
             }
-            prev.next = node.next;
-            node = prev.next;
+            prev.next = circularNode.next;
+            circularNode = prev.next;
             size--;
         }
-        return node.data;
+        return circularNode.data;
     }
 }

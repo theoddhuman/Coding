@@ -4,9 +4,9 @@ public class Test {
 
     public static void main(String[] args) {
         CircularLinkedList cll = new CircularLinkedList();
-        cll.head = new Node(1);
-        Node second = new Node(2);
-        Node third = new Node(3);
+        cll.head = new CircularNode(1);
+        CircularNode second = new CircularNode(2);
+        CircularNode third = new CircularNode(3);
         cll.head.next = second;
         second.next = third;
         third.next = cll.head;

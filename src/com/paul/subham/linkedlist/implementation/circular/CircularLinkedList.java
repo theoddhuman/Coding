@@ -9,7 +9,7 @@ package com.paul.subham.linkedlist.implementation.circular;
  * 6. print list
  */
 public class CircularLinkedList {
-    public Node head;
+    public CircularNode head;
     private int size;
 
     public CircularLinkedList() {
@@ -17,42 +17,42 @@ public class CircularLinkedList {
     }
     //insert at start
     public void insertAtStart(int data) {
-        Node newNode = new Node(data);
+        CircularNode newCircularNode = new CircularNode(data);
         if(head == null) {
-            head = newNode;
+            head = newCircularNode;
             size++;
             return;
         }
-        Node last = head;
+        CircularNode last = head;
         while(last.next != head) {
             last = last.next;
         }
-        newNode.next = head;
-        last.next = newNode;
-        head = newNode;
+        newCircularNode.next = head;
+        last.next = newCircularNode;
+        head = newCircularNode;
         size++;
     }
 
     //insert at end
     public void insertAtEnd(int data) {
-        Node newNode = new Node(data);
+        CircularNode newCircularNode = new CircularNode(data);
         if(head == null) {
-            head = newNode;
+            head = newCircularNode;
             size++;
             return;
         }
-        Node last = head;
+        CircularNode last = head;
         while(last.next != head) {
             last = last.next;
         }
-        last.next = newNode;
-        newNode.next = head;
+        last.next = newCircularNode;
+        newCircularNode.next = head;
         size++;
     }
 
     //delete at start
     public void deleteAtStart() {
-        Node last = head;
+        CircularNode last = head;
         while(last.next != head) {
             last = last.next;
         }
@@ -63,8 +63,8 @@ public class CircularLinkedList {
 
     //delete at end
     public void deleteAtEnd() {
-        Node current = head;
-        Node last = null;
+        CircularNode current = head;
+        CircularNode last = null;
         while(current.next != head) {
             last = current;
             current = current.next;
@@ -75,8 +75,8 @@ public class CircularLinkedList {
 
     //deletion of an element
     public void deleteKey(int data) {
-        Node prev = null;
-        Node current = head;
+        CircularNode prev = null;
+        CircularNode current = head;
         while(current.data != data) {
             if(current.next == head) {
                 System.out.print("No data present");
@@ -104,7 +104,7 @@ public class CircularLinkedList {
 
     //print list
     public void print() {
-        Node current = head;
+        CircularNode current = head;
         do {
             System.out.print(current.data + " ");
             current = current.next;

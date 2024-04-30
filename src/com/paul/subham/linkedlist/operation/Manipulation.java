@@ -1,6 +1,7 @@
 package com.paul.subham.linkedlist.operation;
 
 import com.paul.subham.linkedlist.implementation.circular.CircularLinkedList;
+import com.paul.subham.linkedlist.implementation.circular.CircularNode;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
@@ -632,8 +633,8 @@ public class Manipulation {
      * SC: O(1)
      */
     public static void splitCircularList(CircularLinkedList linkedList, CircularLinkedList part1, CircularLinkedList part2) {
-        com.paul.subham.linkedlist.implementation.circular.Node slow = linkedList.head;
-        com.paul.subham.linkedlist.implementation.circular.Node fast = linkedList.head;
+        CircularNode slow = linkedList.head;
+        CircularNode fast = linkedList.head;
         while(fast.next != linkedList.head && fast.next.next != linkedList.head) {
             slow = slow.next;
             fast = fast.next.next;
