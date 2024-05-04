@@ -11,57 +11,57 @@ package com.paul.subham.linkedlist.implementation.doubly;
  * 8. print list
  */
 public class DoublyLinkedList {
-    public Node head;
+    public DLNode head;
 
     //insert at start
     public void insertAtStart(int data) {
-        Node newNode = new Node(data);
-        newNode.next = head;
+        DLNode newDLNode = new DLNode(data);
+        newDLNode.next = head;
         if(head != null) {
-            head.pre = newNode;
+            head.pre = newDLNode;
         }
-        head = newNode;
+        head = newDLNode;
     }
 
     //insert at end
     public void insertAtEnd(int data) {
-        Node newNode = new Node(data);
+        DLNode newDLNode = new DLNode(data);
         if(head == null) {
-            head = newNode;
+            head = newDLNode;
             return;
         }
-        Node last = head;
+        DLNode last = head;
         while(last.next != null) {
             last = last.next;
         }
-        last.next = newNode;
-        newNode.pre = last;
+        last.next = newDLNode;
+        newDLNode.pre = last;
     }
 
     //insert at middle position
     public void insertAtMiddle(int data, int position) {
-        Node newNode = new Node(data);
+        DLNode newDLNode = new DLNode(data);
         if(head == null && position == 1) {
-            head = newNode;
+            head = newDLNode;
             return;
         }
-        Node current = head;
+        DLNode current = head;
         for(int i=1; i<position-1; i++) {
             current = current.next;
         }
-        current.next.pre = newNode;
-        newNode.next = current.next;
-        current.next = newNode;
-        newNode.pre = current;
+        current.next.pre = newDLNode;
+        newDLNode.next = current.next;
+        current.next = newDLNode;
+        newDLNode.pre = current;
     }
 
-    //insert after node
-    public void insertAfterNode(Node node, int data) {
-        Node newNode = new Node(data);
-        node.next.pre = newNode;
-        newNode.next = node.next;
-        node.next = newNode;
-        newNode.pre = node;
+    //insert after DLNode
+    public void insertAfterNode(DLNode DLNode, int data) {
+        DLNode newDLNode = new DLNode(data);
+        DLNode.next.pre = newDLNode;
+        newDLNode.next = DLNode.next;
+        DLNode.next = newDLNode;
+        newDLNode.pre = DLNode;
     }
 
     //delete at start
@@ -75,7 +75,7 @@ public class DoublyLinkedList {
 
     //delete at end
     public void deleteAtEnd() {
-        Node last = head;
+        DLNode last = head;
         while(last.next != null) {
             last = last.next;
         }
@@ -84,7 +84,7 @@ public class DoublyLinkedList {
 
     //delete at middle
     public void deleteAtMiddle(int position) {
-        Node current = head;
+        DLNode current = head;
         for(int i=1; i<position; i++) {
             current = current.next;
         }
@@ -94,8 +94,8 @@ public class DoublyLinkedList {
 
     //print list
     public void print() {
-        Node current = head;
-        Node last = null;
+        DLNode current = head;
+        DLNode last = null;
         System.out.println("Forward direction:");
         while(current != null) {
             System.out.print(current.data + " ");
@@ -111,14 +111,3 @@ public class DoublyLinkedList {
     }
 }
 
-class Node {
-    int data;
-    public Node pre;
-    public Node next;
-
-    public Node(int data) {
-        this.data = data;
-        pre = null;
-        next = null;
-    }
-}
