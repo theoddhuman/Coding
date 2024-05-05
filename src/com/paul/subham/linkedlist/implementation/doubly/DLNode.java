@@ -3,8 +3,8 @@ package com.paul.subham.linkedlist.implementation.doubly;
 /**
  * @author subham.paul
  */
-class DLNode {
-    int data;
+public class DLNode {
+    public int data;
     public DLNode pre;
     public DLNode next;
 

@@ -2,11 +2,14 @@ package com.paul.subham.linkedlist.operation;
 
 import com.paul.subham.linkedlist.implementation.circular.CircularLinkedList;
 import com.paul.subham.linkedlist.implementation.circular.CircularNode;
+import com.paul.subham.linkedlist.implementation.doubly.DLNode;
+import com.paul.subham.linkedlist.implementation.doubly.DoublyLinkedList;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * 1. Inserting data in sorted linked list
@@ -32,17 +35,19 @@ import java.util.Set;
  * 21. Create a linked list with common elements of two linked lists
  * 22. Splitting a circular linked list in two halves
  * 23. Sorted insert in a circular linked list
+ * 24. Reverse a doubly linked list
+ * 25. Reverse a doubly linked list (Using stack)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        CircularLinkedList linkedList = new CircularLinkedList();
+        DoublyLinkedList linkedList = new DoublyLinkedList();
         linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(7);
         linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        sortedInsertCircularList(linkedList, 1);
+        reverseStack(linkedList);
         linkedList.print();
 //        CircularLinkedList part1 = new CircularLinkedList();
 //        CircularLinkedList part2 = new CircularLinkedList();
@@ -677,6 +682,46 @@ public class Manipulation {
             }
             newNode.next = current.next;
             current.next = newNode;
+        }
+    }
+
+    /**
+     * Reverse a doubly linked list
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void reverse(DoublyLinkedList linkedList) {
+        DLNode temp = null;
+        DLNode current = linkedList.head;
+        while(current != null) {
+            current.pre = current.next;
+            current.next = temp;
+            temp = current;
+            current = current.pre;
+        }
+        if(temp != null) {
+            linkedList.head = temp;
+        }
+    }
+
+    /**
+     * Reverse a doubly linked list (Using stack)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void reverseStack(DoublyLinkedList linkedList) {
+        Stack<Integer> stack = new Stack<>();
+        DLNode current = linkedList.head;
+        while(current != null) {
+            stack.push(current.data);
+            current = current.next;
+        }
+        current = linkedList.head;
+        while(current != null) {
+            current.data = stack.pop();
+            current = current.next;
         }
     }
 
