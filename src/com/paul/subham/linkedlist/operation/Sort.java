@@ -65,7 +65,7 @@ public class Sort {
      * TC: O(n^2)
      * SC: O(1)
      */
-    private static void quickSort(DoublyLinkedList linkedList) {
+    public static void quickSort(DoublyLinkedList linkedList) {
         DLNode current = linkedList.head;
         DLNode end = null;
         while(current != null) {
