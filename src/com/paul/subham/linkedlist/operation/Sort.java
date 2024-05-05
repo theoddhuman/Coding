@@ -7,9 +7,10 @@ import com.paul.subham.linkedlist.implementation.single.Node;
 
 /**
  * @author subham.paul
- * 
+ *
  * 1. Insertion sort of linked list
  * 2. Quick sort of doubly linked list
+ * 3. Merge sort of doubly linked list
  */
 public class Sort {
     public static void main(String[] args) {
@@ -20,7 +21,7 @@ public class Sort {
         linkedList.insertAtEnd(3);
         linkedList.insertAtEnd(2);
         linkedList.print();
-        quickSort(linkedList);
+        mergeSort(linkedList);
         System.out.println();
         linkedList.print();
     }
@@ -97,5 +98,57 @@ public class Sort {
         pIndex.data = end.data;
         end.data = temp;
         return pIndex;
+    }
+
+    /**
+     * Merge sort of doubly linked list
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void mergeSort(DoublyLinkedList linkedList) {
+        linkedList.head = mergeSortUtil(linkedList.head);
+    }
+
+    private static DLNode mergeSortUtil(DLNode node) {
+        if(node == null || node.next == null) {
+            return node;
+        }
+        DLNode second = split(node);
+        node = mergeSortUtil(node);
+        second = mergeSortUtil(second);
+        return merge(node, second);
+    }
+
+    private static DLNode split(DLNode node) {
+        DLNode slow = node;
+        DLNode fast = node;
+        while(fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        DLNode temp = slow.next;
+        slow.next = null;
+        return temp;
+    }
+
+    private static DLNode merge(DLNode first, DLNode second) {
+        if(first == null) {
+            return second;
+        }
+        if(second == null) {
+            return first;
+        }
+        if(first.data <= second.data) {
+            first.next = merge(first.next, second);
+            first.next.pre = first;
+            first.pre = null;
+            return first;
+        } else {
+            second.next = merge(first, second.next);
+            second.next.pre = second;
+            second.pre = null;
+            return second;
+        }
     }
 }
