@@ -37,6 +37,7 @@ import java.util.Stack;
  * 23. Sorted insert in a circular linked list
  * 24. Reverse a doubly linked list
  * 25. Reverse a doubly linked list (Using stack)
+ * 26. Inserting data in sorted doubly linked list
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -47,7 +48,7 @@ public class Manipulation {
         linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        reverseStack(linkedList);
+        insertInSortedDoublyList(linkedList, 12);
         linkedList.print();
 //        CircularLinkedList part1 = new CircularLinkedList();
 //        CircularLinkedList part2 = new CircularLinkedList();
@@ -723,6 +724,32 @@ public class Manipulation {
             current.data = stack.pop();
             current = current.next;
         }
+    }
+
+    /**
+     * Inserting data in sorted doubly linked list
+     * 
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void insertInSortedDoublyList(DoublyLinkedList linkedList, int data) {
+        DLNode newNode = new DLNode(data);
+        if(linkedList.head == null || linkedList.head.data > data) {
+            newNode.next = linkedList.head;
+            linkedList.head.pre = newNode;
+            linkedList.head = newNode;
+            return;
+        }
+        DLNode current = linkedList.head;
+        while(current.next != null && current.next.data < data) {
+            current = current.next;
+        }
+        newNode.next = current.next;
+        if(current.next != null) {
+            current.next.pre = newNode;
+        }
+        current.next = newNode;
+        newNode.pre = current;
     }
 
 }
