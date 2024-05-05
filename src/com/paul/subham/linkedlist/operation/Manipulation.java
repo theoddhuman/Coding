@@ -28,27 +28,28 @@ import java.util.Stack;
  * 14. Rotate a linked list k times right (by k rotation)
  * 15. Partition a linked list such that nodes smaller than k at one side and greater than k at the other.
  * 16. Partition a linked list such that odd nodes at one side and even nodes at the other.
- * 17. Remove duplicates in a linked list (Two loop)
- * 18. Remove duplicates in a linked list (Hashing)
- * 19. Remove duplicates in a sorted linked list (Iterative)
- * 20. Remove duplicates in a sorted linked list (Recursive)
- * 21. Create a linked list with common elements of two linked lists
- * 22. Splitting a circular linked list in two halves
- * 23. Sorted insert in a circular linked list
- * 24. Reverse a doubly linked list
- * 25. Reverse a doubly linked list (Using stack)
- * 26. Inserting data in sorted doubly linked list
+ * 17. Partition a linked list such that odd nodes at one side and even nodes at the other. (2 traversal)
+ * 18. Remove duplicates in a linked list (Two loop)
+ * 19. Remove duplicates in a linked list (Hashing)
+ * 20. Remove duplicates in a sorted linked list (Iterative)
+ * 21. Remove duplicates in a sorted linked list (Recursive)
+ * 22. Create a linked list with common elements of two linked lists
+ * 23. Splitting a circular linked list in two halves
+ * 24. Sorted insert in a circular linked list
+ * 25. Reverse a doubly linked list
+ * 26. Reverse a doubly linked list (Using stack)
+ * 27. Inserting data in sorted doubly linked list
  */
 public class Manipulation {
     public static void main(String[] args) {
-        DoublyLinkedList linkedList = new DoublyLinkedList();
-        linkedList.insertAtEnd(2);
+        LinkedList linkedList = new LinkedList();
+        linkedList.insertAtEnd(1);
         linkedList.insertAtEnd(5);
         linkedList.insertAtEnd(7);
         linkedList.insertAtEnd(11);
         linkedList.print();
         System.out.println();
-        insertInSortedDoublyList(linkedList, 12);
+        partitionOddEven2(linkedList);
         linkedList.print();
 //        CircularLinkedList part1 = new CircularLinkedList();
 //        CircularLinkedList part2 = new CircularLinkedList();
@@ -524,6 +525,50 @@ public class Manipulation {
     }
 
     /**
+     * Partition a linked list such that odd nodes at one side and even nodes at the other. (2 traversal)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void partitionOddEven2(LinkedList linkedList) {
+        Node end = linkedList.head;
+        while(end.next != null) {
+            end = end.next;
+        }
+        Node newEnd = end;
+        Node current = linkedList.head;
+        while(current.data % 2 != 0 && current != end) {
+            newEnd.next = current;
+            current = current.next;
+            newEnd = newEnd.next;
+            newEnd.next = null;
+        }
+        Node prev = null;
+        if(current.data % 2 == 0) {
+            linkedList.head = current;
+            while(current != end) {
+                if(current.data % 2 == 0) {
+                    prev = current;
+                    current = current.next;
+                } else {
+                    prev.next = current.next;
+                    newEnd.next = current;
+                    newEnd = current;
+                    newEnd.next = null;
+                    current = prev.next;
+                }
+            }
+        } else {
+            prev = current;
+        }
+        if(end != newEnd && end.data % 2 != 0) {
+            prev.next = end.next;
+            newEnd.next = end;
+            end.next = null;
+        }
+    }
+
+    /**
      * Remove duplicates in a linked list (Two loop)
      *
      * TC: O(n^2)
@@ -728,7 +773,7 @@ public class Manipulation {
 
     /**
      * Inserting data in sorted doubly linked list
-     * 
+     *
      * TC: O(n)
      * SC: O(1)
      */
