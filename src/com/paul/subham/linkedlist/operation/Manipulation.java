@@ -7,6 +7,7 @@ import com.paul.subham.linkedlist.implementation.doubly.DoublyLinkedList;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -39,6 +40,8 @@ import java.util.Stack;
  * 25. Reverse a doubly linked list
  * 26. Reverse a doubly linked list (Using stack)
  * 27. Inserting data in sorted doubly linked list
+ * 28. Clone a linked list with nex t and random pointer (Extra space)
+ * 29. Clone a linked list with nex t and random pointer (Space efficient)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -797,4 +800,69 @@ public class Manipulation {
         newNode.pre = current;
     }
 
+    /**
+     * Clone a linked list with nex t and random pointer (Extra space)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public RandomNode cloneRandom(RandomNode head) {
+        RandomNode x = head;
+        RandomNode y = null;
+        HashMap<RandomNode, RandomNode> map = new HashMap<>();
+        while(x != null) {
+            map.put(x, new RandomNode(x.data));
+            x = x.next;
+        }
+        x = head;
+        while(x != null) {
+            y = map.get(x);
+            y.next = map.get(x.next);
+            y.random = map.get(x.random);
+            x = x.next;
+        }
+        return map.get(head);
+    }
+
+    /**
+     * Clone a linked list with nex t and random pointer (Space efficient)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public RandomNode cloneRandomEfficient(RandomNode head) {
+        RandomNode current = head;
+        RandomNode temp = null;
+        while(current != null) {
+            temp = current.next;
+            current.next = new RandomNode(current.data);
+            current.next.next = temp;
+            current = temp;
+        }
+        current = head;
+        while(current != null && current.next != null) {
+            current.next.random = current.random != null ? current.random.next : null;
+            current = current.next.next;
+        }
+        RandomNode original = head;
+        RandomNode copy = head.next;
+        temp = copy;
+        while(original != null && copy != null) {
+            original.next = original.next != null ? original.next.next : null;
+            copy.next = copy.next != null? copy.next.next : null;
+            original = original.next;
+            copy = copy.next;
+        }
+        return temp;
+    }
+
+}
+
+class RandomNode {
+    int data;
+    RandomNode next, random;
+    RandomNode(int data) {
+        this.data = data;
+        this.random = this.next = null;
+    }
 }
