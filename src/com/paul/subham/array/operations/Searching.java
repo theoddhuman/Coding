@@ -52,11 +52,17 @@ import java.util.*;
  * 45. Find smallest and second-smallest elements in an array (Using priority queue)
  * 46. Find the smallest element in sorted and rotated array (Binary search - iterative)
  * 47. Find the smallest element in sorted and rotated array (Binary search - recursive)
+ * 48. Majority element of an array
+ * 49. Majority element of an array (Using binary search tree)
+ * 50. Majority element of an array (Using sorting)
+ * 51. Majority element of an array (Moore's Voting algorithm)
+ * 52. Majority element of an array (Using hashing)
+ * 53. Majority element of an array (Using bit manipulation)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {5, 6, 2,3,4};
-        System.out.println(minSortedRotated(a, 0, a.length-1));
+        int[] a = {3, 6, 3,3,4,5,3};
+        System.out.println(majorityBitManipulation(a));
     }
 
     /**
@@ -996,7 +1002,7 @@ public class Searching {
      * Find smallest and second-smallest elements in an array (Using priority queue)
      *
      * TC: O(n)
-     * SC: O(1)
+     * SC: O(n)
      */
     public static void findSmallestAndSecondSmallestPriorityQueue(int[] a) {
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
@@ -1066,5 +1072,212 @@ public class Searching {
             }
         }
         return a[low];
+    }
+
+    /**
+     * Majority element of an array
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int majority(int[] a) {
+        int maxCount = Integer.MIN_VALUE;
+        int max = a[0];
+        for(int i=0; i<a.length; i++) {
+            int count = 0;
+            for(int j=0; j<a.length; j++) {
+                if(a[i] == a[j]) {
+                    count++;
+                }
+            }
+            if(count > maxCount) {
+                maxCount = count;
+                max = a[i];
+            }
+        }
+        if(maxCount > a.length/2) {
+            return max;
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Majority element of an array (Using binary search tree)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int majorityBST(int[] a) {
+        BinarySearchFrequencyTree bst = new BinarySearchFrequencyTree();
+        for(int i=0; i<a.length; i++) {
+            bst.insert(a[i]);
+        }
+        return inOrder(bst.root, a.length);
+    }
+
+    private static int inOrder(BSFrequencyNode node, int n) {
+        if(node != null) {
+            int data = inOrder(node.left, n);
+            if(data > Integer.MIN_VALUE){
+                return data;
+            }
+            if (node.frequency > n / 2) {
+                return node.data;
+            }
+            return inOrder(node.right, n);
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Majority element of an array (Using sorting)
+     *
+     * TC: O(nlogn), average case
+     * SC: O(n)
+     */
+    public static int majorityUsingSorting(int[] a) {
+        Arrays.sort(a);
+        int count = 1;
+        for(int i=1; i<a.length; i++) {
+            if(a[i] == a[i-1]) {
+                count++;
+            } else {
+                count = 1;
+            }
+            if(count > a.length/2) {
+                return a[i];
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Majority element of an array (Moore's Voting algorithm)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int majorityMoore(int[] a) {
+        int candidate = getCandidate(a);
+        return isMajority(a, candidate) ? candidate : Integer.MIN_VALUE;
+    }
+
+    private static boolean isMajority(int[] a, int candidate) {
+        int count = 0;
+        for (int j : a) {
+            if (j == candidate) {
+                count++;
+            }
+            if (count > a.length / 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int getCandidate(int[] a) {
+        int majorityIndex = 0;
+        int count = 1;
+        for(int i=1; i<a.length; i++) {
+            if(a[i] == a[majorityIndex]) {
+                count++;
+            } else {
+                count--;
+            }
+            if(count == 0) {
+                majorityIndex = i;
+                count = 1;
+            }
+        }
+        return a[majorityIndex];
+    }
+
+    /**
+     * Majority element of an array (Using hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int majorityHashing(int[] a) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<a.length; i++) {
+            if(!map.containsKey(a[i])) {
+                map.put(a[i], 1);
+            } else {
+                map.put(a[i], map.get(a[i]) + 1);
+            }
+            if(map.get(a[i]) > a.length/2) {
+                return a[i];
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Majority element of an array (Using bit manipulation)
+     *
+     * TC: O(n*k), k is number of bits
+     * SC: O(1)
+     */
+    public static int majorityBitManipulation(int[] a) {
+         int majority = 0;
+         for(int i=0; i<32; i++) {
+             int numZeros = 0;
+             int numOnes = 0;
+             for(int num : a) {
+                 if(((num >> i) & 1) == 1) {
+                     numOnes++;
+                 } else {
+                     numZeros++;
+                 }
+             }
+             if(numOnes > numZeros) {
+                 majority |=(1<<i);
+             }
+         }
+         int count = 0;
+         for(int num : a) {
+             if(num==majority) {
+                 count++;
+             }
+             if(count > a.length/2) {
+                 return majority;
+             }
+         }
+         return Integer.MIN_VALUE;
+    }
+
+}
+
+class BinarySearchFrequencyTree {
+    BSFrequencyNode root;
+
+    void insert(int data) {
+        root = insertUtil(root, data);
+    }
+
+    private BSFrequencyNode insertUtil(BSFrequencyNode node, int data) {
+        if(node == null) {
+            return new BSFrequencyNode(data);
+        }
+        if(data == node.data) {
+            node.frequency ++;
+        } else if(data <node.data) {
+            node.left = insertUtil(node.left, data);
+        } else {
+            node.right = insertUtil(node.right, data);
+        }
+        return node;
+    }
+}
+
+class BSFrequencyNode {
+    int data;
+    int frequency;
+    BSFrequencyNode left, right;
+    BSFrequencyNode(int data) {
+        this.data = data;
+        this.frequency =1;
+        this.left = this.right = null;
     }
 }
