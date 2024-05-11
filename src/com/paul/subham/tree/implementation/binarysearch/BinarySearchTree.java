@@ -11,9 +11,9 @@ package com.paul.subham.tree.implementation.binarysearch;
  * 8. delete an element
  */
 public class BinarySearchTree {
-    Node root;
+    BSTNode root;
 
-    public Node getRoot() {
+    public BSTNode getRoot() {
         return this.root;
     }
 
@@ -22,18 +22,18 @@ public class BinarySearchTree {
         root = insertUtil(root, data);
     }
 
-    private Node insertUtil(Node node, int data) {
-        if(node == null) {
-            node = new Node(data);
-            return node;
+    private BSTNode insertUtil(BSTNode BSTNode, int data) {
+        if(BSTNode == null) {
+            BSTNode = new BSTNode(data);
+            return BSTNode;
         }
 
-        if(data < node.data) {
-            node.left = insertUtil(node.left, data);
-        } else if(data > node.data) {
-            node.right = insertUtil(node.right, data);
+        if(data < BSTNode.data) {
+            BSTNode.left = insertUtil(BSTNode.left, data);
+        } else if(data > BSTNode.data) {
+            BSTNode.right = insertUtil(BSTNode.right, data);
         }
-        return node;
+        return BSTNode;
     }
 
     //searching an element recursive, TC: O(n), SC: O(n)
@@ -44,19 +44,19 @@ public class BinarySearchTree {
         return false;
     }
 
-    private Node searchRecursiveUtil(Node node, int data) {
-        if(node == null || node.data == data) {
-            return node;
+    private BSTNode searchRecursiveUtil(BSTNode BSTNode, int data) {
+        if(BSTNode == null || BSTNode.data == data) {
+            return BSTNode;
         }
-        if(data < node.data) {
-            return searchRecursiveUtil(node.left, data);
+        if(data < BSTNode.data) {
+            return searchRecursiveUtil(BSTNode.left, data);
         }
-        return searchRecursiveUtil(node.right, data);
+        return searchRecursiveUtil(BSTNode.right, data);
     }
 
     //searching an element iterative, TC: O(n), SC: O(n)
     public boolean searchIterative(int data) {
-        Node current = root;
+        BSTNode current = root;
         while(current != null) {
             if(current.data == data) {
                 return true;
@@ -72,18 +72,18 @@ public class BinarySearchTree {
 
     //minimum recursive, TC: O(n), SC: O(n)
     public int minRecursive(){
-        Node min = minRecursiveUtil(root);
+        BSTNode min = minRecursiveUtil(root);
         if(min == null) {
             return Integer.MIN_VALUE;
         }
         return min.data;
     }
 
-    private Node minRecursiveUtil(Node node) {
-        if(node == null || node.left == null) {
-            return node;
+    private BSTNode minRecursiveUtil(BSTNode BSTNode) {
+        if(BSTNode == null || BSTNode.left == null) {
+            return BSTNode;
         }
-        return minRecursiveUtil(node.left);
+        return minRecursiveUtil(BSTNode.left);
     }
 
     //minimum iterative, TC: O(n), SC: O(n)
@@ -91,7 +91,7 @@ public class BinarySearchTree {
         if(root == null) {
             return Integer.MIN_VALUE;
         }
-        Node current = root;
+        BSTNode current = root;
         while(current.left != null) {
             current = current.left;
         }
@@ -100,18 +100,18 @@ public class BinarySearchTree {
 
     //maximum recursive, TC: O(n), SC: O(n)
     int maxRecursive(){
-        Node max = maxRecursiveUtil(root);
+        BSTNode max = maxRecursiveUtil(root);
         if(max == null) {
             return Integer.MAX_VALUE;
         }
         return max.data;
     }
 
-    Node maxRecursiveUtil(Node node) {
-        if(node == null || node.right == null) {
-            return node;
+    BSTNode maxRecursiveUtil(BSTNode BSTNode) {
+        if(BSTNode == null || BSTNode.right == null) {
+            return BSTNode;
         }
-        return maxRecursiveUtil(node.right);
+        return maxRecursiveUtil(BSTNode.right);
     }
 
     //maximum iterative, TC: O(n), SC: O(n)
@@ -119,7 +119,7 @@ public class BinarySearchTree {
         if(root == null) {
             return Integer.MAX_VALUE;
         }
-        Node current = root;
+        BSTNode current = root;
         while(current.right != null) {
             current = current.right;
         }
@@ -131,7 +131,7 @@ public class BinarySearchTree {
         root = deleteUtil(root, data);
     }
 
-    Node deleteUtil(Node node, int data) {
+    BSTNode deleteUtil(BSTNode node, int data) {
         if(node == null) {
             return node;
         }
@@ -157,7 +157,7 @@ public class BinarySearchTree {
         inOrderUtil(root);
     }
 
-    private void inOrderUtil(Node node) {
+    private void inOrderUtil(BSTNode node) {
         if(node != null) {
             inOrderUtil(node.left);
             System.out.print(node.data + " ");

@@ -1,11 +1,11 @@
 package com.paul.subham.tree.implementation.binarysearch;
 
-public class Node {
+public class BSTNode {
     public int data;
-    public Node left;
-    public Node right;
+    public BSTNode left;
+    public BSTNode right;
 
-    Node(int data) {
+    BSTNode(int data) {
         this.data = data;
     }
 }

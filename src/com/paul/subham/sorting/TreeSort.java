@@ -1,7 +1,7 @@
 package com.paul.subham.sorting;
 
 import com.paul.subham.tree.implementation.binarysearch.BinarySearchTree;
-import com.paul.subham.tree.implementation.binarysearch.Node;
+import com.paul.subham.tree.implementation.binarysearch.BSTNode;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class TreeSort {
         inOrder(binarySearchTree.getRoot(), a);
     }
 
-    public static void inOrder(Node node, int[] a) {
+    public static void inOrder(BSTNode node, int[] a) {
         if(node != null) {
             inOrder(node.left, a);
             a[index] = node.data;

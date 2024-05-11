@@ -2,6 +2,8 @@ package com.paul.subham.tree.operations;
 
 import com.paul.subham.tree.implementation.binary.BinaryTree;
 import com.paul.subham.tree.implementation.binary.Node;
+import com.paul.subham.tree.implementation.binarysearch.BSTNode;
+import com.paul.subham.tree.implementation.binarysearch.BinarySearchTree;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -36,6 +38,8 @@ import java.util.Queue;
  * 25. Check if given binary tree is a BST (Inorder)
  * 26. Check if given binary tree is a BST (Using nodes)
  * 27. Check if given binary tree is a BST (Using Morris Traversal)
+ * 28. Lowest common ancestor of binary search tree (Recursive)
+ * 29. Lowest common ancestor of binary search tree (Iterative)
  */
 
 public class Structure {
@@ -63,9 +67,17 @@ public class Structure {
 //        bt.insert(4);
 //        bt.insert(5);
 //        bt.insert(6);
-        bt.levelOrder();
-        System.out.println();
-        System.out.println(isValidBSTMorris(bt));
+//        bt.levelOrder();
+//        System.out.println();
+//        System.out.println(isValidBSTMorris(bt));
+        BinarySearchTree bst = new BinarySearchTree();
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(9);
+        bst.insert(2);
+        bst.insert(4);
+        bst.insert(6);
+        System.out.println(lcaBSTRecursive(bst, 2, 4));
     }
 
     /**
@@ -772,5 +784,53 @@ public class Structure {
             }
         }
         return true;
+    }
+
+    /**
+     * Lowest common ancestor of binary search tree (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int lcaBSTRecursive(BinarySearchTree binaryTree, int a, int b) {
+        BSTNode lca = lcaBSTRecursive(binaryTree.getRoot(), a , b);
+        if(lca != null) {
+            return lca.data;
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    private static BSTNode lcaBSTRecursive(BSTNode node, int a, int b) {
+        if(node == null) {
+            return null;
+        }
+        if(node.data > a && node.data > b) {
+            return lcaBSTRecursive(node.left, a , b);
+        }
+        if(node.data < a && node.data < b) {
+            return lcaBSTRecursive(node.right, a , b);
+        }
+        return node;
+    }
+
+    /**
+     * Lowest common ancestor of binary search tree (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int lcaBSTIterative(BinarySearchTree binarySearchTree, int a, int b) {
+        BSTNode current = binarySearchTree.getRoot();
+        while(current != null) {
+            if(current.data > a && current.data > b) {
+                current = current.left;
+            }
+            else if(current.data < a && current.data < b) {
+                current = current.right;
+            } else {
+                return current.data;
+            }
+        }
+        return Integer.MIN_VALUE;
     }
 }
