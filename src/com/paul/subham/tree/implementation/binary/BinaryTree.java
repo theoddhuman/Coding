@@ -33,6 +33,7 @@ import java.util.Stack;
  * 20. Reverse level order traversal (recursive)
  * 21. Reverse level order traversal (Using stack and queue)
  * 22. Reverse level order traversal (Hashing)
+ * 23. Reverse inorder traversal (Recursive)
  */
 public class BinaryTree {
     public Node root;
@@ -482,6 +483,23 @@ public class BinaryTree {
         map.get(level).add(node);
         addNodeToMap(node.left, level+1, map);
         addNodeToMap(node.right, level+1, map);
+    }
+
+    public void reverseInorder() {
+
+    }
+
+    /**
+     * Reverse inorder traversal (Recursive)
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private void reverseInorderUtil(Node node) {
+        if(node != null) {
+            reverseInorderUtil(node.right);
+            System.out.print(node.data + " ");
+            reverseInorderUtil(node.left);
+        }
     }
 }
 

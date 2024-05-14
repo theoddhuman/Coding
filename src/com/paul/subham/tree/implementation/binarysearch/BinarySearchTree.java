@@ -99,7 +99,7 @@ public class BinarySearchTree {
     }
 
     //maximum recursive, TC: O(n), SC: O(n)
-    int maxRecursive(){
+    public int maxRecursive(){
         BSTNode max = maxRecursiveUtil(root);
         if(max == null) {
             return Integer.MAX_VALUE;
@@ -127,7 +127,7 @@ public class BinarySearchTree {
     }
 
     //delete an element, TC: O(n), SC: O(n)
-    void delete(int data) {
+    public void delete(int data) {
         root = deleteUtil(root, data);
     }
 

@@ -1,6 +1,8 @@
 package com.paul.subham.array.operations;
 
 import com.paul.subham.searching.BinarySearch;
+import com.paul.subham.tree.implementation.binarysearch.BSTNode;
+import com.paul.subham.tree.implementation.binarysearch.BinarySearchTree;
 
 import java.util.*;
 
@@ -58,11 +60,21 @@ import java.util.*;
  * 51. Majority element of an array (Moore's Voting algorithm)
  * 52. Majority element of an array (Using hashing)
  * 53. Majority element of an array (Using bit manipulation)
+ * 54. The largest K elements in an array (Using tree sorting)
+ * 55. The smallest K elements in an array (Using tree sorting)
+ * 55. The largest K elements in an array (Using tree sorting - space optimized)
+ * 56. The smallest K elements in an array (Using tree sorting - space optimized)
+ * 56. The largest K elements in an array (Using sorting)
+ * 57. The smallest K elements in an array (Using sorting)
+ * 58. The largest K elements in an array (Bubble sort)
+ * 59. The smallest K elements in an array (Bubble sort)
+ * 60. The largest K elements in an array (Selection sort)
+ * 61. The smallest K elements in an array (Selection sort)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {3, 6, 3,3,4,5,3};
-        System.out.println(majorityBitManipulation(a));
+        int[] a = {3, 6, 1,4,5,8};
+        kLargestElementsSelectionSort(a, 3);
     }
 
     /**
@@ -1246,6 +1258,211 @@ public class Searching {
          }
          return Integer.MIN_VALUE;
     }
+
+    /**
+     * The largest K elements in an array (Using tree sorting)
+     *
+     * TC: O(nlogn), average case
+     * SC: O(n)
+     */
+    public static void kLargestElementsTreeSort(int[] a, int k) {
+        BinarySearchTree binarySearchTree = new BinarySearchTree();
+        for(int i=0; i<a.length; i++) {
+            binarySearchTree.insert(a[i]);
+        }
+        inOrderReverse(binarySearchTree.getRoot(), k);
+    }
+    private static int count = 0;
+    private static void inOrderReverse(BSTNode node, int k) {
+        if(node != null) {
+            inOrderReverse(node.right, k);
+            if(count < k) {
+                System.out.print(node.data + " ");
+                count++;
+            }
+            inOrderReverse(node.left, k);
+        }
+    }
+
+    /**
+     * The smallest K elements in an array (Using tree sorting)
+     *
+     * TC: O(nlogn), average case
+     * SC: O(n)
+     */
+    public static void kSmallestElementsTreeSort(int[] a, int k) {
+        BinarySearchTree binarySearchTree = new BinarySearchTree();
+        for(int i=0; i<a.length; i++) {
+            binarySearchTree.insert(a[i]);
+        }
+        inOrder(binarySearchTree.getRoot(), k);
+    }
+    private static void inOrder(BSTNode node, int k) {
+        if(node != null) {
+            inOrder(node.left, k);
+            if(count < k) {
+                System.out.print(node.data + " ");
+                count++;
+            }
+            inOrder(node.right, k);
+        }
+    }
+
+    /**
+     * The largest K elements in an array (Using tree sorting - space optimized)
+     *
+     * TC: O(nlogk), average case
+     * SC: O(k)
+     */
+    public static void kLargestElementsTreeSortEfficient(int[] a, int k) {
+        BinarySearchTree binarySearchTree = new BinarySearchTree();
+        int i = 0;
+        for(;i<k;i++) {
+            binarySearchTree.insert(a[i]);
+        }
+        for(;i<a.length;i++) {
+            int min = binarySearchTree.minRecursive();
+            if(a[i] > min) {
+                binarySearchTree.delete(min);
+                binarySearchTree.insert(a[i]);
+            }
+        }
+        binarySearchTree.inOrder();
+    }
+
+    /**
+     * The smallest K elements in an array (Using tree sorting - space optimized)
+     *
+     * TC: O(nlogk), average case
+     * SC: O(k)
+     */
+    public static void kSmallestElementsTreeSortEfficient(int[] a, int k) {
+        BinarySearchTree binarySearchTree = new BinarySearchTree();
+        int i = 0;
+        for(;i<k;i++) {
+            binarySearchTree.insert(a[i]);
+        }
+        for(;i<a.length;i++) {
+            int max = binarySearchTree.maxRecursive();
+            if(a[i] < max) {
+                binarySearchTree.delete(max);
+                binarySearchTree.insert(a[i]);
+            }
+        }
+        binarySearchTree.inOrder();
+    }
+
+    /**
+     * The largest K elements in an array (Using sorting)
+     *
+     * TC: O(nlogn), average case
+     * SC: O(1)
+     */
+    public static void kLargestElementsSorting(int[] a, int k) {
+        Arrays.sort(a);
+        for(int i=a.length-1; i>=a.length-k; i--) {
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    /**
+     * The smallest K elements in an array (Using sorting)
+     *
+     * TC: O(nlogn), average case
+     * SC: O(1)
+     */
+    public static void kSmallestElementsSorting(int[] a, int k) {
+        Arrays.sort(a);
+        for (int j : a) {
+            System.out.print(j + " ");
+        }
+    }
+
+    /**
+     * The largest K elements in an array (Bubble sort)
+     *
+     * TC: O(nk)
+     * SC: O(1)
+     */
+    public static void kLargestElementsBubbleSort(int[] a, int k) {
+        for(int i=a.length-1; i>=a.length-k; i--) {
+            for(int j = 0; j<i; j++) {
+                if(a[j] > a[j+1]) {
+                    int temp = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = temp;
+                }
+            }
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    /**
+     * The smallest K elements in an array (Bubble sort)
+     *
+     * TC: O(nk)
+     * SC: O(1)
+     */
+    public static void kSmallestElementsBubbleSort(int[] a, int k) {
+        for(int i=a.length-1; i>=a.length-k; i--) {
+            for(int j = 0; j<i; j++) {
+                if(a[j] < a[j+1]) {
+                    int temp = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = temp;
+                }
+            }
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    /**
+     * The largest K elements in an array (Selection sort)
+     *
+     * TC: O(nk)
+     * SC: O(1)
+     */
+    public static void kLargestElementsSelectionSort(int[] a, int k) {
+        int maxIndex;
+        for(int i=0; i<k; i++) {
+            maxIndex = i;
+            for(int j = i+1; j<a.length; j++) {
+                if(a[j] > a[maxIndex]) {
+                    maxIndex = j;
+                }
+            }
+            int temp = a[maxIndex];
+            a[maxIndex] = a[i];
+            a[i] = temp;
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    /**
+     * The smallest K elements in an array (Selection sort)
+     *
+     * TC: O(nk)
+     * SC: O(1)
+     */
+    public static void kSmallestElementsSelectionSort(int[] a, int k) {
+        int minIndex;
+        for(int i=0; i<k; i++) {
+            minIndex = i;
+            for(int j = i+1; j<a.length; j++) {
+                if(a[j] < a[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            int temp = a[minIndex];
+            a[minIndex] = a[i];
+            a[i] = temp;
+            System.out.print(a[i] + " ");
+        }
+    }
+
+
+
+
 
 }
 
