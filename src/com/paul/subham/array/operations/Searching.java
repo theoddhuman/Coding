@@ -70,11 +70,17 @@ import java.util.*;
  * 59. The smallest K elements in an array (Bubble sort)
  * 60. The largest K elements in an array (Selection sort)
  * 61. The smallest K elements in an array (Selection sort)
+ * 62. The largest K elements in an array (Priority Queue)
+ * 63. The smallest K elements in an array (Priority Queue)
+ * 64. The largest K elements in an array (Binary search)
+ * 65. The smallest K elements in an array (Binary search)
+ * 66. The largest K elements in an array (Quick sort)
+ * 67. The smallest K elements in an array (Quick sort)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {3, 6, 1,4,5,8};
-        kLargestElementsSelectionSort(a, 3);
+        int[] a = {8,9,2,1,7,11,4,14};
+        kSmallestElementsQuickSort(a, 4);
     }
 
     /**
@@ -1460,8 +1466,200 @@ public class Searching {
         }
     }
 
+    /**
+     * The largest K elements in an array (Priority Queue)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static void kLargestElementsPriorityQueue(int[] a, int k) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        for(int i=0; i<a.length; i++) {
+            priorityQueue.add(a[i]);
+            if(priorityQueue.size() > k) {
+                priorityQueue.remove();
+            }
+        }
+        while(!priorityQueue.isEmpty()) {
+            System.out.print(priorityQueue.remove() + " ");
+        }
+    }
 
+    /**
+     * The smallest K elements in an array (Priority Queue)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static void kSmallestElementsPriorityQueue(int[] a, int k) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.reverseOrder());
+        for(int i=0; i<a.length; i++) {
+            priorityQueue.add(a[i]);
+            if(priorityQueue.size() > k) {
+                priorityQueue.remove();
+            }
+        }
+        while(!priorityQueue.isEmpty()) {
+            System.out.print(priorityQueue.remove() + " ");
+        }
+    }
 
+    /**
+     * The largest K elements in an array (Binary search)
+     *
+     * TC: O(nlog(max-min))
+     * SC: O(1)
+     */
+    public static void kLargestElementsBinarySearch(int[] a, int k) {
+        int kthLargest = kthLargestBinarySearch(a, k);
+        for(int i : a) {
+            if(i >= kthLargest) {
+                System.out.print(i + " ");
+            }
+        }
+    }
+
+    private static int kthLargestBinarySearch(int[] a, int k) {
+        int low = Integer.MAX_VALUE;
+        int high = Integer.MIN_VALUE;
+        for(int i : a) {
+            low = Math.min(low, i);
+            high = Math.max(high, i);
+        }
+        int mid = 0;
+        while(low <= high) {
+            mid = low + (high - low) / 2;
+            int count = 0;
+            for(int j: a) {
+                if(j >= mid) {
+                    count ++;
+                }
+            }
+            if(count == k) {
+                return mid;
+            } else if(count > k) {
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return mid;
+    }
+
+    /**
+     * The smallest K elements in an array (Binary search)
+     *
+     * TC: O(nlog(max-min))
+     * SC: O(1)
+     */
+    public static void kSmallestElementsBinarySearch(int[] a, int k) {
+        int kthSmallest = kthSmallestBinarySearch(a, k);
+        for(int i : a) {
+            if(i <= kthSmallest) {
+                System.out.print(i + " ");
+            }
+        }
+    }
+
+    private static int kthSmallestBinarySearch(int[] a, int k) {
+        int low = Integer.MAX_VALUE;
+        int high = Integer.MIN_VALUE;
+        for(int i : a) {
+            low = Math.min(low, i);
+            high = Math.max(high, i);
+        }
+        int mid = 0;
+        while(low <= high) {
+            mid = low + (high - low) / 2;
+            int count = 0;
+            for(int j: a) {
+                if(j <= mid) {
+                    count ++;
+                }
+            }
+            if(count == k) {
+                return mid;
+            } else if(count < k) {
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return mid;
+    }
+
+    /**
+     * The largest K elements in an array (Quick sort)
+     *
+     * TC: O(n^2), worst case   O(n), average case
+     * SC: O(n)
+     */
+    public static void kLargestElementsQuickSort(int[] a, int k) {
+        kthLargestQuickSort(a, 0, a.length-1, k);
+        for(int i = a.length-1; i>=a.length-k; i--) {
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    private static int kthLargestQuickSort(int[] a, int l, int r, int k) {
+        int pivot = partition(a, l, r, k, false);
+        if(pivot == r - k +1) {
+            return pivot;
+        } else if (pivot > r - k + 1) {
+            return kthLargestQuickSort(a, l, pivot-1, k - (r - (pivot - 1)));
+        } else {
+            return kthLargestQuickSort(a, pivot+1, r, k);
+        }
+    }
+
+    /**
+     * The smallest K elements in an array (Quick sort)
+     *
+     * TC: O(n^2), worst case   O(n), average case
+     * SC: O(n)
+     */
+    public static void kSmallestElementsQuickSort(int[] a, int k) {
+        kthSmallestQuickSort(a, 0, a.length-1, k);
+        for(int i = a.length-1; i>=a.length-k; i--) {
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    private static int kthSmallestQuickSort(int[] a, int l, int r, int k) {
+        int pivot = partition(a, l, r, k, true);
+        if(pivot == r - k +1) {
+            return pivot;
+        } else if (pivot > r - k + 1) {
+            return kthSmallestQuickSort(a, l, pivot-1, k - (r - (pivot - 1)));
+        } else {
+            return kthSmallestQuickSort(a, pivot+1, r, k);
+        }
+    }
+
+    private static int partition(int[] a, int l, int r, int k, boolean reverse) {
+        int pIndex = l;
+        for(int i=l; i<r; i++) {
+            if(reverse) {
+                if (a[i] >= a[r]) {
+                    int temp = a[i];
+                    a[i] = a[pIndex];
+                    a[pIndex] = temp;
+                    pIndex++;
+                }
+            } else {
+                if (a[i] <= a[r]) {
+                    int temp = a[i];
+                    a[i] = a[pIndex];
+                    a[pIndex] = temp;
+                    pIndex++;
+                }
+            }
+        }
+        int temp = a[pIndex];
+        a[pIndex] = a[r];
+        a[r] = temp;
+        return pIndex;
+    }
 
 
 }
