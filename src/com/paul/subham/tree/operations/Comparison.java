@@ -10,14 +10,13 @@ import java.util.Stack;
 /**
  * @author subham.paul
  *
- * 1. Convert a binary tree to its mirror (Recursive)
- * 2. Convert a binary tree to its mirror (Iterative)
- * 3. Check if two binary trees are mirrors (Recursive)
- * 4. Check if two binary trees are mirrors (Iterative - Inorder)
- * 5. Check if two binary trees are mirrors (Iterative - level order)
- * 6. Check if two binary trees are identical (Recursive)
- * 7. Check if two binary trees are identical (Iterative - Inorder)
- * 8. Check if two binary trees are identical (Iterative - level order)
+ * 
+ * 1. Check if two binary trees are mirrors (Recursive)
+ * 2. Check if two binary trees are mirrors (Iterative - Inorder)
+ * 3. Check if two binary trees are mirrors (Iterative - level order)
+ * 4. Check if two binary trees are identical (Recursive)
+ * 5. Check if two binary trees are identical (Iterative - Inorder)
+ * 6. Check if two binary trees are identical (Iterative - level order)
  */
 public class Comparison {
     public static void main(String[] args) {
@@ -50,51 +49,7 @@ public class Comparison {
 
         System.out.println(isIdenticalIterativeLevelOrder(bt, bt1));
     }
-
-    /**
-     * Convert a binary tree to its mirror (Recursive)
-     *
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void convertToMirrorRecursive(BinaryTree binaryTree) {
-        binaryTree.root = mirror(binaryTree.root);
-    }
-
-    private static Node mirror(Node node) {
-        if(node == null) {
-            return null;
-        }
-        Node left = mirror(node.left);
-        Node right = mirror(node.right);
-        node.left = right;
-        node.right = left;
-        return node;
-    }
-
-    /**
-     * Convert a binary tree to its mirror (Iterative)
-     *
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void convertToMirrorIterative(BinaryTree binaryTree) {
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(binaryTree.root);
-        while(!queue.isEmpty()) {
-            Node current = queue.remove();
-            Node temp = current.left;
-            current.left = current.right;
-            current.right = temp;
-            if(current.left != null) {
-                queue.add(current.left);
-            }
-            if(current.right != null) {
-                queue.add(current.right);
-            }
-        }
-    }
-
+    
     /**
      * Check if two binary trees are mirrors (Recursive)
      *
