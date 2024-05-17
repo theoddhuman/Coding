@@ -13,7 +13,7 @@ import java.util.Queue;
  * 4. Counting no of tress in a forest (Using BFS)
  * 5. k core of an undirected graph
  */
-public class Miscellaneous {
+public class Structure {
     public static void main(String[] args) {
         AdjacencyListGraph g1 = new AdjacencyListGraph(10);
         g1.addEdgeUndirected(0, 1);
