@@ -20,6 +20,7 @@ import java.util.Stack;
  * 8. Intersection point of two linked lists (Reversing first list)
  * 9. Intersection point of two linked lists (By hashing)
  * 10. Intersection point of two linked lists (By two pointer)
+ * 11. Length of a linked list even or odd
  */
 
 public class Structure {
@@ -338,5 +339,21 @@ public class Structure {
         } while(p1 != p2);
 
         return null;
+    }
+
+    /**
+     * Length of a linked list even or odd
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static boolean isLengthEven(LinkedList linkedList) {
+        Node current = linkedList.head;
+        while(current != null && current.next != null) {
+            current = current.next.next;
+            if(current == null) {
+                return true;
+            }
+        }
+        return false;
     }
 }
