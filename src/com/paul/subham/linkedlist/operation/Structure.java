@@ -87,9 +87,9 @@ public class Structure {
         //creating first half of the list
         prev.next = null;
 
-        Manipulation.reverseIterative(secondList);
+        Reverse.reverseIterative(secondList);
         boolean result = Comparison.isIdentical(linkedList, secondList);
-        Manipulation.reverseIterative(secondList);
+        Reverse.reverseIterative(secondList);
         if(midNode != null) {
             prev.next = midNode;
         } else {
@@ -273,14 +273,14 @@ public class Structure {
     public static Node intersectionPointReversingFirstList(LinkedList linkedList1, LinkedList linkedList2) {
         int c1 = linkedList1.size();
         int c2 = linkedList2.size();
-        Manipulation.reverseIterative(linkedList1);
+        Reverse.reverseIterative(linkedList1);
         int c3 = linkedList2.size() + 1;
         int x = (c2 + c3 - c1) / 2;
         Node current = linkedList2.head;
         for(int i=0; i<x-1; i++) {
             current = current.next;
         }
-        Manipulation.reverseIterative(linkedList1);
+        Reverse.reverseIterative(linkedList1);
         return current;
     }
 

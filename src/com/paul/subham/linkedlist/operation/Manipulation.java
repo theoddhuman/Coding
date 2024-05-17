@@ -10,38 +10,29 @@ import com.paul.subham.linkedlist.implementation.single.Node;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * 1. Inserting data in sorted linked list
- * 2. Reverse a linked list iterative
- * 3. Reverse a linked list recursive
- * 4. Merge two sorted linked lists in sorted order (recursive)
- * 5. Merge two sorted linked lists in sorted order (iterative)
- * 6. Reverse a linked list in pair (recursive)
- * 7. Reverse a linked list in pair (iterative)
- * 8. Pairwise swap elements of a linked list (iterative)
- * 9. Pairwise swap elements of a linked list (Recursive)
- * 10. Swap nodes of a linked list (Changing link)
- * 11. Reverse a linked list in group (Iterative)
- * 12. Reverse a linked list in group (Recursive)
- * 13. Rotate a linked list k times right (by changing head)
- * 14. Rotate a linked list k times right (by k rotation)
- * 15. Partition a linked list such that nodes smaller than k at one side and greater than k at the other.
- * 16. Partition a linked list such that odd nodes at one side and even nodes at the other.
- * 17. Partition a linked list such that odd nodes at one side and even nodes at the other. (2 traversal)
- * 18. Remove duplicates in a linked list (Two loop)
- * 19. Remove duplicates in a linked list (Hashing)
- * 20. Remove duplicates in a sorted linked list (Iterative)
- * 21. Remove duplicates in a sorted linked list (Recursive)
- * 22. Create a linked list with common elements of two linked lists
- * 23. Splitting a circular linked list in two halves
- * 24. Sorted insert in a circular linked list
- * 25. Reverse a doubly linked list
- * 26. Reverse a doubly linked list (Using stack)
- * 27. Inserting data in sorted doubly linked list
- * 28. Clone a linked list with nex t and random pointer (Extra space)
- * 29. Clone a linked list with nex t and random pointer (Space efficient)
+ * 2. Merge two sorted linked lists in sorted order (recursive)
+ * 3. Merge two sorted linked lists in sorted order (iterative)
+ * 4. Pairwise swap elements of a linked list (iterative)
+ * 5. Pairwise swap elements of a linked list (Recursive)
+ * 6. Swap nodes of a linked list (Changing link)
+ * 7. Rotate a linked list k times right (by changing head)
+ * 8. Rotate a linked list k times right (by k rotation)
+ * 9. Partition a linked list such that nodes smaller than k at one side and greater than k at the other.
+ * 10. Partition a linked list such that odd nodes at one side and even nodes at the other.
+ * 11. Partition a linked list such that odd nodes at one side and even nodes at the other. (2 traversal)
+ * 12. Remove duplicates in a linked list (Two loop)
+ * 13. Remove duplicates in a linked list (Hashing)
+ * 14. Remove duplicates in a sorted linked list (Iterative)
+ * 15. Remove duplicates in a sorted linked list (Recursive)
+ * 16. Create a linked list with common elements of two linked lists
+ * 17. Splitting a circular linked list in two halves
+ * 18. Sorted insert in a circular linked list
+ * 19. Inserting data in sorted doubly linked list
+ * 20. Clone a linked list with nex t and random pointer (Extra space)
+ * 21. Clone a linked list with nex t and random pointer (Space efficient)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -100,44 +91,6 @@ public class Manipulation {
         }
         temp.next = newNode;
         newNode.next = current;
-    }
-
-    /**
-     * Reverse a linked list iterative
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static void reverseIterative(LinkedList linkedList) {
-        Node prev = null;
-        Node current = linkedList.head;
-        Node next = null;
-        while(current != null) {
-            next = current.next;
-            current.next = prev;
-            prev = current;
-            current = next;
-        }
-        linkedList.head = prev;
-    }
-
-    public static void reverseRecursive(LinkedList linkedList) {
-        reverseUtil(linkedList, linkedList.head, null);
-    }
-
-    /**
-     * Reverse a linked list recursive
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void reverseUtil(LinkedList linkedList, Node current, Node prev) {
-        if (current.next == null) {
-            linkedList.head = current;
-            current.next = prev;
-        } else {
-            Node next = current.next;
-            current.next = prev;
-            reverseUtil(linkedList, next, current);
-        }
     }
 
     /**
@@ -205,51 +158,6 @@ public class Manipulation {
         }
         linkedList.head = linkedList.head.next;
         return linkedList;
-    }
-
-    /**
-     * Reverse a linked list in pair (recursive)
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void reverseInPairRecursive(LinkedList linkedList) {
-        linkedList.head = reverseInPairUtil(linkedList.head);
-    }
-
-    public static Node reverseInPairUtil(Node node) {
-        if(node == null || node.next == null) {
-            return node;
-        }
-        Node temp = node.next;
-        node.next = temp.next;
-        temp.next = node;
-        node.next = reverseInPairUtil(node.next);
-        return temp;
-    }
-
-    /**
-     * Reverse a linked list in pair (iterative)
-     *
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static void reverseInPairIterative(LinkedList linkedList) {
-        Node current = linkedList.head;
-        Node node = null;
-        Node temp;
-        while(current != null && current.next != null) {
-            temp = current.next;
-            current.next = temp.next;
-            temp.next = current;
-            if(current == linkedList.head) {
-                linkedList.head = temp;
-            }
-            if(node != null) {
-                node.next = temp;
-            }
-            node = current;
-            current = current.next;
-        }
     }
 
     /**
@@ -366,62 +274,6 @@ public class Manipulation {
             pairwiseSwapChangingLinkRecursiveUtil(current.next, temp1);
         }
         return temp1;
-    }
-
-    /**
-     * Reverse a linked list in group (Iterative)
-     *
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static void reverseInGroupIterative(LinkedList linkedList, int K) {
-        Node current = linkedList.head;
-        Node prevCurrent = current;
-        Node prevTail = null;
-        while(current != null) {
-            Node tail = null;
-            int count = K;
-            while(current != null && count-- > 0 ) {
-                Node next = current.next;
-                current.next = tail;
-                tail = current;
-                current = next;
-            }
-            if(prevTail != null) {
-                prevTail.next = tail;
-            } else {
-                linkedList.head = tail;
-            }
-            prevTail = prevCurrent;
-            prevCurrent = current;
-        }
-    }
-
-    /**
-     * Reverse a linked list in group (Recursive)
-     *
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void reverseInGroupRecursive(LinkedList linkedList, int K) {
-        linkedList.head = reverseInGroupRecursiveUtil(linkedList.head, K);
-    }
-
-    public static Node reverseInGroupRecursiveUtil(Node current, int K) {
-        if(current == null) {
-            return null;
-        }
-        Node tail = null;
-        Node prevCurrent = current;
-        int count = K;
-        while (current != null && count-- > 0) {
-            Node next = current.next;
-            current.next = tail;
-            tail = current;
-            current = next;
-        }
-        prevCurrent.next = reverseInGroupRecursiveUtil(current, K);
-        return tail;
     }
 
     /**
@@ -731,46 +583,6 @@ public class Manipulation {
             }
             newNode.next = current.next;
             current.next = newNode;
-        }
-    }
-
-    /**
-     * Reverse a doubly linked list
-     *
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static void reverse(DoublyLinkedList linkedList) {
-        DLNode temp = null;
-        DLNode current = linkedList.head;
-        while(current != null) {
-            current.pre = current.next;
-            current.next = temp;
-            temp = current;
-            current = current.pre;
-        }
-        if(temp != null) {
-            linkedList.head = temp;
-        }
-    }
-
-    /**
-     * Reverse a doubly linked list (Using stack)
-     *
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void reverseStack(DoublyLinkedList linkedList) {
-        Stack<Integer> stack = new Stack<>();
-        DLNode current = linkedList.head;
-        while(current != null) {
-            stack.push(current.data);
-            current = current.next;
-        }
-        current = linkedList.head;
-        while(current != null) {
-            current.data = stack.pop();
-            current = current.next;
         }
     }
 
