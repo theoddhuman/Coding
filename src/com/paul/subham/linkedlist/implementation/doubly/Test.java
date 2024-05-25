@@ -3,8 +3,8 @@ package com.paul.subham.linkedlist.implementation.doubly;
 public class Test {
     public static void main(String[] args) {
         DoublyLinkedList dll = new DoublyLinkedList();
-        dll.head = new Node(1);
-        dll.head.next = new Node(2);
+        dll.head = new DLNode(1);
+        dll.head.next = new DLNode(2);
         dll.head.next.pre = dll.head;
         //dll.insertAtStart(4);
         dll.insertAtEnd(3);

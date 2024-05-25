@@ -25,12 +25,23 @@ import java.util.PriorityQueue;
  * 14. The smallest K elements in an array (Binary search)
  * 15. The largest K elements in an array (Quick sort)
  * 16. The smallest K elements in an array (Quick sort)
+ * 17. Kth smallest elements in an array (Using sorting)
+ * 18. Kth largest elements in an array (Using sorting)
+ * 19. Kth largest elements in an array (Binary Search)
+ * 20. Kth smallest elements in an array (Binary Search)
+ * 21. Kth largest elements in an array (Priority Queue)
+ * 22. Kth smallest elements in an array (Priority Queue)
+ * 23. Kth largest elements in an array (Quick sort)
+ * 24. Kth smallest elements in an array (Quick sort)
+ * 25. Kth smallest elements in an array (Counting sort)
+ * 26. Kth largest elements in an array (Counting sort)
  */
 
 public class Selection {
     public static void main(String[] args) {
         int[] a = {8,9,2,1,7,11,4,14};
-        kSmallestElementsQuickSort(a, 4);
+        //kLargestElementsBinarySearch(a, 3);
+        System.out.println(kthLargestElementCountingSort(a, 5));
     }
 
 
@@ -288,7 +299,101 @@ public class Selection {
         }
     }
 
-    private static int kthLargestBinarySearch(int[] a, int k) {
+    /**
+     * The smallest K elements in an array (Binary search)
+     *
+     * TC: O(nlog(max-min))
+     * SC: O(1)
+     */
+    public static void kSmallestElementsBinarySearch(int[] a, int k) {
+        int kthSmallest = kthSmallestBinarySearch(a, k);
+        for(int i : a) {
+            if(i <= kthSmallest) {
+                System.out.print(i + " ");
+            }
+        }
+    }
+
+    /**
+     * The largest K elements in an array (Quick sort)
+     *
+     * TC: O(n^2), worst case   O(n), average case
+     * SC: O(n)
+     */
+    public static void kLargestElementsQuickSort(int[] a, int k) {
+        kthLargestQuickSort(a, 0, a.length-1, k);
+        for(int i = a.length-1; i>=a.length-k; i--) {
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    /**
+     * The smallest K elements in an array (Quick sort)
+     *
+     * TC: O(n^2), worst case   O(n), average case
+     * SC: O(n)
+     */
+    public static void kSmallestElementsQuickSort(int[] a, int k) {
+        kthSmallestQuickSort(a, 0, a.length-1, k);
+        for(int i = a.length-1; i>=a.length-k; i--) {
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    private static int partition(int[] a, int l, int r, int k, boolean reverse) {
+        int pIndex = l;
+        for(int i=l; i<r; i++) {
+            if(reverse) {
+                if (a[i] >= a[r]) {
+                    int temp = a[i];
+                    a[i] = a[pIndex];
+                    a[pIndex] = temp;
+                    pIndex++;
+                }
+            } else {
+                if (a[i] <= a[r]) {
+                    int temp = a[i];
+                    a[i] = a[pIndex];
+                    a[pIndex] = temp;
+                    pIndex++;
+                }
+            }
+        }
+        int temp = a[pIndex];
+        a[pIndex] = a[r];
+        a[r] = temp;
+        return pIndex;
+    }
+
+    /**
+     * Kth smallest elements in an array (Using sorting)
+     *
+     * TC: O(nlogn), average case
+     * SC: O(1)
+     */
+    public static int kthSmallest(int[] a, int k) {
+        Arrays.sort(a);
+        return a[k-1];
+    }
+
+    /**
+     * Kth largest elements in an array (Using sorting)
+     *
+     * TC: O(nlogn), average case
+     * SC: O(1)
+     */
+    public static int kthLargest(int[] a, int k) {
+        Arrays.sort(a);
+        return a[a.length-k];
+    }
+
+    /**
+     * Kth largest elements in an array (Binary Search)
+     *
+     * TC: O(nlog(max-min))
+     * SC: O(1)
+     */
+    public static int kthLargestBinarySearch(int[] a, int k) {
         int low = Integer.MAX_VALUE;
         int high = Integer.MIN_VALUE;
         for(int i : a) {
@@ -316,21 +421,12 @@ public class Selection {
     }
 
     /**
-     * The smallest K elements in an array (Binary search)
+     * Kth smallest elements in an array (Binary Search)
      *
      * TC: O(nlog(max-min))
      * SC: O(1)
      */
-    public static void kSmallestElementsBinarySearch(int[] a, int k) {
-        int kthSmallest = kthSmallestBinarySearch(a, k);
-        for(int i : a) {
-            if(i <= kthSmallest) {
-                System.out.print(i + " ");
-            }
-        }
-    }
-
-    private static int kthSmallestBinarySearch(int[] a, int k) {
+    public static int kthSmallestBinarySearch(int[] a, int k) {
         int low = Integer.MAX_VALUE;
         int high = Integer.MIN_VALUE;
         for(int i : a) {
@@ -358,16 +454,47 @@ public class Selection {
     }
 
     /**
-     * The largest K elements in an array (Quick sort)
+     * Kth largest elements in an array (Priority Queue)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static int kthLargestElementPriorityQueue(int[] a, int k) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        for (int j : a) {
+            priorityQueue.add(j);
+            if (priorityQueue.size() > k) {
+                priorityQueue.remove();
+            }
+        }
+        return priorityQueue.remove();
+    }
+
+    /**
+     * Kth smallest elements in an array (Priority Queue)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static int kthSmallestElementPriorityQueue(int[] a, int k) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.reverseOrder());
+        for (int j : a) {
+            priorityQueue.add(j);
+            if (priorityQueue.size() > k) {
+                priorityQueue.remove();
+            }
+        }
+        return priorityQueue.remove();
+    }
+
+    /**
+     * Kth largest elements in an array (Quick sort)
      *
      * TC: O(n^2), worst case   O(n), average case
      * SC: O(n)
      */
-    public static void kLargestElementsQuickSort(int[] a, int k) {
-        kthLargestQuickSort(a, 0, a.length-1, k);
-        for(int i = a.length-1; i>=a.length-k; i--) {
-            System.out.print(a[i] + " ");
-        }
+    public static int kthLargestQuickSort(int[] a, int k) {
+        return a[kthLargestQuickSort(a, 0, a.length-1, k)];
     }
 
     private static int kthLargestQuickSort(int[] a, int l, int r, int k) {
@@ -382,16 +509,13 @@ public class Selection {
     }
 
     /**
-     * The smallest K elements in an array (Quick sort)
+     * Kth smallest elements in an array (Quick sort)
      *
      * TC: O(n^2), worst case   O(n), average case
      * SC: O(n)
      */
-    public static void kSmallestElementsQuickSort(int[] a, int k) {
-        kthSmallestQuickSort(a, 0, a.length-1, k);
-        for(int i = a.length-1; i>=a.length-k; i--) {
-            System.out.print(a[i] + " ");
-        }
+    public static int kthSmallestQuickSort(int[] a, int k) {
+        return a[kthSmallestQuickSort(a, 0, a.length-1, k)];
     }
 
     private static int kthSmallestQuickSort(int[] a, int l, int r, int k) {
@@ -405,28 +529,57 @@ public class Selection {
         }
     }
 
-    private static int partition(int[] a, int l, int r, int k, boolean reverse) {
-        int pIndex = l;
-        for(int i=l; i<r; i++) {
-            if(reverse) {
-                if (a[i] >= a[r]) {
-                    int temp = a[i];
-                    a[i] = a[pIndex];
-                    a[pIndex] = temp;
-                    pIndex++;
-                }
-            } else {
-                if (a[i] <= a[r]) {
-                    int temp = a[i];
-                    a[i] = a[pIndex];
-                    a[pIndex] = temp;
-                    pIndex++;
+    /**
+     * Kth smallest elements in an array (Counting sort)
+     *
+     * TC: O(n + max)
+     * SC: O(max)
+     */
+    public static int kthSmallestElementCountingSort(int[] a, int k) {
+        int max = Integer.MIN_VALUE;
+        for(int i : a) {
+            max = Math.max(max, i);
+        }
+        int[] frequency = new int[max+1];
+        for(int i : a) {
+            frequency[i] ++ ;
+        }
+        int count = 0;
+        for(int i=0; i<=max; i++) {
+            if(frequency[i] != 0) {
+                count += frequency[i];
+                if(count == k) {
+                    return i;
                 }
             }
         }
-        int temp = a[pIndex];
-        a[pIndex] = a[r];
-        a[r] = temp;
-        return pIndex;
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Kth largest elements in an array (Counting sort)
+     *
+     * TC: O(n + max)
+     * SC: O(max)
+     */
+    public static int kthLargestElementCountingSort(int[] a, int k) {
+        int max = Integer.MIN_VALUE;
+        for(int i : a) {
+            max = Math.max(max, i);
+        }
+        int[] frequency = new int[max+1];
+        for(int i : a) {
+            frequency[i] ++ ;
+        }
+        int count = 0;
+        for(int i=max; i>=0; i--) {
+            if(frequency[i] != 0) {
+                count += frequency[i];
+                if(count == k) {
+                    return i;
+                }
+            }
+        }
+        return Integer.MIN_VALUE;
     }
 }
