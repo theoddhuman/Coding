@@ -11,17 +11,21 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 1. Insertion sort of linked list
  * 2. Quick sort of doubly linked list
  * 3. Merge sort of doubly linked list
+ * 4. Sort bitonic doubly linked list
+ * 5. Sort bitonic doubly linked list (Efficient)
  */
 public class Sort {
     public static void main(String[] args) {
         DoublyLinkedList linkedList = new DoublyLinkedList();
-        linkedList.insertAtEnd(5);
-        linkedList.insertAtEnd(4);
         linkedList.insertAtEnd(1);
+        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(4);
+        linkedList.insertAtEnd(7);
+        linkedList.insertAtEnd(6);
         linkedList.insertAtEnd(3);
         linkedList.insertAtEnd(2);
         linkedList.print();
-        mergeSort(linkedList);
+        bitonicSortDLL(linkedList);
         System.out.println();
         linkedList.print();
     }
@@ -150,5 +154,88 @@ public class Sort {
             second.pre = null;
             return second;
         }
+    }
+
+    /**
+     * Sort bitonic doubly linked list
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void sortBitonicDLL(DoublyLinkedList linkedList) {
+        if(linkedList.head == null || linkedList.head.next == null) {
+            return;
+        }
+        DLNode current = linkedList.head.next;
+        while(current != null) {
+            if(current.data < current.pre.data) {
+                break;
+            }
+            current = current.next;
+        }
+        if(current == null) {
+            return;
+        }
+        current.pre.next = null;
+        current.pre = null;
+        current = reverse(current);
+        System.out.println(current.data);
+        linkedList.head = merge(linkedList.head, current);
+    }
+
+    /**
+     * Sort bitonic doubly linked list (Efficient)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static DLNode reverse(DLNode node) {
+        DLNode temp = null;
+        DLNode current = node;
+        while(current != null) {
+            temp = current.pre;
+            current.pre = current.next;
+            current.next = temp;
+            current = current.pre;
+        }
+        if(temp != null) {
+            node = temp.pre;
+        }
+        return node;
+    }
+
+    public static void bitonicSortDLL(DoublyLinkedList linkedList) {
+        if(linkedList.head == null || linkedList.head.next == null) {
+            return;
+        }
+        DLNode front = linkedList.head;
+        DLNode last = linkedList.head;
+        while(last.next != null) {
+            last = last.next;
+        }
+        DLNode res = new DLNode(0);
+        DLNode resEnd = res;
+        DLNode next;
+        DLNode pre;
+        while (front != last) {
+            if(front.data <= last.data) {
+                resEnd.next = front;
+                next = front.next;
+                front.pre = resEnd;
+                front.next = null;
+                front = next;
+            } else {
+                resEnd.next = last;
+                pre = last.pre;
+                last.pre = resEnd;
+                pre.next = null;
+                last = pre;
+            }
+            resEnd = resEnd.next;
+        }
+        resEnd.next = front;
+        front.pre = resEnd;
+        linkedList.head = res.next;
+        linkedList.head.pre = null;
     }
 }
