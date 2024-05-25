@@ -33,17 +33,23 @@ import java.util.Set;
  * 19. Inserting data in sorted doubly linked list
  * 20. Clone a linked list with nex t and random pointer (Extra space)
  * 21. Clone a linked list with nex t and random pointer (Space efficient)
+ * 22. Remove duplicates from a sorted doubly linked list
+ * 23. Remove all occurrences of an element from a doubly linked list
+ * 24. Remove duplicates from a doubly linked list (Sorting)
+ * 25. Remove duplicates from a doubly linked list (Hashing)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        LinkedList linkedList = new LinkedList();
-        linkedList.insertAtEnd(1);
-        linkedList.insertAtEnd(5);
+        DoublyLinkedList linkedList = new DoublyLinkedList();
         linkedList.insertAtEnd(7);
-        linkedList.insertAtEnd(11);
+        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(4);
+        linkedList.insertAtEnd(3);
+        linkedList.insertAtEnd(4);
+        linkedList.insertAtEnd(2);
         linkedList.print();
         System.out.println();
-        partitionOddEven2(linkedList);
+        removeDuplicatesDLLHashing(linkedList);
         linkedList.print();
 //        CircularLinkedList part1 = new CircularLinkedList();
 //        CircularLinkedList part2 = new CircularLinkedList();
@@ -618,7 +624,7 @@ public class Manipulation {
      * TC: O(n)
      * SC: O(n)
      */
-    public RandomNode cloneRandom(RandomNode head) {
+    public static RandomNode cloneRandom(RandomNode head) {
         RandomNode x = head;
         RandomNode y = null;
         HashMap<RandomNode, RandomNode> map = new HashMap<>();
@@ -642,7 +648,7 @@ public class Manipulation {
      * TC: O(n)
      * SC: O(1)
      */
-    public RandomNode cloneRandomEfficient(RandomNode head) {
+    public static RandomNode cloneRandomEfficient(RandomNode head) {
         RandomNode current = head;
         RandomNode temp = null;
         while(current != null) {
@@ -666,6 +672,79 @@ public class Manipulation {
             copy = copy.next;
         }
         return temp;
+    }
+
+    /**
+     * Remove duplicates from a sorted doubly linked list
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void removeDuplicatesSortedDLL(DoublyLinkedList linkedList) {
+        DLNode current = linkedList.head;
+        while(current.next != null) {
+            if(current.next.data == current.data) {
+                if(current.next.next != null) {
+                    current.next.next.pre = current;
+                }
+                current.next = current.next.next;
+            } else {
+                current = current.next;
+            }
+        }
+    }
+
+    /**
+     * Remove all occurrences of an element from a doubly linked list
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void removeAllK(DoublyLinkedList linkedList, int k) {
+        DLNode current = linkedList.head;
+        while(current.next != null) {
+            if(current.next.data == k) {
+                if(current.next.next != null) {
+                    current.next.next.pre = current;
+                }
+                current.next = current.next.next;
+            } else {
+                current = current.next;
+            }
+        }
+    }
+
+    /**
+     * Remove duplicates from a doubly linked list (Sorting)
+     *
+     * TC: O(n^2), O(nlogn) avg time complexity
+     * SC: O(1)
+     */
+    public static void removeDuplicatesDLLSorting(DoublyLinkedList linkedList) {
+        Sort.mergeSort(linkedList);
+        removeDuplicatesSortedDLL(linkedList);
+    }
+
+    /**
+     * Remove duplicates from a doubly linked list (Hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void removeDuplicatesDLLHashing(DoublyLinkedList linkedList) {
+        HashSet<Integer> set = new HashSet<>();
+        DLNode current = linkedList.head;
+        while(current != null) {
+            if(set.contains(current.data)) {
+                if(current.next != null) {
+                    current.next.pre = current.pre;
+                }
+                current.pre.next = current.next;
+            } else {
+                set.add(current.data);
+            }
+            current = current.next;
+        }
     }
 
 }
