@@ -1,8 +1,8 @@
 package com.paul.subham.array.operations;
 
 import com.paul.subham.searching.BinarySearch;
-import com.paul.subham.tree.implementation.binarysearch.BSTNode;
-import com.paul.subham.tree.implementation.binarysearch.BinarySearchTree;
+import com.paul.subham.tree.implementation.tournament.TNode;
+import com.paul.subham.tree.implementation.tournament.TournamentTree;
 
 import java.util.*;
 
@@ -60,10 +60,12 @@ import java.util.*;
  * 51. Majority element of an array (Moore's Voting algorithm)
  * 52. Majority element of an array (Using hashing)
  * 53. Majority element of an array (Using bit manipulation)
+ * 54. The second-largest element of an array (Using tournament tree)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {8,9,2,1,7,11,4,14};
+        int[] a = {8,9,2,1,7,4,14};
+        System.out.println(secondLargestTournamentTree(a));
     }
 
     /**
@@ -1246,6 +1248,39 @@ public class Searching {
              }
          }
          return Integer.MIN_VALUE;
+    }
+
+    /**
+     * The second-largest element of an array (Using tournament tree)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int secondLargestTournamentTree(int[] a) {
+        TournamentTree tournamentTree = new TournamentTree();
+        tournamentTree.insertArray(a);
+        return a[secondLargestIndex(tournamentTree.root, a)];
+    }
+
+    private static int secondLargestIndex(TNode node, int[] a) {
+        if(node == null || node.left == null) {
+            return -1;
+        }
+        if(node.left.index == node.index) {
+            int leftSecondMin = secondLargestIndex(node.left, a);
+            if(leftSecondMin == -1 || a[node.right.index] > a[leftSecondMin]) {
+                return node.right.index;
+            } else {
+                return leftSecondMin;
+            }
+        } else {
+            int rightSecondMin = secondLargestIndex(node.right, a);
+            if(rightSecondMin == -1 || a[node.left.index] > a[rightSecondMin]) {
+                return node.left.index;
+            } else {
+                return rightSecondMin;
+            }
+        }
     }
 
 

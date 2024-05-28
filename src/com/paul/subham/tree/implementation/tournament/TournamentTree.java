@@ -6,11 +6,9 @@ import java.util.Queue;
 
 /**
  * @author subham.paul
- * 
- * 1. Construct tournament tree from an array
  */
 public class TournamentTree {
-    TNode root;
+    public TNode root;
 
     /**
      * Construct tournament tree from an array

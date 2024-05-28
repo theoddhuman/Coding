@@ -4,8 +4,8 @@ package com.paul.subham.tree.implementation.tournament;
  * @author subham.paul
  */
 public class TNode {
-    int index;
-    TNode left, right;
+    public int index;
+    public TNode left, right;
     TNode(int index) {
         this.index = index;
         this.left = this.right = null;
