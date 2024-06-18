@@ -29,6 +29,7 @@ import java.util.Stack;
  * 11. Distance between two nodes of a binary tree (Using the lowest common ancestor)
  * 12. Distance between two nodes of a binary tree (Using the lowest common ancestor - efficient)
  * 13. Distance between two nodes of a binary tree (Single traversal)
+ * 14. Check existence of a path with given sum in binary tree
  */
 public class Path {
     /**
@@ -55,7 +56,7 @@ public class Path {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        System.out.println(distanceSingleTraversal(bt, 11,1));
+        System.out.println(hasSumPath(bt, 20));
     }
 
 
@@ -428,6 +429,26 @@ public class Path {
             return Math.max(left, right) + 1;
         }
         return 0;
+    }
+
+    /**
+     * Check existence of a path with given sum in binary tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean hasSumPath(BinaryTree binaryTree, int sum) {
+        return hasSumPath(binaryTree.root, sum);
+    }
+
+    private static boolean hasSumPath(Node node, int sum) {
+        if(node == null) {
+            return false;
+        }
+        if(node.left == null && node.right == null && node.data == sum) {
+            return true;
+        }
+        return hasSumPath(node.left, sum-node.data) || hasSumPath(node.right, sum-node.data);
     }
 
 }
