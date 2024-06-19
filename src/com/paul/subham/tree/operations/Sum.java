@@ -1,10 +1,12 @@
 package com.paul.subham.tree.operations;
 
+import com.paul.subham.linkedlist.implementation.doubly.DLNode;
 import com.paul.subham.tree.implementation.binary.BinaryTree;
 import com.paul.subham.tree.implementation.binary.Node;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TreeMap;
 
 /**
  * @author subham.paul
@@ -18,6 +20,8 @@ import java.util.Queue;
  * 7. Sum of all nodes in a binary tree (Iterative)
  * 8. Sum of all nodes in a binary tree having child node value x (Recursive)
  * 9. Sum of all nodes in a binary tree having child node value x (Iterative)
+ * 10. Vertical sum of a binary tree (Using Tree Map)
+ * 11. Vertical sum of a binary tree (Using Doubly Linked List)
  */
 public class Sum {
     /**
@@ -44,7 +48,8 @@ public class Sum {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        System.out.println(sumWithSpecificChildRecursive(bt, 6));
+        //System.out.println(sumWithSpecificChildRecursive(bt, 6));
+        printVerticalSumsDLL(bt);
     }
 
     /**
@@ -259,5 +264,63 @@ public class Sum {
             }
         }
         return sum;
+    }
+
+    /**
+     * Vertical sum of a binary tree (Using Tree Map)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static void printVerticalSums(BinaryTree binaryTree) {
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        verticalSumUtil(binaryTree.root, 0, map);
+        map.values().forEach(sum -> System.out.print(sum + " "));
+    }
+
+    private static void verticalSumUtil(Node node, int vIndex, TreeMap<Integer, Integer> map) {
+        if(node == null) {
+            return;
+        }
+        verticalSumUtil(node.left, vIndex-1, map);
+        int prevSum = map.get(vIndex) == null ? 0 : map.get(vIndex);
+        map.put(vIndex, prevSum + node.data);
+        verticalSumUtil(node.right, vIndex + 1, map);
+    }
+
+    /**
+     * Vertical sum of a binary tree (Using Doubly Linked List)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void printVerticalSumsDLL(BinaryTree binaryTree) {
+        DLNode dlNode = new DLNode(0);
+        verticalSumUtil(binaryTree.root, dlNode);
+        while(dlNode.pre != null) {
+            dlNode = dlNode.pre;
+        }
+        while(dlNode != null) {
+            System.out.print(dlNode.data + " ");
+            dlNode = dlNode.next;
+        }
+    }
+
+    private static void verticalSumUtil(Node node, DLNode dlNode) {
+        dlNode.data = dlNode.data + node.data;
+        if(node.left != null) {
+            if(dlNode.pre == null) {
+                dlNode.pre = new DLNode(0);
+                dlNode.pre.next = dlNode;
+            }
+            verticalSumUtil(node.left, dlNode.pre);
+        }
+        if(node.right != null) {
+            if(dlNode.next == null) {
+                dlNode.next = new DLNode(0);
+                dlNode.pre.next = dlNode;
+            }
+            verticalSumUtil(node.right, dlNode.next);
+        }
     }
 }
