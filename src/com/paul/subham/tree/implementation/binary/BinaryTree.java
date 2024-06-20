@@ -149,7 +149,7 @@ public class BinaryTree {
     }
 
     //preorder traversal recursive, TC: O(n), SC: O(n)
-    void preOrderRecursive(Node node) {
+    public void preOrderRecursive(Node node) {
         if(node != null) {
             System.out.print(node.data + " ");
             preOrderRecursive(node.left);

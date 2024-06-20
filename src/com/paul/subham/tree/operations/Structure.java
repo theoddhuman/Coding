@@ -43,6 +43,8 @@ import java.util.Queue;
  * 28. Lowest common ancestor of binary search tree (Recursive)
  * 29. Lowest common ancestor of binary search tree (Iterative)
  * 30. Print all possible binary trees from given inorder
+ * 31. Fill next sibling (consider all node at same level as sibling)
+ * 32. Fill next sibling (consider all node at same level as sibling - Recursive)
  */
 
 public class Structure {
@@ -872,5 +874,68 @@ public class Structure {
             }
         }
         return trees;
+    }
+
+    /**
+     * Fill next sibling (consider all node at same level as sibling)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void fillNextSibling(BNSNode node) {
+        if(node == null) {
+            return;
+        }
+        Queue<BNSNode> queue = new LinkedList<>();
+        queue.add(node);
+        queue.add(null);
+        while(!queue.isEmpty()) {
+            BNSNode temp = queue.remove();
+            if(temp != null) {
+                temp.nextSibling = queue.peek();
+                if(temp.left != null) {
+                    queue.add(temp.left);
+                }
+                if(temp.right != null) {
+                    queue.add(temp.right);
+                }
+            } else {
+                if(!queue.isEmpty()) {
+                    queue.add(null);
+                }
+            }
+        }
+    }
+
+    /**
+     * Fill next sibling (consider all node at same level as sibling - Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void fillNextSiblingRecursive(BNSNode node) {
+        if(node == null) {
+            return;
+        }
+        if(node.left != null) {
+            node.left.nextSibling = node.right;
+        }
+        if(node.right != null) {
+            if(node.nextSibling != null) {
+                node.right.nextSibling = node.nextSibling.left;
+            }
+        }
+        fillNextSiblingRecursive(node.left);
+        fillNextSiblingRecursive(node.right);
+    }
+
+}
+
+class BNSNode {
+    int data;
+    BNSNode left, right, nextSibling;
+    BNSNode(int data) {
+        this.data = data;
+        left = right = nextSibling = null;
     }
 }
