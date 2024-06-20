@@ -5,7 +5,9 @@ import com.paul.subham.tree.implementation.binary.Node;
 import com.paul.subham.tree.implementation.binarysearch.BSTNode;
 import com.paul.subham.tree.implementation.binarysearch.BinarySearchTree;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -40,6 +42,7 @@ import java.util.Queue;
  * 27. Check if given binary tree is a BST (Using Morris Traversal)
  * 28. Lowest common ancestor of binary search tree (Recursive)
  * 29. Lowest common ancestor of binary search tree (Iterative)
+ * 30. Print all possible binary trees from given inorder
  */
 
 public class Structure {
@@ -55,29 +58,30 @@ public class Structure {
      *         4
      */
     public static void main(String[] args) {
-        BinaryTree bt = new BinaryTree();
-        bt.root = new Node(7);
-        bt.root.left = new Node(2);
-        bt.root.right = new Node(8);
-        bt.root.left.left = new Node(1);
-        bt.root.left.right = new Node(5);
-        bt.root.left.right.left = new Node(3);
-        bt.root.left.right.right = new Node(6);
-        bt.root.left.right.left.right = new Node(4);
+//        BinaryTree bt = new BinaryTree();
+//        bt.root = new Node(7);
+//        bt.root.left = new Node(2);
+//        bt.root.right = new Node(8);
+//        bt.root.left.left = new Node(1);
+//        bt.root.left.right = new Node(5);
+//        bt.root.left.right.left = new Node(3);
+//        bt.root.left.right.right = new Node(6);
+//        bt.root.left.right.left.right = new Node(4);
 //        bt.insert(4);
 //        bt.insert(5);
 //        bt.insert(6);
 //        bt.levelOrder();
 //        System.out.println();
 //        System.out.println(isValidBSTMorris(bt));
-        BinarySearchTree bst = new BinarySearchTree();
-        bst.insert(5);
-        bst.insert(3);
-        bst.insert(9);
-        bst.insert(2);
-        bst.insert(4);
-        bst.insert(6);
-        System.out.println(lcaBSTRecursive(bst, 2, 4));
+//        BinarySearchTree bst = new BinarySearchTree();
+//        bst.insert(5);
+//        bst.insert(3);
+//        bst.insert(9);
+//        bst.insert(2);
+//        bst.insert(4);
+//        bst.insert(6);
+//        System.out.println(lcaBSTRecursive(bst, 2, 4));
+        printPossibleTrees(new int[]{4,5,7});
     }
 
     /**
@@ -832,5 +836,41 @@ public class Structure {
             }
         }
         return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Print all possible binary trees from given inorder
+     *
+     * TC: O(n^3)
+     * SC: O(n^2)
+     */
+    public static void printPossibleTrees(int[] inOrder) {
+        List<Node> trees = getTrees(inOrder, 0, inOrder.length-1);
+        BinaryTree binaryTree = new BinaryTree();
+        for(int i=0; i<trees.size(); i++) {
+            binaryTree.preOrderRecursive(trees.get(i));
+            System.out.println();
+        }
+    }
+
+    private static List<Node> getTrees(int[] in, int start, int end) {
+        List<Node> trees = new ArrayList<>();
+        if(start > end) {
+            trees.add(null);
+            return trees;
+        }
+        for(int i=start; i<=end; i++) {
+            List<Node> leftTrees = getTrees(in, start, i-1);
+            List<Node> rightTrees = getTrees(in, i+1, end);
+            for(int j=0; j<leftTrees.size(); j++) {
+                for(int k = 0; k<rightTrees.size(); k++) {
+                    Node node = new Node(in[i]);
+                    node.left = leftTrees.get(j);
+                    node.right = rightTrees.get(k);
+                    trees.add(node);
+                }
+            }
+        }
+        return trees;
     }
 }
