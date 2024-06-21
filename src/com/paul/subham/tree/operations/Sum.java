@@ -22,6 +22,11 @@ import java.util.TreeMap;
  * 9. Sum of all nodes in a binary tree having child node value x (Iterative)
  * 10. Vertical sum of a binary tree (Using Tree Map)
  * 11. Vertical sum of a binary tree (Using Doubly Linked List)
+ * 12. Average of levels in a binary tree
+ * 13. Sum of left leaves of a binary tree (Recursive)
+ * 14. Sum of left leaves of a binary tree (Iterative)
+ * 15. Sum of right leaves of a binary tree (Recursive)
+ * 16. Sum of right leaves of a binary tree (Iterative)
  */
 public class Sum {
     /**
@@ -48,8 +53,9 @@ public class Sum {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
+        System.out.println(rightLeavesSumIterative(bt));
         //System.out.println(sumWithSpecificChildRecursive(bt, 6));
-        printVerticalSumsDLL(bt);
+
     }
 
     /**
@@ -322,5 +328,139 @@ public class Sum {
             }
             verticalSumUtil(node.right, dlNode.next);
         }
+    }
+
+    /**
+     * Average of levels in a binary tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void averageOfLevels(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        while(!queue.isEmpty()) {
+            int sum = 0;
+            int count = 0;
+            Queue<Node> tempQueue = new LinkedList<>();
+            while(!queue.isEmpty()) {
+                Node current = queue.remove();
+                sum += current.data;
+                count++;
+                if(current.left != null) {
+                    tempQueue.add(current.left);
+                }
+                if(current.right != null) {
+                    tempQueue.add(current.right);
+                }
+            }
+            queue = tempQueue;
+            System.out.println(sum * 1.0/count + " ");
+        }
+    }
+
+    /**
+     * Sum of left leaves of a binary tree (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int leftLeavesSum(BinaryTree binaryTree) {
+        return leftLeavesSum(binaryTree.root);
+    }
+
+    private static int leftLeavesSum(Node node) {
+        int res = 0;
+        if(node == null) {
+            return res;
+        }
+        if(isLeaf(node.left)) {
+            res += node.left.data;
+        } else {
+            res += leftLeavesSum(node.left);
+        }
+        res += leftLeavesSum(node.right);
+        return res;
+    }
+
+    private static boolean isLeaf(Node node) {
+        if(node == null) {
+            return false;
+        }
+        return node.left == null && node.right == null;
+    }
+
+    /**
+     * Sum of left leaves of a binary tree (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int leftLeavesSumIterative(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int sum = 0;
+        while(!queue.isEmpty()) {
+            Node current = queue.remove();
+            if(isLeaf(current.left)) {
+                sum += current.left.data;
+            }
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * Sum of right leaves of a binary tree (Recursive)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int rightLeavesSum(BinaryTree binaryTree) {
+        return rightLeavesSum(binaryTree.root);
+    }
+
+    private static int rightLeavesSum(Node node) {
+        int res = 0;
+        if(node == null) {
+            return res;
+        }
+        if(isLeaf(node.right)) {
+            res += node.right.data;
+        } else {
+            res += rightLeavesSum(node.right);
+        }
+        res += rightLeavesSum(node.left);
+        return res;
+    }
+
+    /**
+     * Sum of right leaves of a binary tree (Iterative)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int rightLeavesSumIterative(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int sum = 0;
+        while(!queue.isEmpty()) {
+            Node current = queue.remove();
+            if(isLeaf(current.right)) {
+                sum += current.right.data;
+            }
+            if(current.left != null) {
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        return sum;
     }
 }

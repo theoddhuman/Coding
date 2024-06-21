@@ -60,15 +60,15 @@ public class Structure {
      *         4
      */
     public static void main(String[] args) {
-//        BinaryTree bt = new BinaryTree();
-//        bt.root = new Node(7);
-//        bt.root.left = new Node(2);
-//        bt.root.right = new Node(8);
-//        bt.root.left.left = new Node(1);
-//        bt.root.left.right = new Node(5);
-//        bt.root.left.right.left = new Node(3);
-//        bt.root.left.right.right = new Node(6);
-//        bt.root.left.right.left.right = new Node(4);
+        BinaryTree bt = new BinaryTree();
+        bt.root = new Node(7);
+        bt.root.left = new Node(2);
+        bt.root.right = new Node(8);
+        bt.root.left.left = new Node(1);
+        bt.root.left.right = new Node(5);
+        bt.root.left.right.left = new Node(3);
+        bt.root.left.right.right = new Node(6);
+        bt.root.left.right.left.right = new Node(4);
 //        bt.insert(4);
 //        bt.insert(5);
 //        bt.insert(6);
@@ -83,7 +83,7 @@ public class Structure {
 //        bst.insert(4);
 //        bst.insert(6);
 //        System.out.println(lcaBSTRecursive(bst, 2, 4));
-        printPossibleTrees(new int[]{4,5,7});
+        largestAtEachLevel(bt);
     }
 
     /**
@@ -927,6 +927,29 @@ public class Structure {
         }
         fillNextSiblingRecursive(node.left);
         fillNextSiblingRecursive(node.right);
+    }
+
+    public static void largestAtEachLevel(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(binaryTree.root);
+        int nodeCount;
+        int max;
+        while (!queue.isEmpty()) {
+            nodeCount = queue.size();
+            max = Integer.MIN_VALUE;
+            while(nodeCount > 0) {
+                Node current = queue.remove();
+                max = Math.max(current.data, max);
+                if(current.left != null) {
+                    queue.add(current.left);
+                }
+                if(current.right != null) {
+                    queue.add(current.right);
+                }
+                nodeCount--;
+            }
+            System.out.println(max + " ");
+        }
     }
 
 }
