@@ -140,7 +140,7 @@ public class BinaryTree {
     }
 
     //inorder traversal recursive, TC: O(n), SC: O(n)
-    void inOrderRecursive(Node node) {
+    public void inOrderRecursive(Node node) {
         if(node != null) {
             inOrderRecursive(node.left);
             System.out.print(node.data + " ");
@@ -488,7 +488,7 @@ public class BinaryTree {
     }
 
     public void reverseInorder() {
-
+        reverseInorderUtil(root);
     }
 
     /**

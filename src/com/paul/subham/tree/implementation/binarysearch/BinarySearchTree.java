@@ -11,7 +11,7 @@ package com.paul.subham.tree.implementation.binarysearch;
  * 8. delete an element
  */
 public class BinarySearchTree {
-    BSTNode root;
+    public BSTNode root;
 
     public BSTNode getRoot() {
         return this.root;
