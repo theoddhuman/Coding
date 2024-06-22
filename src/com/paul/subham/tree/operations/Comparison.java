@@ -17,37 +17,32 @@ import java.util.Stack;
  * 4. Check if two binary trees are identical (Recursive)
  * 5. Check if two binary trees are identical (Iterative - Inorder)
  * 6. Check if two binary trees are identical (Iterative - level order)
+ * 7. Check if two binary trees are isomorphic
+ * 8. Check if two binary trees are quasi-isomorphic
  */
 public class Comparison {
     public static void main(String[] args) {
-        BinaryTree bt = new BinaryTree();
-        bt.root = new Node(1);
-        bt.root.left = new Node(2);
-        bt.root.right = new Node(3);
-        bt.root.left.left = new Node(4);
-        bt.root.left.right = new Node(5);
-        bt.levelOrder();
-        System.out.println();
+        BinaryTree tree = new BinaryTree();
+        tree.root = new Node(1);
+        tree.root.left = new Node(2);
+        tree.root.right = new Node(3);
+        tree.root.left.left = new Node(4);
+        tree.root.left.right = new Node(5);
+        tree.root.right.left = new Node(6);
+        tree.root.left.right.left = new Node(7);
+        tree.root.left.right.right = new Node(8);
 
-        BinaryTree bt1 = new BinaryTree();
-        bt1.root = new Node(1);
-        bt1.root.left = new Node(2);
-        bt1.root.right = new Node(3);
-        bt1.root.left.left = new Node(4);
-        bt1.root.left.right = new Node(5);
-        bt1.levelOrder();
-        System.out.println();
+        BinaryTree tree1 = new BinaryTree();
+        tree1.root = new Node(1);
+        tree1.root.left = new Node(3);
+        tree1.root.right = new Node(2);
+        tree1.root.right.left = new Node(4);
+        tree1.root.right.right = new Node(5);
+        tree1.root.left.right = new Node(6);
+        tree1.root.right.right.left = new Node(8);
+        tree1.root.right.right.right = new Node(11);
 
-        BinaryTree b = new BinaryTree();
-        b.root = new Node(1);
-        b.root.left = new Node(3);
-        b.root.right = new Node(2);
-        b.root.right.left = new Node(5);
-        b.root.right.right = new Node(4);
-        b.levelOrder();
-        System.out.println();
-
-        System.out.println(isIdenticalIterativeLevelOrder(bt, bt1));
+        System.out.println(isQuasiIsomorphic(tree, tree1));
     }
     
     /**
@@ -236,5 +231,60 @@ public class Comparison {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Check if two binary trees are isomorphic
+     *
+     * Two trees are called isomorphic if one of them can be obtained from other by a series of flips,
+     * i.e. by swapping left and right children of a number of nodes.
+     * Any number of nodes at any level can have their children swapped.
+     * Two empty trees are isomorphic.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isIsomorphic(BinaryTree binaryTree1, BinaryTree binaryTree2) {
+        return isIsomorphic(binaryTree1.root, binaryTree2.root);
+    }
+
+    private static boolean isIsomorphic(Node node1, Node node2) {
+        if(node1 == null && node2 == null) {
+            return true;
+        }
+        if(node1 == null || node2 == null) {
+            return false;
+        }
+        if(node1.data != node2.data) {
+            return false;
+        }
+        return (isIsomorphic(node1.left, node2.left) && isIsomorphic(node1.right, node2.right))
+                || (isIsomorphic(node1.left, node2.right) && isIsomorphic(node1.right, node2.left));
+    }
+
+    /**
+     * Check if two binary trees are quasi-isomorphic
+     *
+     * Two trees are called quasi-isomorphic if one of them can be obtained from other by a series of flips,
+     * i.e. by swapping left and right children of a number of nodes, values don't matter, only shape matters
+     * Any number of nodes at any level can have their children swapped.
+     * Two empty trees are quasi-isomorphic.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isQuasiIsomorphic(BinaryTree binaryTree1, BinaryTree binaryTree2) {
+        return isQuasiIsomorphic(binaryTree1.root, binaryTree2.root);
+    }
+
+    private static boolean isQuasiIsomorphic(Node node1, Node node2) {
+        if(node1 == null && node2 == null) {
+            return true;
+        }
+        if(node1 == null || node2 == null) {
+            return false;
+        }
+        return (isQuasiIsomorphic(node1.left, node2.left) && isQuasiIsomorphic(node1.right, node2.right))
+                || (isQuasiIsomorphic(node1.left, node2.right) && isQuasiIsomorphic(node1.right, node2.left));
     }
 }
