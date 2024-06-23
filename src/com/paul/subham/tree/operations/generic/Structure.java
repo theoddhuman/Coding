@@ -13,6 +13,7 @@ import java.util.Queue;
  * 2. Depth or height of array representation of generic tree (Dynamic Programming)
  * 3. Count siblings of a node in generic tree (Recursive)
  * 4. Count siblings of a node in generic tree (iterative)
+ * 5. Count children of a node in generic tree
  */
 public class Structure {
     public static void main(String[] args) {
@@ -152,5 +153,21 @@ public class Structure {
             }
         }
         return 0;
+    }
+
+    /**
+     * Count children of a node in generic tree
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int countChild(GNode node) {
+        int count = 0;
+        GNode current = node.child;
+        while(current != null) {
+            count ++ ;
+            current = current.next;
+        }
+        return count;
     }
 }
