@@ -12,6 +12,8 @@ import java.util.Stack;
  * 2. kth smallest element in a binary search tree (inorder - iterative)
  * 3. kth smallest element in a binary search tree (Morris traversal)
  * 4. kth smallest element in a binary search tree (Augmented Tree)
+ * 5. Ceil of a number in binary search tree
+ * 6. Floor of a number in binary search tree
  */
 public class Search {
     /**
@@ -26,20 +28,20 @@ public class Search {
      *         4
      */
     public static void main(String[] args) {
-//        BinarySearchTree bst = new BinarySearchTree();
-//        bst.insert(5);
-//        bst.insert(3);
-//        bst.insert(9);
-//        bst.insert(2);
-//        bst.insert(4);
-//        bst.insert(6);
-//        System.out.println(kthSmallestMorris(bst, 11));
-        int[] a = {20,8,22,4,12,10,14};
-        ATree tree = new ATree();
-        for (int j : a) {
-            tree.insert(j);
-        }
-        System.out.println(kthSmallest(tree, 6));
+        BinarySearchTree bst = new BinarySearchTree();
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(9);
+        bst.insert(2);
+        bst.insert(4);
+        bst.insert(7);
+        System.out.println(floor(bst, 6));
+//        int[] a = {20,8,22,4,12,10,14};
+//        ATree tree = new ATree();
+//        for (int j : a) {
+//            tree.insert(j);
+//        }
+//        System.out.println(kthSmallest(tree, 6));
     }
 
     /**
@@ -163,6 +165,54 @@ public class Search {
             return kthSmallest(node.left, k);
         }
         return kthSmallest(node.right, k-count);
+    }
+
+    /**
+     * Ceil of a number in binary search tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int ceil(BinarySearchTree binarySearchTree, int data) {
+        return ceil(binarySearchTree.root, data);
+    }
+
+    private static int ceil(BSTNode node, int data) {
+        if(node == null) {
+            return Integer.MIN_VALUE;
+        }
+        if(node.data == data) {
+            return data;
+        }
+        if(node.data < data) {
+            return ceil(node.right, data);
+        }
+        int c = ceil(node.left,data);
+        return c>=data ? c : node.data;
+    }
+
+    /**
+     * Floor of a number in binary search tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int floor(BinarySearchTree binarySearchTree, int data) {
+        return floor(binarySearchTree.root, data);
+    }
+
+    private static int floor(BSTNode node, int data) {
+        if(node == null) {
+            return Integer.MAX_VALUE;
+        }
+        if(node.data == data) {
+            return data;
+        }
+        if(data < node.data) {
+            return floor(node.left, data);
+        }
+        int f = floor(node.right,data);
+        return f<=data ? f : node.data;
     }
 }
 
