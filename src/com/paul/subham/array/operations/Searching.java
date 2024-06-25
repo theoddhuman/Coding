@@ -61,11 +61,13 @@ import java.util.*;
  * 52. Majority element of an array (Using hashing)
  * 53. Majority element of an array (Using bit manipulation)
  * 54. The second-largest element of an array (Using tournament tree)
+ * 55. Print all pairs with given sum in an array (Hashing)
+ * 56. Print all pairs with given sum in an array (Two Pointer)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {8,9,2,1,7,4,14};
-        System.out.println(secondLargestTournamentTree(a));
+        int[] a = {8,9,2,1,7,4,8,14};
+        printPairsTwoPointer(a, 16);
     }
 
     /**
@@ -1283,7 +1285,52 @@ public class Searching {
         }
     }
 
+    /**
+     * Print all pairs with given sum in an array (Hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void printPairSums(int[] a, int k) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        for(int i=0; i<a.length; i++) {
+            int rem = k-a[i];
+            if(rem == a[i]) {
+                if(hashMap.containsKey(rem) && hashMap.get(rem) == 1) {
+                    System.out.println(rem + " " +rem);
+                }
+            } else {
+                if(hashMap.containsKey(rem) && !hashMap.containsKey(a[i])) {
+                    System.out.println(rem + " " + a[i]);
+                }
+            }
+            hashMap.put(a[i], hashMap.getOrDefault(a[i], 0) + 1);
+        }
+    }
 
+    /**
+     * Print all pairs with given sum in an array (Two Pointer)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static void printPairsTwoPointer(int[] a, int k) {
+        Arrays.sort(a);
+        int low = 0;
+        int high = a.length-1;
+        while(low < high) {
+            int sum = a[low] + a[high];
+            if(sum == k) {
+                System.out.println(a[low] + " " + a[high]);
+                low++;
+                high--;
+            } else if (sum < k) {
+                low++;
+            } else {
+                high--;
+            }
+        }
+    }
 }
 
 class BinarySearchFrequencyTree {
