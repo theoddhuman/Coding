@@ -27,12 +27,16 @@ import java.util.Set;
  * 14. Re-arrange an array such that a[i] = i (Hashing)
  * 15. Re-arrange an array such that a[i] = i (Swapping)
  * 16. Remove adjacent duplicates from an array
+ * 17. Merge two sorted arrays
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {5, 2,2,3,1,2,2,2,4,5};
-        removeAdjacentDuplicates(a);
-        System.out.println(Arrays.toString(a));
+        int[] a = {1,5,6,9};
+        int[] b = {3,4,11,23};
+        int[] res = merge(a, b);
+        for(int i: res) {
+            System.out.print(i + " ");
+        }
 //        int[][] a = {{1, 3, 45, 46},
 //                {21, 34, 35, 89},
 //                {1, 2, 3, 11},
@@ -415,5 +419,36 @@ public class Manipulation {
         for(int i=stack+1; i<a.length; i++) {
             a[i] = -1;
         }
+    }
+
+    /**
+     * Merge two sorted arrays
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] merge(int[] a, int[] b) {
+        int l = 0;
+        int r = 0;
+        int[] temp = new int[a.length + b.length];
+        int index = 0;
+        while(l < a.length && r < b.length) {
+            if(a[l] <= b[r]) {
+                temp[index++] = a[l];
+                l++;
+            } else {
+                temp[index++] = b[r];
+                r++;
+            }
+        }
+        while(l < a.length) {
+            temp[index++] = a[l];
+            l++;
+        }
+        while(r < b.length) {
+            temp[index++] = b[r];
+            r++;
+        }
+        return temp;
     }
 }

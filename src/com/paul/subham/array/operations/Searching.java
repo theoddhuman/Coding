@@ -63,11 +63,17 @@ import java.util.*;
  * 54. The second-largest element of an array (Using tournament tree)
  * 55. Print all pairs with given sum in an array (Hashing)
  * 56. Print all pairs with given sum in an array (Two Pointer)
+ * 57. Median of two sorted arrays (Merging)
+ * 58. Median of two sorted arrays of same size (Count while merging)
+ * 59. Median of two sorted arrays of same size (Binary search)
+ * 60. Median of two sorted arrays of different size (Count while merging)
+ * 61. Median of two sorted arrays of different size (Binary search)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {8,9,2,1,7,4,8,14};
-        printPairsTwoPointer(a, 16);
+        int[] a = {1, 5, 9, 11, 14, 16};
+        int[] b = {3, 4, 7, 8, 10};
+        System.out.println(medianTwoSortedArraysDiffSizeBinarySearch(a, b));
     }
 
     /**
@@ -353,9 +359,9 @@ public class Searching {
      * SC: O(1)
      */
     public static void getTwoRepeatingNumberUsingIndex(int[] a) {
-        for(int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             int absolute = Math.abs(a[i]);
-            if(a[absolute] > 0) {
+            if (a[absolute] > 0) {
                 a[absolute] = -a[absolute];
             } else {
                 System.out.print(absolute + " ");
@@ -370,9 +376,9 @@ public class Searching {
      */
     public static void getTwoRepeatingNumberByModifyingArray(int[] a) {
         int divider = a.length - 1;
-        for(int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             a[a[i] % divider - 1] += divider;
-            if(a[a[i] % divider - 1] / divider == 2) {
+            if (a[a[i] % divider - 1] / divider == 2) {
                 System.out.print(a[i] + " ");
             }
         }
@@ -384,9 +390,9 @@ public class Searching {
      * SC: O(1)
      */
     public static void twoSum(int[] a, int k) {
-        for(int i=0; i<a.length-1; i++) {
-            for(int j=i+1; j<a.length; j++) {
-                if(a[i] + a[j] == k) {
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[i] + a[j] == k) {
                     System.out.println(a[i] + " " + a[j]);
                     return;
                 }
@@ -402,16 +408,16 @@ public class Searching {
     public static void twoSumBySorting(int[] a, int k) {
         Arrays.sort(a);
         int left = 0;
-        int right = a.length-1;
-        while(left < right) {
+        int right = a.length - 1;
+        while (left < right) {
             int sum = a[left] + a[right];
-            if(sum == k) {
+            if (sum == k) {
                 System.out.println(a[left] + " " + a[right]);
                 return;
-            } else if(sum > k) {
-                right --;
+            } else if (sum > k) {
+                right--;
             } else {
-                left ++;
+                left++;
             }
         }
     }
@@ -423,10 +429,10 @@ public class Searching {
      */
     public static void twoSumByBinarySearch(int[] a, int k) {
         Arrays.sort(a);
-        for(int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             int searchKey = k - a[i];
-            int searchIndex = BinarySearch.searchRecursive(a, i+1, a.length-1, searchKey);
-            if(searchIndex != -1) {
+            int searchIndex = BinarySearch.searchRecursive(a, i + 1, a.length - 1, searchKey);
+            if (searchIndex != -1) {
                 System.out.println(a[i] + " " + a[searchIndex]);
                 return;
             }
@@ -457,27 +463,27 @@ public class Searching {
      */
     public static void twoSumByRemainder(int[] a, int k) {
         int[] rem = new int[k];
-        for (int i=0; i<a.length; i++) {
-            if(a[i] < k) {
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] < k) {
                 rem[a[i] % k]++;
             }
         }
         int i;
-        for(i=1; i<k/2; i++) {
-            if(rem[i] > 0 && rem[k-i] > 0) {
-                System.out.println(i + " " + (k-i));
+        for (i = 1; i < k / 2; i++) {
+            if (rem[i] > 0 && rem[k - i] > 0) {
+                System.out.println(i + " " + (k - i));
                 return;
             }
         }
 
-        if(i >= k/2) {
-            if(k%2 == 0) {
-                if(rem[k/2] > 1) {
-                    System.out.println(k/2 + " " + k/2);
+        if (i >= k / 2) {
+            if (k % 2 == 0) {
+                if (rem[k / 2] > 1) {
+                    System.out.println(k / 2 + " " + k / 2);
                 }
             } else {
-                if(rem[k/2] > 0 && rem[k - k/2] > 0) {
-                    System.out.println(k/2 + " " + (k - k/2));
+                if (rem[k / 2] > 0 && rem[k - k / 2] > 0) {
+                    System.out.println(k / 2 + " " + (k - k / 2));
                 }
             }
 
@@ -490,17 +496,17 @@ public class Searching {
      * SC: O(1)
      */
     public static void twoSumClosestToZero(int[] a) {
-        if(a.length < 2) {
+        if (a.length < 2) {
             System.out.println("Invalid input");
             return;
         }
         int left = 0;
         int right = 1;
         int minSum = a[left] + a[right];
-        for(int i=0; i<a.length-1; i++) {
-            for(int j=i+1; j<a.length; j++) {
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = i + 1; j < a.length; j++) {
                 int sum = a[i] + a[j];
-                if(minSum > Math.abs(sum)) {
+                if (minSum > Math.abs(sum)) {
                     minSum = Math.abs(sum);
                     left = i;
                     right = j;
@@ -516,19 +522,19 @@ public class Searching {
      * SC: O(1)
      */
     public static void twoSumClosestToZeroBySorting(int[] a) {
-        if(a.length < 2) {
+        if (a.length < 2) {
             System.out.println("Invalid input");
             return;
         }
         Arrays.sort(a);
         int mini = 0;
-        int minj = a.length-1;
+        int minj = a.length - 1;
         int left = 0;
-        int right = a.length-1;
+        int right = a.length - 1;
         int minSum = Integer.MAX_VALUE;
-        while(left < right) {
+        while (left < right) {
             int sum = Math.abs(a[left] + a[right]);
-            if(minSum > sum) {
+            if (minSum > sum) {
                 mini = left;
                 minj = right;
                 minSum = Math.abs(sum);
@@ -545,7 +551,7 @@ public class Searching {
 
     /**
      * Finding an element which appears odd no of times in an array (Nested loop)
-     *
+     * <p>
      * TC: O(n^2)
      * SC: O(1)
      */
@@ -566,7 +572,7 @@ public class Searching {
 
     /**
      * Finding an element which appears odd no of times in an array (Hashing)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(n)
      */
@@ -579,8 +585,8 @@ public class Searching {
                 map.put(j, 1);
             }
         }
-        for(Integer i : map.keySet()) {
-            if(map.get(i)%2 != 0) {
+        for (Integer i : map.keySet()) {
+            if (map.get(i) % 2 != 0) {
                 return i;
             }
         }
@@ -589,13 +595,13 @@ public class Searching {
 
     /**
      * Finding an element which appears odd no of times in an array (Bit manipulation - XOR)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(1)
      */
     public static int oddAppearingElementXor(int[] a) {
         int res = 0;
-        for(int i: a) {
+        for (int i : a) {
             res = res ^ i;
         }
         return res;
@@ -603,82 +609,82 @@ public class Searching {
 
     /**
      * Finding an element which appears odd no of times in an array (Binary search)
-     *
+     * <p>
      * Given an array where all elements appear even number of times except one.
      * All repeating occurrences of elements appear in pairs and these pairs are not adjacent.
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
     public static int oddAppearingElementBinarySearch(int[] a, int low, int high) {
-        if(low > high) {
+        if (low > high) {
             return Integer.MIN_VALUE;
         }
-        if(low == high) {
+        if (low == high) {
             return a[low];
         }
-        int mid = low + (high - low)/2;
-        if(mid%2 == 0) {
-            if(a[mid] == a[mid+1]){
-                return oddAppearingElementBinarySearch(a, mid+2, high);
+        int mid = low + (high - low) / 2;
+        if (mid % 2 == 0) {
+            if (a[mid] == a[mid + 1]) {
+                return oddAppearingElementBinarySearch(a, mid + 2, high);
             } else {
                 return oddAppearingElementBinarySearch(a, low, mid);
             }
         } else {
-            if(a[mid] == a[mid-1]) {
-                return oddAppearingElementBinarySearch(a, mid+1,high);
+            if (a[mid] == a[mid - 1]) {
+                return oddAppearingElementBinarySearch(a, mid + 1, high);
             } else {
-                return oddAppearingElementBinarySearch(a, low, mid-1);
+                return oddAppearingElementBinarySearch(a, low, mid - 1);
             }
         }
     }
 
     /**
      * Finding maximum in an array which is increasing then decreasing (Bitonic Search - Recursive)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(logn)
      */
     public static int maxBitonicRecursive(int[] a, int low, int high) {
-        if(low == high) {
+        if (low == high) {
             return a[low];
         }
-        if(low + 1== high) {
+        if (low + 1 == high) {
             return Math.max(a[low], a[high]);
         }
-        int mid = low + (high - low)/2;
-        if(a[mid] > a[mid-1] && a[mid] > a[mid+1]) {
+        int mid = low + (high - low) / 2;
+        if (a[mid] > a[mid - 1] && a[mid] > a[mid + 1]) {
             return a[mid];
         }
-        if(a[mid] > a[mid-1] && a[mid] < a[mid+1]) {
-            return maxBitonicRecursive(a, mid+1, high);
+        if (a[mid] > a[mid - 1] && a[mid] < a[mid + 1]) {
+            return maxBitonicRecursive(a, mid + 1, high);
         } else {
-            return maxBitonicRecursive(a, low, mid-1);
+            return maxBitonicRecursive(a, low, mid - 1);
         }
     }
 
     /**
      * Finding maximum in an array which is increasing then decreasing (Bitonic Search - Iterative)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
     public static int maxBitonicIterative(int[] a, int low, int high) {
-        if(low == high) {
+        if (low == high) {
             return a[low];
         }
-        while(low <= high) {
-            if(low + 1== high) {
+        while (low <= high) {
+            if (low + 1 == high) {
                 return Math.max(a[low], a[high]);
             }
-            int mid = low + (high-low)/2;
-            if(a[mid] > a[mid-1] && a[mid] > a[mid+1]) {
+            int mid = low + (high - low) / 2;
+            if (a[mid] > a[mid - 1] && a[mid] > a[mid + 1]) {
                 return a[mid];
             }
-            if(a[mid] > a[mid-1] && a[mid] < a[mid+1]) {
-                low = mid+1;
+            if (a[mid] > a[mid - 1] && a[mid] < a[mid + 1]) {
+                low = mid + 1;
             } else {
-                high = mid-1;
+                high = mid - 1;
             }
         }
         return a[high];
@@ -686,77 +692,78 @@ public class Searching {
 
     /**
      * Searching an element in sorted and rotated array (Using pivot)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(logn)
      */
     public static int searchSortedAndRotatedPivot(int[] a, int data) {
-        int pivot = findPivot(a, 0, a.length-1);
-        if(pivot == -1) {
-            return BinarySearch.searchRecursive(a, 0, a.length-1, data);
+        int pivot = findPivot(a, 0, a.length - 1);
+        if (pivot == -1) {
+            return BinarySearch.searchRecursive(a, 0, a.length - 1, data);
         }
-        if(a[pivot] == data) {
+        if (a[pivot] == data) {
             return pivot;
         }
-        if(a[0] <= data) {
-            return BinarySearch.searchRecursive(a, 0, pivot-1, data);
+        if (a[0] <= data) {
+            return BinarySearch.searchRecursive(a, 0, pivot - 1, data);
         } else {
-            return BinarySearch.searchRecursive(a, pivot+1, a.length-1, data);
+            return BinarySearch.searchRecursive(a, pivot + 1, a.length - 1, data);
         }
     }
 
     private static int findPivot(int[] a, int low, int high) {
-        if(low > high) {
+        if (low > high) {
             return -1;
         }
-        if(low == high) {
+        if (low == high) {
             return low;
         }
-        int mid = low + (high-low)/2;
-        if(mid < high && a[mid] > a[mid+1]) {
+        int mid = low + (high - low) / 2;
+        if (mid < high && a[mid] > a[mid + 1]) {
             return mid;
         }
-        if(mid > low && a[mid] < a[mid-1]) {
-            return mid-1;
+        if (mid > low && a[mid] < a[mid - 1]) {
+            return mid - 1;
         }
-        if(a[low] >= a[mid]) {
-            return findPivot(a, low, mid-1);
+        if (a[low] >= a[mid]) {
+            return findPivot(a, low, mid - 1);
         } else {
-            return findPivot(a, mid+1, high);
+            return findPivot(a, mid + 1, high);
         }
     }
+
     /**
      * Searching an element in sorted and rotated array (Binary Search - Recursive)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(logn)
      */
     public static int searchSortedAndRotatedBinaryRecursive(int[] a, int data, int low, int high) {
-        if(low>high) {
+        if (low > high) {
             return -1;
         }
-        int mid = low + (high-low)/2;
-        if(a[mid] == data) {
+        int mid = low + (high - low) / 2;
+        if (a[mid] == data) {
             return mid;
         }
-        if(a[low] <= a[mid]) {
-            if(a[low] <= data && data < a[mid]) {
-                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid-1);
+        if (a[low] <= a[mid]) {
+            if (a[low] <= data && data < a[mid]) {
+                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid - 1);
             } else {
-                return searchSortedAndRotatedBinaryRecursive(a, data, mid+1, high);
+                return searchSortedAndRotatedBinaryRecursive(a, data, mid + 1, high);
             }
         } else {
-            if(a[mid] < data && data <= a[high]) {
-                return searchSortedAndRotatedBinaryRecursive(a, data, mid+1, high);
+            if (a[mid] < data && data <= a[high]) {
+                return searchSortedAndRotatedBinaryRecursive(a, data, mid + 1, high);
             } else {
-                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid-1);
+                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid - 1);
             }
         }
     }
 
     /**
      * Searching an element in sorted and rotated array (Binary Search - Iterative)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
@@ -785,42 +792,42 @@ public class Searching {
 
     /**
      * Median of sequence of elements
-     *
+     * <p>
      * TC: O(1)
      * SC: O(1)
      */
     public static double median(int[] a) {
         int n = a.length;
-        if(n%2 != 0) {
-            return a[n/2];
+        if (n % 2 != 0) {
+            return a[n / 2];
         } else {
-            return (double)(a[(n-1)/2] + a[n/2])/2.0;
+            return (double) (a[(n - 1) / 2] + a[n / 2]) / 2.0;
         }
     }
 
     /**
      * First occurrence of an element in an array (Binary Search - Recursive)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(logn)
      */
     public static int firstOccurrenceRecursive(int[] a, int low, int high, int data) {
-        if(low > high) {
+        if (low > high) {
             return -1;
         }
-        int mid = low + (high-low) / 2;
-        if((mid == low && a[mid] == data) || (a[mid] == data && a[mid-1] < data)) {
+        int mid = low + (high - low) / 2;
+        if ((mid == low && a[mid] == data) || (a[mid] == data && a[mid - 1] < data)) {
             return mid;
         } else if (a[mid] >= data) {
-            return firstOccurrenceRecursive(a, low, mid-1, data);
+            return firstOccurrenceRecursive(a, low, mid - 1, data);
         } else {
-            return firstOccurrenceRecursive(a, mid+1, high, data);
+            return firstOccurrenceRecursive(a, mid + 1, high, data);
         }
     }
 
     /**
      * First occurrence of an element in an array (Binary Search - Iterative)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
@@ -842,27 +849,27 @@ public class Searching {
 
     /**
      * Last occurrence of an element in an array (Binary Search - Recursive)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(logn)
      */
     public static int lastOccurrenceRecursive(int[] a, int low, int high, int data) {
-        if(low > high) {
+        if (low > high) {
             return -1;
         }
-        int mid = low + (high-low) / 2;
-        if((mid == high && a[mid] == data) || (a[mid] == data && a[mid+1] > data)) {
+        int mid = low + (high - low) / 2;
+        if ((mid == high && a[mid] == data) || (a[mid] == data && a[mid + 1] > data)) {
             return mid;
         } else if (a[mid] >= data) {
-            return lastOccurrenceRecursive(a, low, mid-1, data);
+            return lastOccurrenceRecursive(a, low, mid - 1, data);
         } else {
-            return lastOccurrenceRecursive(a, mid+1, high, data);
+            return lastOccurrenceRecursive(a, mid + 1, high, data);
         }
     }
 
     /**
      * Last occurrence of an element in an array (Binary Search - Iterative)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
@@ -871,7 +878,7 @@ public class Searching {
         int high = a.length - 1;
         while (low <= high) {
             int mid = low + (high - low) / 2;
-            if((mid == high && a[mid] == data) || (a[mid] == data && a[mid+1] > data)) {
+            if ((mid == high && a[mid] == data) || (a[mid] == data && a[mid + 1] > data)) {
                 return mid;
             } else if (a[mid] >= data) {
                 high = mid - 1;
@@ -884,14 +891,14 @@ public class Searching {
 
     /**
      * Count no of occurrences of an element in an array (Linear search)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
     public static int countOccurrences(int[] a, int data) {
         int count = 0;
-        for(int i: a) {
-            if(i == data) {
+        for (int i : a) {
+            if (i == data) {
                 count++;
             }
         }
@@ -900,20 +907,20 @@ public class Searching {
 
     /**
      * Count no of occurrences of an element in an array (Binary Search)
-     *
+     * <p>
      * TC: O(logn + k), where k is no of occurrences
      * SC: O(1)
      */
     public static int countOccurrencesBinarySearch(int[] a, int data) {
         int index = BinarySearch.search(a, a.length, data);
         int count = 1;
-        int left = index-1;
-        while(left>=0 && a[left] == data) {
+        int left = index - 1;
+        while (left >= 0 && a[left] == data) {
             count++;
             left--;
         }
-        int right = index+1;
-        while(index<a.length && a[right] == data) {
+        int right = index + 1;
+        while (index < a.length && a[right] == data) {
             count++;
             right++;
         }
@@ -922,22 +929,22 @@ public class Searching {
 
     /**
      * Count no of occurrences of an element in an array (Binary Search - improved)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
     public static int countOccurrencesBinarySearchImproved(int[] a, int data) {
         int firstIndex = firstOccurrenceIterative(a, data);
-        if(firstIndex == -1) {
+        if (firstIndex == -1) {
             return 0;
         }
         int lastIndex = lastOccurrenceIterative(a, data);
-        return lastIndex - firstIndex  + 1;
+        return lastIndex - firstIndex + 1;
     }
 
     /**
      * Find smallest and second-smallest elements in an array (Sorting)
-     *
+     * <p>
      * TC: O(nlogn)
      * SC: O(1)
      */
@@ -945,111 +952,111 @@ public class Searching {
         Arrays.sort(a);
         int smallest = a[0];
         int secondSmallest = Integer.MAX_VALUE;
-        for(int i=1; i<a.length; i++) {
-            if(a[i] > smallest) {
+        for (int i = 1; i < a.length; i++) {
+            if (a[i] > smallest) {
                 secondSmallest = a[i];
                 break;
             }
         }
-        System.out.println("Smallest: "+smallest);
-        if(secondSmallest < Integer.MAX_VALUE) {
+        System.out.println("Smallest: " + smallest);
+        if (secondSmallest < Integer.MAX_VALUE) {
             System.out.println("Second Smallest " + secondSmallest);
         }
     }
 
     /**
      * Find smallest and second-smallest elements in an array (Scanning twice)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(1)
      */
     public static void findSmallestAndSecondSmallestTwoScan(int[] a) {
         int smallest = Integer.MAX_VALUE;
-        for(int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             smallest = Math.min(smallest, a[i]);
         }
         int secondSmallest = Integer.MAX_VALUE;
-        for(int i=0; i<a.length; i++) {
-            if(a[i] > smallest) {
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] > smallest) {
                 secondSmallest = Math.min(secondSmallest, a[i]);
             }
         }
-        System.out.println("Smallest: "+smallest);
-        if(secondSmallest < Integer.MAX_VALUE) {
+        System.out.println("Smallest: " + smallest);
+        if (secondSmallest < Integer.MAX_VALUE) {
             System.out.println("Second Smallest " + secondSmallest);
         }
     }
 
     /**
      * Find smallest and second-smallest elements in an array (Scanning once)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(1)
      */
     public static void findSmallestAndSecondSmallestSingleScan(int[] a) {
         int smallest = Integer.MAX_VALUE;
         int secondSmallest = Integer.MAX_VALUE;
-        for(int i=0; i<a.length; i++) {
-            if(a[i] < smallest) {
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] < smallest) {
                 secondSmallest = smallest;
                 smallest = a[i];
-            } else if(a[i] < secondSmallest && a[i] != smallest) {
+            } else if (a[i] < secondSmallest && a[i] != smallest) {
                 secondSmallest = a[i];
             }
         }
-        System.out.println("Smallest: "+smallest);
-        if(secondSmallest < Integer.MAX_VALUE) {
+        System.out.println("Smallest: " + smallest);
+        if (secondSmallest < Integer.MAX_VALUE) {
             System.out.println("Second Smallest " + secondSmallest);
         }
     }
 
     /**
      * Find smallest and second-smallest elements in an array (Using priority queue)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(n)
      */
     public static void findSmallestAndSecondSmallestPriorityQueue(int[] a) {
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
-        for(int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             priorityQueue.add(a[i]);
         }
         int smallest = priorityQueue.poll();
         int secondSmallest = Integer.MAX_VALUE;
-        while(!priorityQueue.isEmpty()) {
+        while (!priorityQueue.isEmpty()) {
             int x = priorityQueue.poll();
-            if(x != smallest) {
+            if (x != smallest) {
                 secondSmallest = x;
                 break;
             }
         }
         System.out.println("Smallest " + smallest);
-        if(secondSmallest < Integer.MAX_VALUE) {
+        if (secondSmallest < Integer.MAX_VALUE) {
             System.out.println("Second Smallest " + secondSmallest);
         }
     }
 
     /**
      * Find the smallest element in sorted and rotated array (Binary search - iterative)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
     public static int minSortedRotated(int[] a) {
         int low = 0;
-        int high = a.length-1;
-        while(low < high) {
-            int mid = low + (high-low)/2;
-            if(low < mid && a[mid] < a[mid-1]) {
+        int high = a.length - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (low < mid && a[mid] < a[mid - 1]) {
                 return a[mid];
             }
-            if(high > mid && a[mid] > a[mid+1]) {
-                return a[mid+1];
+            if (high > mid && a[mid] > a[mid + 1]) {
+                return a[mid + 1];
             }
-            if(a[mid] < a[high]) {
-                high = mid-1;
+            if (a[mid] < a[high]) {
+                high = mid - 1;
             } else {
-                low = mid+1;
+                low = mid + 1;
             }
         }
         return a[0];
@@ -1057,23 +1064,23 @@ public class Searching {
 
     /**
      * Find the smallest element in sorted and rotated array (Binary search - recursive)
-     *
+     * <p>
      * TC: O(logn)
      * SC: O(1)
      */
     public static int minSortedRotated(int[] a, int low, int high) {
-        if(low < high) {
-            int mid = low + (high-low)/2;
-            if(low < mid && a[mid] < a[mid-1]) {
+        if (low < high) {
+            int mid = low + (high - low) / 2;
+            if (low < mid && a[mid] < a[mid - 1]) {
                 return a[mid];
             }
-            if(high > mid && a[mid] > a[mid+1]) {
-                return a[mid+1];
+            if (high > mid && a[mid] > a[mid + 1]) {
+                return a[mid + 1];
             }
-            if(a[mid] < a[high]) {
-                return minSortedRotated(a, low, mid-1);
+            if (a[mid] < a[high]) {
+                return minSortedRotated(a, low, mid - 1);
             } else {
-                return minSortedRotated(a, mid+1, high);
+                return minSortedRotated(a, mid + 1, high);
             }
         }
         return a[low];
@@ -1081,26 +1088,26 @@ public class Searching {
 
     /**
      * Majority element of an array
-     *
+     * <p>
      * TC: O(n^2)
      * SC: O(1)
      */
     public static int majority(int[] a) {
         int maxCount = Integer.MIN_VALUE;
         int max = a[0];
-        for(int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             int count = 0;
-            for(int j=0; j<a.length; j++) {
-                if(a[i] == a[j]) {
+            for (int j = 0; j < a.length; j++) {
+                if (a[i] == a[j]) {
                     count++;
                 }
             }
-            if(count > maxCount) {
+            if (count > maxCount) {
                 maxCount = count;
                 max = a[i];
             }
         }
-        if(maxCount > a.length/2) {
+        if (maxCount > a.length / 2) {
             return max;
         }
         return Integer.MIN_VALUE;
@@ -1108,22 +1115,22 @@ public class Searching {
 
     /**
      * Majority element of an array (Using binary search tree)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(n)
      */
     public static int majorityBST(int[] a) {
         BinarySearchFrequencyTree bst = new BinarySearchFrequencyTree();
-        for(int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             bst.insert(a[i]);
         }
         return inOrder(bst.root, a.length);
     }
 
     private static int inOrder(BSFrequencyNode node, int n) {
-        if(node != null) {
+        if (node != null) {
             int data = inOrder(node.left, n);
-            if(data > Integer.MIN_VALUE){
+            if (data > Integer.MIN_VALUE) {
                 return data;
             }
             if (node.frequency > n / 2) {
@@ -1136,20 +1143,20 @@ public class Searching {
 
     /**
      * Majority element of an array (Using sorting)
-     *
+     * <p>
      * TC: O(nlogn), average case
      * SC: O(n)
      */
     public static int majorityUsingSorting(int[] a) {
         Arrays.sort(a);
         int count = 1;
-        for(int i=1; i<a.length; i++) {
-            if(a[i] == a[i-1]) {
+        for (int i = 1; i < a.length; i++) {
+            if (a[i] == a[i - 1]) {
                 count++;
             } else {
                 count = 1;
             }
-            if(count > a.length/2) {
+            if (count > a.length / 2) {
                 return a[i];
             }
         }
@@ -1158,7 +1165,7 @@ public class Searching {
 
     /**
      * Majority element of an array (Moore's Voting algorithm)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(1)
      */
@@ -1183,13 +1190,13 @@ public class Searching {
     private static int getCandidate(int[] a) {
         int majorityIndex = 0;
         int count = 1;
-        for(int i=1; i<a.length; i++) {
-            if(a[i] == a[majorityIndex]) {
+        for (int i = 1; i < a.length; i++) {
+            if (a[i] == a[majorityIndex]) {
                 count++;
             } else {
                 count--;
             }
-            if(count == 0) {
+            if (count == 0) {
                 majorityIndex = i;
                 count = 1;
             }
@@ -1199,19 +1206,19 @@ public class Searching {
 
     /**
      * Majority element of an array (Using hashing)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(n)
      */
     public static int majorityHashing(int[] a) {
         Map<Integer, Integer> map = new HashMap<>();
-        for(int i=0; i<a.length; i++) {
-            if(!map.containsKey(a[i])) {
+        for (int i = 0; i < a.length; i++) {
+            if (!map.containsKey(a[i])) {
                 map.put(a[i], 1);
             } else {
                 map.put(a[i], map.get(a[i]) + 1);
             }
-            if(map.get(a[i]) > a.length/2) {
+            if (map.get(a[i]) > a.length / 2) {
                 return a[i];
             }
         }
@@ -1220,41 +1227,41 @@ public class Searching {
 
     /**
      * Majority element of an array (Using bit manipulation)
-     *
+     * <p>
      * TC: O(n*k), k is number of bits
      * SC: O(1)
      */
     public static int majorityBitManipulation(int[] a) {
-         int majority = 0;
-         for(int i=0; i<32; i++) {
-             int numZeros = 0;
-             int numOnes = 0;
-             for(int num : a) {
-                 if(((num >> i) & 1) == 1) {
-                     numOnes++;
-                 } else {
-                     numZeros++;
-                 }
-             }
-             if(numOnes > numZeros) {
-                 majority |=(1<<i);
-             }
-         }
-         int count = 0;
-         for(int num : a) {
-             if(num==majority) {
-                 count++;
-             }
-             if(count > a.length/2) {
-                 return majority;
-             }
-         }
-         return Integer.MIN_VALUE;
+        int majority = 0;
+        for (int i = 0; i < 32; i++) {
+            int numZeros = 0;
+            int numOnes = 0;
+            for (int num : a) {
+                if (((num >> i) & 1) == 1) {
+                    numOnes++;
+                } else {
+                    numZeros++;
+                }
+            }
+            if (numOnes > numZeros) {
+                majority |= (1 << i);
+            }
+        }
+        int count = 0;
+        for (int num : a) {
+            if (num == majority) {
+                count++;
+            }
+            if (count > a.length / 2) {
+                return majority;
+            }
+        }
+        return Integer.MIN_VALUE;
     }
 
     /**
      * The second-largest element of an array (Using tournament tree)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(n)
      */
@@ -1265,19 +1272,19 @@ public class Searching {
     }
 
     private static int secondLargestIndex(TNode node, int[] a) {
-        if(node == null || node.left == null) {
+        if (node == null || node.left == null) {
             return -1;
         }
-        if(node.left.index == node.index) {
+        if (node.left.index == node.index) {
             int leftSecondMin = secondLargestIndex(node.left, a);
-            if(leftSecondMin == -1 || a[node.right.index] > a[leftSecondMin]) {
+            if (leftSecondMin == -1 || a[node.right.index] > a[leftSecondMin]) {
                 return node.right.index;
             } else {
                 return leftSecondMin;
             }
         } else {
             int rightSecondMin = secondLargestIndex(node.right, a);
-            if(rightSecondMin == -1 || a[node.left.index] > a[rightSecondMin]) {
+            if (rightSecondMin == -1 || a[node.left.index] > a[rightSecondMin]) {
                 return node.left.index;
             } else {
                 return rightSecondMin;
@@ -1287,20 +1294,20 @@ public class Searching {
 
     /**
      * Print all pairs with given sum in an array (Hashing)
-     *
+     * <p>
      * TC: O(n)
      * SC: O(n)
      */
     public static void printPairSums(int[] a, int k) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
-        for(int i=0; i<a.length; i++) {
-            int rem = k-a[i];
-            if(rem == a[i]) {
-                if(hashMap.containsKey(rem) && hashMap.get(rem) == 1) {
-                    System.out.println(rem + " " +rem);
+        for (int i = 0; i < a.length; i++) {
+            int rem = k - a[i];
+            if (rem == a[i]) {
+                if (hashMap.containsKey(rem) && hashMap.get(rem) == 1) {
+                    System.out.println(rem + " " + rem);
                 }
             } else {
-                if(hashMap.containsKey(rem) && !hashMap.containsKey(a[i])) {
+                if (hashMap.containsKey(rem) && !hashMap.containsKey(a[i])) {
                     System.out.println(rem + " " + a[i]);
                 }
             }
@@ -1310,17 +1317,17 @@ public class Searching {
 
     /**
      * Print all pairs with given sum in an array (Two Pointer)
-     *
+     * <p>
      * TC: O(nlogn)
      * SC: O(n)
      */
     public static void printPairsTwoPointer(int[] a, int k) {
         Arrays.sort(a);
         int low = 0;
-        int high = a.length-1;
-        while(low < high) {
+        int high = a.length - 1;
+        while (low < high) {
             int sum = a[low] + a[high];
-            if(sum == k) {
+            if (sum == k) {
                 System.out.println(a[low] + " " + a[high]);
                 low++;
                 high--;
@@ -1330,6 +1337,169 @@ public class Searching {
                 high--;
             }
         }
+    }
+
+    /**
+     * Median of two sorted arrays (Merging)
+     * <p>
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static double medianTwoSortedArrays(int[] a, int[] b) {
+        int[] temp = Manipulation.merge(a, b);
+        return median(temp);
+    }
+
+    /**
+     * Median of two sorted arrays of same size (Count while merging)
+     * <p>
+     * TC: O(n)
+     * SC: O(1)
+     */
+    private static double medianTwoSortedArraysSameSizeMerging(int[] a, int[] b) {
+        int l = 0;
+        int r = 0;
+        int m1 = -1, m2 = -1;
+        for (int i = 0; i <= a.length; i++) {
+            if (l == a.length) {
+                m1 = m2;
+                m2 = b[0];
+                break;
+            }
+            if (r == b.length) {
+                m1 = m2;
+                m2 = a[0];
+                break;
+            }
+            if (a[l] <= b[r]) {
+                m1 = m2;
+                m2 = a[l];
+                l++;
+            } else {
+                m1 = m2;
+                m2 = a[r];
+                r++;
+            }
+        }
+        return (m1 + m2) / 2.0;
+    }
+
+    /**
+     * Median of two sorted arrays of same size (Binary Search)
+     * <p>
+     * TC: O(logn)
+     * SC: O(logn)
+     */
+    public static double medianTwoSortedArraysSameSizeSelection(int[] a, int[] b) {
+        return getMedian(a, b, 0, a.length - 1, 0, b.length - 1);
+    }
+
+    private static double getMedian(int[] a, int[] b, int startA, int endA, int startB, int endB) {
+        if (endA - startA == 1) {
+            return (Math.max(a[startA], b[startB]) + Math.min(a[endA], b[endB])) / 2.0;
+        }
+        double m1 = median(a, startA, endA);
+        double m2 = median(b, startB, endB);
+        if (m1 < m2) {
+            return getMedian(a, b, (startA + endA + 1) / 2, endA, startB, (startB + endB) / 2);
+        }
+        return getMedian(a, b, startA, (startA + endA) / 2, (startB + endB + 1) / 2, endB);
+    }
+
+    private static double median(int[] a, int start, int end) {
+        int n = end - start + 1;
+        if (n % 2 == 0) {
+            return (a[start + n / 2] + a[start + n / 2 - 1]) / 2.0;
+        }
+        return a[start + n / 2];
+    }
+
+    /**
+     * Median of two sorted arrays of different size (Count while merging)
+     * <p>
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static double medianTwoSortedArraysDiffSize(int[] a, int[] b) {
+        int aLength = a.length;
+        int bLength = b.length;
+        int n = aLength + bLength;
+        int m1 = -1;
+        int m2 = -1;
+        int i = 0;
+        int j = 0;
+        if (n % 2 == 1) {
+            for (int k = 0; k <= n / 2; k++) {
+                if (i < aLength && j < bLength) {
+                    m2 = a[i] <= b[j] ? a[i++] : b[j++];
+                } else if (i < aLength) {
+                    m2 = a[i++];
+                } else {
+                    m2 = b[j++];
+                }
+            }
+            return m2;
+        } else {
+            for (int k = 0; k <= n / 2; k++) {
+                m1 = m2;
+                if (i < aLength && j < bLength) {
+                    m2 = a[i] <= b[j] ? a[i++] : b[j++];
+                } else if (i < aLength) {
+                    m2 = a[i++];
+                } else {
+                    m2 = b[j++];
+                }
+            }
+            return (m1 + m2) / 2.0;
+        }
+    }
+
+    /**
+     * Median of two sorted arrays of different size (Binary search)
+     * <p>
+     * TC: O(log(min(m,n)))
+     * SC: O(1)
+     */
+    public static double medianTwoSortedArraysDiffSizeBinarySearch(int[] a, int[] b) {
+        int m = a.length;
+        int n = b.length;
+        if (m > n) {
+            return medianTwoSortedArraysDiffSizeBinarySearch(b, a);
+        }
+        int low = 0;
+        int high = m;
+        while (low <= high) {
+            int midA = (low + high) / 2;
+            int midB = (m + n + 1)/2 - midA;
+            int lA = Integer.MIN_VALUE;
+            int lB = Integer.MIN_VALUE;
+            int rA = Integer.MAX_VALUE;
+            int rB = Integer.MAX_VALUE;
+            if(midA > 0) {
+                lA = a[midA-1];
+            }
+            if(midB > 0) {
+                lB = b[midB-1];
+            }
+            if(midA < m) {
+                rA = a[midA];
+            }
+            if(midB < n) {
+                rB = b[midB];
+            }
+            if(lA <= rB && lB <= rA) {
+                if((m+n)%2 == 0) {
+                    return (Math.max(lA, lB) + Math.min(rA, rB)) / 2.0;
+                } else {
+                    return Math.max(lA, lB);
+                }
+            } else if (lA > rB) {
+                high = midA - 1;
+            } else {
+                low = midA + 1;
+            }
+        }
+        return Integer.MIN_VALUE;
     }
 }
 
@@ -1341,12 +1511,12 @@ class BinarySearchFrequencyTree {
     }
 
     private BSFrequencyNode insertUtil(BSFrequencyNode node, int data) {
-        if(node == null) {
+        if (node == null) {
             return new BSFrequencyNode(data);
         }
-        if(data == node.data) {
-            node.frequency ++;
-        } else if(data <node.data) {
+        if (data == node.data) {
+            node.frequency++;
+        } else if (data < node.data) {
             node.left = insertUtil(node.left, data);
         } else {
             node.right = insertUtil(node.right, data);
@@ -1359,9 +1529,10 @@ class BSFrequencyNode {
     int data;
     int frequency;
     BSFrequencyNode left, right;
+
     BSFrequencyNode(int data) {
         this.data = data;
-        this.frequency =1;
+        this.frequency = 1;
         this.left = this.right = null;
     }
 }
