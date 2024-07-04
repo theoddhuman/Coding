@@ -30,13 +30,16 @@ import java.util.Set;
  * 17. Merge two sorted arrays
  * 18. Move zeros to end of an array
  * 19. Move zeros to end of an array (Single traversal)
+ * 20. Segregate 0's and 1's in an array (Count 0)
+ * 21. Segregate 0's and 1's in an array (Two indices)
+ * 22. Segregate 0's and 1's in an array (Single traversal)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {1,0, 0, 5,6, 0,9};
+        int[] a = {1,0, 1,1,0,0,1,0};
 //        int[] b = {3,4,11,23};
 //        int[] res = merge(a, b);
-        moveZerosEndSingleTraversal(a);
+        segregate0And1SingleTraversal(a);
         for(int i: a) {
             System.out.print(i + " ");
         }
@@ -487,6 +490,73 @@ public class Manipulation {
                 a[count] = a[i];
                 a[i] = temp;
                 count++;
+            }
+        }
+    }
+
+    /**
+     * Segregate 0's and 1's in an array (Count 0)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void segregate0And1(int[] a) {
+        int count0 = 0;
+        for(int i=0; i<a.length; i++) {
+            if(a[i] == 0) {
+                count0++;
+            }
+        }
+        for(int i=0; i<count0; i++) {
+            a[i] = 0;
+        }
+        for(int i=count0; i<a.length; i++) {
+            a[i] = 1;
+        }
+    }
+
+    /**
+     * Segregate 0's and 1's in an array (Two indices)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void segregate0And1TwoIndices(int[] a) {
+        int l = 0;
+        int r = a.length - 1;
+        while (l < r) {
+            while (a[l] == 0 && l < r) {
+                l++;
+            }
+            while (a[r] == 1 && l < r) {
+                r--;
+            }
+            if (l < r) {
+                a[l] = 0;
+                a[r] = 1;
+                l++;
+                r--;
+            }
+        }
+    }
+
+    /**
+     * Segregate 0's and 1's in an array (Single traversal)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void segregate0And1SingleTraversal(int[] a) {
+        int l = 0;
+        int r = a.length - 1;
+        while (l < r) {
+            if (a[l] == 1) {
+                int temp = a[l];
+                a[l] = a[r];
+                a[r] = temp;
+                r--;
+            } else {
+                l++;
             }
         }
     }
