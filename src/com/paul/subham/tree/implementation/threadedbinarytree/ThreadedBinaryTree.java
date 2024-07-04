@@ -16,6 +16,7 @@ import java.util.Queue;
  * 8. Inorder predecessor of a node
  * 9. Preorder traversal
  * 10. Preorder successor of a node
+ * 11. Insert in threaded binary search tree
  */
 public class ThreadedBinaryTree {
     public TBTNode root;
@@ -289,5 +290,49 @@ public class ThreadedBinaryTree {
             node = node.right;
         }
         return node.right;
+    }
+
+    /**
+     * Insert in threaded binary search tree
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public void insertBST(int data) {
+        TBTNode newNode = new TBTNode(data);
+        if(root.left == root && root.right == root) {
+            newNode.leftBit = root.leftBit;
+            newNode.left = root.left;
+            root.left = newNode;
+            root.leftBit = true;
+            newNode.right = root;
+            return;
+        }
+        TBTNode current = root.left;
+        while(true) {
+            if (current.data > data) {
+                if (!current.leftBit) {
+                    newNode.leftBit = false;
+                    newNode.left = current;
+                    current.left = newNode;
+                    current.leftBit = true;
+                    newNode.right = current;
+                    return;
+                } else {
+                    current = current.left;
+                }
+            } else {
+                if (!current.rightBit) {
+                    newNode.rightBit = false;
+                    newNode.right = current.right;
+                    current.right = newNode;
+                    current.rightBit = true;
+                    newNode.left = current;
+                    return;
+                } else {
+                    current = current.right;
+                }
+            }
+        }
     }
 }
