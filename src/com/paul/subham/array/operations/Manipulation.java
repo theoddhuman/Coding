@@ -28,13 +28,16 @@ import java.util.Set;
  * 15. Re-arrange an array such that a[i] = i (Swapping)
  * 16. Remove adjacent duplicates from an array
  * 17. Merge two sorted arrays
+ * 18. Move zeros to end of an array
+ * 19. Move zeros to end of an array (Single traversal)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {1,5,6,9};
-        int[] b = {3,4,11,23};
-        int[] res = merge(a, b);
-        for(int i: res) {
+        int[] a = {1,0, 0, 5,6, 0,9};
+//        int[] b = {3,4,11,23};
+//        int[] res = merge(a, b);
+        moveZerosEndSingleTraversal(a);
+        for(int i: a) {
             System.out.print(i + " ");
         }
 //        int[][] a = {{1, 3, 45, 46},
@@ -450,5 +453,41 @@ public class Manipulation {
             r++;
         }
         return temp;
+    }
+
+    /**
+     * Move zeros to end of an array
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void moveZerosEnd(int[] a) {
+        int count = 0;
+        for(int i=0; i<a.length; i++) {
+            if(a[i] != 0) {
+                a[count++] = a[i];
+            }
+        }
+        while(count < a.length) {
+            a[count++] = 0;
+        }
+    }
+
+    /**
+     * Move zeros to end of an array (Single traversal)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void moveZerosEndSingleTraversal(int[] a) {
+        int count = 0;
+        for(int i=0; i<a.length; i++) {
+            if(a[i] != 0) {
+                int temp = a[count];
+                a[count] = a[i];
+                a[i] = temp;
+                count++;
+            }
+        }
     }
 }
