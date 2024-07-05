@@ -5,6 +5,9 @@ public class Node {
     public Node left;
     public Node right;
 
+    // not mandatory
+    public Node parent;
+
     public Node(int data) {
         this.data = data;
         left = right = null;

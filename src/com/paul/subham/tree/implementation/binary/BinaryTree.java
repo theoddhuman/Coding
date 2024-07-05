@@ -72,6 +72,36 @@ public class BinaryTree {
         }
     }
 
+    //insert an element with parent pointer, TC: O(n), SC: O(9)
+    public void insertWithParentPointer(int data) {
+        Node newNode = new Node(data);
+        if(root == null) {
+            root = newNode;
+            return;
+        }
+
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        Node current;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            if(current.left != null) {
+                queue.add(current.left);
+            } else {
+                current.left = newNode;
+                newNode.parent = current;
+                return;
+            }
+            if(current.right != null) {
+                queue.add(current.right);
+            } else {
+                current.right = newNode;
+                newNode.parent = current;
+                return;
+            }
+        }
+    }
+
     //delete an element, TC: O(n), SC: O(9)
     void delete(int data) {
         if(root == null) {
@@ -231,7 +261,7 @@ public class BinaryTree {
     }
 
     //postorder traversal iterative, TC: O(n), SC: O(n)
-    void postOrderIterative() {
+    public void postOrderIterative() {
         Stack<Node> stack = new Stack<>();
         stack.push(root);
         Node current = null;

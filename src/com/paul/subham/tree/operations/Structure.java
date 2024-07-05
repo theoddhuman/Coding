@@ -45,6 +45,12 @@ import java.util.Queue;
  * 30. Print all possible binary trees from given inorder
  * 31. Fill next sibling (consider all node at same level as sibling)
  * 32. Fill next sibling (consider all node at same level as sibling - Recursive)
+ * 33. Leftmost node of a node in binary tree
+ * 34. Rightmost node of a node in binary tree
+ * 35. Inorder successor of a binary tree
+ * 36. Inorder successor of a binary tree (Using reverse inorder)
+ * 37. Preorder successor of a binary tree (Using parent pointer)
+ * 38. Postorder successor of a binary tree (Using parent pointer)
  */
 
 public class Structure {
@@ -69,6 +75,14 @@ public class Structure {
         bt.root.left.right.left = new Node(3);
         bt.root.left.right.right = new Node(6);
         bt.root.left.right.left.right = new Node(4);
+//        bt.insertWithParentPointer(1);
+//        bt.insertWithParentPointer(2);
+//        bt.insertWithParentPointer(3);
+//        bt.insertWithParentPointer(4);
+//        bt.insertWithParentPointer(5);
+//        bt.insertWithParentPointer(6);
+        bt.postOrderIterative();
+
 //        bt.insert(4);
 //        bt.insert(5);
 //        bt.insert(6);
@@ -83,7 +97,7 @@ public class Structure {
 //        bst.insert(4);
 //        bst.insert(6);
 //        System.out.println(lcaBSTRecursive(bst, 2, 4));
-        largestAtEachLevel(bt);
+//        System.out.println(preorderSuccessor(bt, bt.root.left).data);
     }
 
     /**
@@ -950,6 +964,141 @@ public class Structure {
             }
             System.out.println(max + " ");
         }
+    }
+
+    /**
+     * Leftmost node of a node in binary tree
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node leftMostNode(Node node) {
+        while(node != null && node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    /**
+     * Rightmost node of a node in binary tree
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node rightMostNode(Node node) {
+        while(node != null && node.right != null) {
+            node = node.right;
+        }
+        return node;
+    }
+
+    /**
+     * Inorder successor of a binary tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void inorderSuccessor(BinaryTree binaryTree, Node node) {
+        if(node.right != null) {
+            Node leftMost = leftMostNode(node.right);
+            System.out.println(leftMost.data);
+        } else {
+            Node rightMost = rightMostNode(binaryTree.root);
+            if(node == rightMost) {
+                System.out.println("No successor");
+            }
+            inorderSuccessorRecursive(binaryTree.root, node);
+        }
+    }
+
+    private static Node inorderSuccessorRecursive(Node root, Node node) {
+        if (root == null) {
+            return null;
+        }
+        Node temp = null;
+        if (root == node || (temp = inorderSuccessorRecursive(root.left, node)) != null
+                || (temp = inorderSuccessorRecursive(root.right, node)) != null) {
+            if (temp != null) {
+                if (root.left == temp) {
+                    System.out.println(root.data);
+                    return null;
+                }
+            }
+            return root;
+        }
+        return null;
+    }
+
+    /**
+     * Inorder successor of a binary tree (Using reverse inorder)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static Node inorderSuccessorInorder(BinaryTree binaryTree, Node searchNode) {
+        return inorderSuccessorRecur(binaryTree.root, searchNode);
+    }
+
+    private static Node pre = null;
+
+    private static Node inorderSuccessorRecur(Node node, Node searchNode) {
+        if(node == null) {
+            return null;
+        }
+        Node successor = inorderSuccessorRecur(node.right, searchNode);
+        if(successor != null) {
+            return successor;
+        }
+        if(node == searchNode) {
+            return pre;
+        }
+        pre = node;
+        return inorderSuccessorRecur(node.left, searchNode);
+    }
+
+    /**
+     * Preorder successor of a binary tree (Using parent pointer)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node preorderSuccessor(BinaryTree binaryTree, Node node) {
+        if(node.left != null) {
+            return node.left;
+        }
+        if(node.right != null) {
+            return node.right;
+        }
+        Node parent = node.parent;
+        Node current = node;
+        while(parent != null && parent.right == current) {
+            current = current.parent;
+            parent = parent.parent;
+        }
+        return parent != null ? parent.right : null;
+    }
+
+    /**
+     * Postorder successor of a binary tree (Using parent pointer)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node postorderSuccessor(BinaryTree binaryTree, Node node) {
+        if(node == binaryTree.root) {
+            return null;
+        }
+        Node parent = node.parent;
+        // when node is left of parent and right of parent is null, or when node is right of parent.
+        if(parent.right == null || parent.right == node) {
+            return parent;
+        }
+        // when right of parent is not null
+        Node current = parent.right;
+        while(current.left != null) {
+            current = current.left;
+        }
+        return current;
     }
 
 }
