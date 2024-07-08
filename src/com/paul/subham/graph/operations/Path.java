@@ -25,20 +25,27 @@ import java.util.Queue;
  */
 public class Path {
     public static void main(String[] args) {
-//        AdjacencyListGraph graph = new AdjacencyListGraph(10);
-//        graph.addEdge(1,2);
-//        graph.addEdge(1,4);
-//        graph.addEdge(2,3);
-//        graph.addEdge(2,5);
-//        graph.addEdge(4,5);
-//        System.out.println(countAllSimplePaths(4,5,graph));
-        AdjacencyListGraph graph = new AdjacencyListGraph(4);
-        graph.addEdge(0,1);
-        graph.addEdge(0,2);
+        AdjacencyListGraph graph = new AdjacencyListGraph(10);
         graph.addEdge(1,2);
-        graph.addEdge(2,0);
+        graph.addEdge(1,4);
         graph.addEdge(2,3);
-        System.out.println(Arrays.deepToString(transitiveClosureDFS(graph)));
+        graph.addEdge(2,5);
+        graph.addEdge(4,5);
+        graph.addEdge(3,5);
+        System.out.println(countAllSimplePaths(1,5,graph));
+       // AdjacencyListWeightedGraph graph = new AdjacencyListWeightedGraph(5);
+//        graph.addEdge(0,1);
+//        graph.addEdge(0,2);
+//        graph.addEdge(1,2);
+//        graph.addEdge(2,0);
+//        graph.addEdge(2,3);
+//        graph.addEdge(1,2,4);
+//        graph.addEdge(1,3, 5);
+//        graph.addEdge(3,4, 2);
+//        graph.addEdge(4,2, -20);
+//        weightedShortestPath(graph, 1);
+//        weightedShortestPathImproved(graph, 1);
+//        weightedShortestPathUsingArray(graph, 1);
     }
 
     /**
@@ -75,7 +82,17 @@ public class Path {
      * If V = n, total possible edge = n*(n-1)/2, O(n^2logn)
      * TC: for adjacency matrix, O(V^2logV)
      * SC: O(V)
-     * It may or may not work if the graph has negative edges as it relaxes vertex with each iteration.
+     *
+     * Case I
+     * This implementation will work negative edges too as this is storing only vertex in the priority queue.
+     * It is storing distance in a different data structure i.e., array.
+     * It won't work for negative cycle.
+     *
+     * Case II
+     * If we store combination of vertex and distance in priority queue or
+     * keep track of visited vertex
+     * then may or may not work if the graph has negative edges
+     * as it relaxes vertex with each iteration.
      */
     public static void weightedShortestPath(AdjacencyListWeightedGraph graph, int s) {
         Integer[] distance = new Integer[graph.vertex];
@@ -109,6 +126,35 @@ public class Path {
         }
     }
 
+    public static void weightedShortestPathImproved(AdjacencyListWeightedGraph graph, int s) {
+        Integer[] distance = new Integer[graph.vertex];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        Integer[] path = new Integer[graph.vertex];
+
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(graph.vertex,
+                Comparator.comparing(a -> distance[a]));
+        distance[s] = 0;
+        priorityQueue.add(s);
+        while(!priorityQueue.isEmpty()) {
+            int current = priorityQueue.remove();
+            LinkedList<Edge> adjList = graph.adjListArray[current];
+            for(Edge edge : adjList) {
+                int d = distance[current] + edge.weight;
+                int next = edge.destination;
+                if (distance[next] > d) {
+                    priorityQueue.remove(next);
+                    distance[next] = d;
+                    path[next] = current;
+                    priorityQueue.add(next);
+                }
+            }
+        }
+
+        for(int i=0; i<graph.vertex; i++) {
+            System.out.println(i + " " + distance[i] + " " + path[i]);
+        }
+    }
+
     /**
      * Shortest path in weighted graph - Dijkstra's Algorithm (Using Array)
      * TC: Using array, V min check + E updates, O(V^2 + E)
@@ -117,6 +163,7 @@ public class Path {
      */
     public static void weightedShortestPathUsingArray(AdjacencyListWeightedGraph graph, int s) {
         Integer[] distance = new Integer[graph.vertex];
+        Arrays.fill(distance, Integer.MAX_VALUE);
         Integer[] path = new Integer[graph.vertex];
         distance[s] = 0;
         for(int i=0; i<graph.vertex-1; i++) {
@@ -144,7 +191,7 @@ public class Path {
         int min = Integer.MAX_VALUE;
         int minIndex = -1;
         for(int i=0; i<distance.length; i++) {
-            if(Objects.nonNull(distance[i]) && !visited[i] && distance[i] < min) {
+            if(!visited[i] && distance[i] < min) {
                 min = distance[i];
                 minIndex = i;
             }
@@ -161,11 +208,9 @@ public class Path {
      */
     public static void weightedShortestPathBF(AdjacencyListWeightedGraph graph, int s) {
         Integer[] distance = new Integer[graph.vertex];
+        Arrays.fill(distance, Integer.MAX_VALUE);
         Integer[] path = new Integer[graph.vertex];
         Queue<Integer> queue = new LinkedList<>();
-        for(int i=0; i<graph.vertex; i++) {
-            distance[i] = Integer.MAX_VALUE;
-        }
         distance[s] = 0;
         queue.add(s);
         while(!queue.isEmpty()) {
@@ -228,11 +273,11 @@ public class Path {
         if(source == destination) {
             return 1;
         }
-        int count = 0;
-        return countAllSimplePathsUtil(source, destination, visited, graph, count);
+        countAllSimplePathsUtil(source, destination, visited, graph);
+        return count;
     }
-
-    private static int countAllSimplePathsUtil(int source, int destination, boolean[] visited, AdjacencyListGraph graph, int count) {
+    private static int count = 0;
+    private static void countAllSimplePathsUtil(int source, int destination, boolean[] visited, AdjacencyListGraph graph) {
         visited[source] = true;
         if(source == destination) {
             count++;
@@ -240,12 +285,11 @@ public class Path {
             List<Integer> adjList = graph.adjListArray[source];
             for(Integer i : adjList) {
                 if(!visited[i]) {
-                    count = countAllSimplePathsUtil(i, destination, visited, graph, count);
+                    countAllSimplePathsUtil(i, destination, visited, graph);
                 }
             }
         }
         visited[source] = false;
-        return count;
     }
 
     /**
@@ -266,9 +310,11 @@ public class Path {
         boolean[][] reach = new boolean[vertex][vertex];
         for(int i=0; i<vertex; i++) {
             for(int j=0; j<vertex; j++) {
+                //same vertex
                 if(i==j) {
                     reach[i][j] = true;
                 } else {
+                    //edge
                     if(graph.adjMatrix[i][j] != 0) {
                         reach[i][j] = true;
                     }
@@ -279,6 +325,7 @@ public class Path {
         for(int k=0; k<vertex; k++) {
             for(int i=0; i<vertex; i++) {
                 for(int j=0; j<vertex; j++) {
+                    // if i to j via k
                     reach[i][j] = reach[i][j] || (reach[i][k] && reach[k][j]);
                 }
             }
