@@ -32,7 +32,7 @@ public class SpanningTree {
         Integer[] distance = new Integer[graph.vertex];
         Integer[] path = new Integer[graph.vertex];
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(graph.vertex,
-                (o1, o2) -> distance[o1].compareTo(distance[o2]));
+                Comparator.comparing(o -> distance[o]));
         distance[s] = 0;
         priorityQueue.add(s);
         while(!priorityQueue.isEmpty()) {

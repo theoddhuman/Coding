@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Stack;
 
 /**
  * 1. Shortest path in unweighted graph
@@ -22,17 +23,18 @@ import java.util.Queue;
  * 6. Count all simple paths from source to destination
  * 7. Transitive closure of a graph (Using Floyd Warshall Algorithm)
  * 8. Transitive closure of a graph (Using DFS)
+ * 9. The shortest path of all pair (Using Floyd Warshall Algorithm)
  */
 public class Path {
     public static void main(String[] args) {
-        AdjacencyListGraph graph = new AdjacencyListGraph(10);
-        graph.addEdge(1,2);
-        graph.addEdge(1,4);
-        graph.addEdge(2,3);
-        graph.addEdge(2,5);
-        graph.addEdge(4,5);
-        graph.addEdge(3,5);
-        System.out.println(countAllSimplePaths(1,5,graph));
+//        AdjacencyListGraph graph = new AdjacencyListGraph(10);
+//        graph.addEdge(1,2);
+//        graph.addEdge(1,4);
+//        graph.addEdge(2,3);
+//        graph.addEdge(2,5);
+//        graph.addEdge(4,5);
+//        graph.addEdge(3,5);
+//        System.out.println(countAllSimplePaths(1,5,graph));
        // AdjacencyListWeightedGraph graph = new AdjacencyListWeightedGraph(5);
 //        graph.addEdge(0,1);
 //        graph.addEdge(0,2);
@@ -46,6 +48,14 @@ public class Path {
 //        weightedShortestPath(graph, 1);
 //        weightedShortestPathImproved(graph, 1);
 //        weightedShortestPathUsingArray(graph, 1);
+        AdjacencyMatrixWeightedGraph graph = new AdjacencyMatrixWeightedGraph(10);
+        graph.addEdge(1,2,1);
+        graph.addEdge(2,3,2);
+        graph.addEdge(3,5,3);
+        graph.addEdge(5,6,4);
+        graph.addEdge(5,4,2);
+        graph.addEdge(3,4,7);
+        allPairShortestPath(graph);
     }
 
     /**
@@ -353,6 +363,49 @@ public class Path {
         for(Integer i : adjList) {
             if(!tc[source][i]) {
                 transitiveClosureDFSUtil(source, i, tc, graph);
+            }
+        }
+    }
+
+    /**
+     * The shortest path of all pair (Using Floyd Warshall Algorithm)
+     *
+     * This is only for adjacency matrix graph.
+     *
+     *
+     * TC: O(V^3)
+     * SC: O(V^2)
+     */
+    public static void allPairShortestPath(AdjacencyMatrixWeightedGraph graph) {
+        int v = graph.vertex;
+        int[][] distance = new int[v][v];
+        for(int i=0; i< v; i++) {
+            Arrays.fill(distance[i], Integer.MAX_VALUE);
+        }
+        for(int i=0; i<v; i++) {
+            for(int j=0; j<v; j++) {
+                if(graph.adjMatrix[i][j] != 0) {
+                    distance[i][j] = graph.adjMatrix[i][j];
+                }
+            }
+        }
+        for(int k=0; k<v; k++) {
+            for(int i=0; i<v; i++) {
+                for(int j=0; j<v; j++) {
+                    if(distance[i][k] < Integer.MAX_VALUE && distance[k][j] < Integer.MAX_VALUE) {
+                        int d = distance[i][k] + distance[k][j];
+                        if (d < distance[i][j]) {
+                            distance[i][j] = d;
+                        }
+                    }
+                }
+            }
+        }
+        for(int i=0; i<v; i++) {
+            for(int j=0; j<v; j++) {
+                if(distance[i][j] < Integer.MAX_VALUE) {
+                    System.out.println(i + " " + j + " " + distance[i][j]);
+                }
             }
         }
     }

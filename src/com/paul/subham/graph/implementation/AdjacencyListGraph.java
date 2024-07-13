@@ -118,7 +118,7 @@ public class AdjacencyListGraph {
      * TC: O(V+E)
      * SC: O(V)
      */
-    void DFSTraversal() {
+    public void DFSTraversal() {
         for(int i=0; i<vertex; i++) {
             if(!visited[i]) {
                 DFS(i);
@@ -171,7 +171,7 @@ public class AdjacencyListGraph {
      * TC: O(V+E), If V = n, total possible edge = n*(n-1)/2, O(n^2)
      * SC: O(V)
      */
-    void BFTraversal() {
+    public void BFTraversal() {
         for(int i=0; i<vertex; i++) {
             if(!visited[i]) {
                 BFS(i);
@@ -184,6 +184,9 @@ public class AdjacencyListGraph {
         queue.add(x);
         while(!queue.isEmpty()) {
             int current = queue.remove();
+            if(visited[current]) {
+                continue;
+            }
             visited[current] = true;
             System.out.println(current);
             List<Integer> adjList = adjListArray[current];
