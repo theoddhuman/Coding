@@ -3,13 +3,19 @@ package com.paul.subham.stack.operation;
 import java.util.Stack;
 
 /**
- * 1.Checking balancing of brackets
- * 2.Postfix evaluation
- * 3.Infix evaluation
+ * 1. Checking balancing of brackets
+ * 2. Postfix evaluation
+ * 3. Infix evaluation
+ * 4. Infix to Postfix conversion
+ * 5. Postfix to Infix conversion
+ * 6. Infix to Prefix conversion
+ * 7. Prefix to Infix conversion
+ * 8. Prefix to Postfix conversion
+ * 9. Postfix to Prefix conversion
  */
 public class Expression {
     public static void main(String[] args) {
-        System.out.println(infixEvaluation("((2+8)/5)+4"));
+        System.out.println(postfixToPrefix("12+3/45*+"));
     }
 
 
@@ -146,5 +152,180 @@ public class Expression {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Infix to Postfix conversion
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String inFixToPostFix(String s) {
+        StringBuilder result = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            if(c == '(') {
+                stack.push(c);
+            } else if (c == ')') {
+                while(!stack.isEmpty() && stack.peek() != '(') {
+                    result.append(stack.pop());
+                }
+                stack.pop();
+            } else if (Character.isLetterOrDigit(c)) {
+                result.append(c);
+            } else if (isOperator(c)){
+                while(!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
+                    result.append(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+        while(!stack.isEmpty()) {
+            if(stack.peek() == '(') {
+                return "Invalid expression";
+            } else {
+                result.append(stack.pop());
+            }
+        }
+        return String.valueOf(result);
+    }
+
+    private static boolean isOperator(char c) {
+        return c == '+' || c == '-' || c == '/'|| c == '*';
+    }
+
+    private static int precedence(char c) {
+        switch (c) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            default:
+                return -1;
+        }
+    }
+
+    /**
+     * Postfix to Infix conversion
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String postfixToInfix(String s) {
+        Stack<String> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (isOperator(ch)) {
+                String op1 = stack.pop();
+                String op2 = stack.pop();
+                stack.push("(" + op2 + ch + op1 + ")");
+            } else {
+                stack.push(String.valueOf(ch));
+            }
+        }
+        return stack.pop();
+    }
+
+    /**
+     * Infix to Prefix conversion
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String inFixToPreFix(String s) {
+        String result = "";
+        Stack<Character> stack = new Stack<>();
+        for(int i=s.length()-1; i>=0; i--) {
+            char c = s.charAt(i);
+            if(c == ')') {
+                stack.push(c);
+            } else if (c == '(') {
+                while(!stack.isEmpty() && stack.peek() != ')') {
+                    result = stack.pop() + result;
+                }
+                stack.pop();
+            } else if (Character.isLetterOrDigit(c)) {
+                result = c + result;
+            } else if (isOperator(c)){
+                while(!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
+                    result = stack.pop() + result;
+                }
+                stack.push(c);
+            }
+        }
+        while(!stack.isEmpty()) {
+            if(stack.peek() == ')') {
+                return "Invalid expression";
+            } else {
+                result = stack.pop() + result;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Prefix to Infix conversion
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String prefixToInfix(String s) {
+        Stack<String> stack = new Stack<>();
+        for (int i = s.length()-1; i>=0; i--) {
+            char ch = s.charAt(i);
+            if (isOperator(ch)) {
+                String op1 = stack.pop();
+                String op2 = stack.pop();
+                stack.push("(" + op1 + ch + op2 + ")");
+            } else {
+                stack.push(String.valueOf(ch));
+            }
+        }
+        return stack.pop();
+    }
+
+    /**
+     * Prefix to Postfix conversion
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String prefixToPostfix(String s) {
+        Stack<String> stack = new Stack<>();
+        for (int i = s.length()-1; i>=0; i--) {
+            char ch = s.charAt(i);
+            if (isOperator(ch)) {
+                String op1 = stack.pop();
+                String op2 = stack.pop();
+                stack.push( op1 + op2 + ch);
+            } else {
+                stack.push(String.valueOf(ch));
+            }
+        }
+        return stack.pop();
+    }
+
+    /**
+     * Postfix to Prefix conversion
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String postfixToPrefix(String s) {
+        Stack<String> stack = new Stack<>();
+        for (int i = 0; i<s.length(); i++) {
+            char ch = s.charAt(i);
+            if (isOperator(ch)) {
+                String op1 = stack.pop();
+                String op2 = stack.pop();
+                stack.push( ch + op2 + op1);
+            } else {
+                stack.push(String.valueOf(ch));
+            }
+        }
+        return stack.pop();
     }
 }
