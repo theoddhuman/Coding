@@ -4,21 +4,32 @@ import com.paul.subham.graph.implementation.AdjacencyListWeightedGraph;
 import com.paul.subham.graph.implementation.Edge;
 import com.paul.subham.set.implementation.QuickFindSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * 1. Minimum Spanning Tree - Prim's Algorithm (Using Priority Queue)
  * 2. Minimum Spanning Tree - Prim's Algorithm (Using Array)
  * 3. Min Spanning Tree - Kruskal Algorithm
+ * 4. Spanning Tree of an undirected graph
+ * 5. Spanning Tree of an undirected graph (Using DFS)
+ * 6. Spanning Tree of an undirected graph (Using BFS)
  */
 public class SpanningTree {
     public static void main(String[] args) {
         AdjacencyListWeightedGraph graph = new AdjacencyListWeightedGraph(10);
-        graph.addEdge(1,2,2);
-        graph.addEdge(1,3,4);
-        graph.addEdge(2,4,6);
-        graph.addEdge(3,4,2);
-        minSpanningTreeKruskal(graph);
+        graph.addEdgeUndirected(1,2,2);
+        graph.addEdgeUndirected(1,3,4);
+        graph.addEdgeUndirected(2,4,6);
+        graph.addEdgeUndirected(3,4,2);
+        spanningTreeBFS(graph);
     }
 
     /**
@@ -136,5 +147,96 @@ public class SpanningTree {
             }
         }
         result.forEach(edge -> System.out.println(edge.source +" "+ edge.destination+" "+edge.weight));
+    }
+
+    /**
+     * Spanning Tree of an undirected graph
+     *
+     * TC: O(E)
+     * SC: O(V)
+     */
+    public static void spanningTree(AdjacencyListWeightedGraph graph) {
+        Set<Edge> spanningTree = new LinkedHashSet<>();
+        for(int i=0; i<graph.vertex; i++) {
+            LinkedList<Edge> list = graph.adjListArray[i];
+            for(Edge edge : list) {
+                if(!(graph.visited[edge.source] && graph.visited[edge.destination])) {
+                    spanningTree.add(edge);
+                    graph.visited[edge.source] = true;
+                    graph.visited[edge.destination] = true;
+                }
+            }
+        }
+        for(Edge edge : spanningTree) {
+            System.out.println(edge.source +" "+edge.destination);
+        }
+    }
+
+    /**
+     * Spanning Tree of an undirected graph (Using DFS)
+     *
+     * TC: O(E)
+     * SC: O(V)
+     */
+    public static void spanningTreeDFS(AdjacencyListWeightedGraph graph) {
+        Set<Edge> spanningTree = new LinkedHashSet<>();
+        for(int i=0; i<graph.vertex; i++) {
+            if(!graph.visited[i]) {
+                graph.visited[i] = true;
+                spanningTreeDFSUtil(i, graph, spanningTree);
+            }
+        }
+
+        for(Edge edge : spanningTree) {
+            System.out.println(edge.source +" "+edge.destination);
+        }
+    }
+
+    private static void spanningTreeDFSUtil(int s, AdjacencyListWeightedGraph graph, Set<Edge> set) {
+        List<Edge> list = graph.adjListArray[s];
+        for(Edge e: list) {
+            if(!graph.visited[e.destination]) {
+                graph.visited[e.destination] = true;
+                set.add(e);
+                spanningTreeDFSUtil(e.destination, graph, set);
+            }
+        }
+    }
+
+    /**
+     * Spanning Tree of an undirected graph (Using BFS)
+     *
+     * TC: O(E)
+     * SC: O(V)
+     */
+    public static void spanningTreeBFS(AdjacencyListWeightedGraph graph) {
+        Set<Edge> spanningTree = new LinkedHashSet<>();
+        for(int i=0; i<graph.vertex; i++) {
+            if(!graph.visited[i]) {
+                graph.visited[i] = true;
+                spanningTreeBFSUtil(i, graph, spanningTree);
+            }
+        }
+
+        for(Edge edge : spanningTree) {
+            System.out.println(edge.source +" "+edge.destination);
+        }
+    }
+
+    private static void spanningTreeBFSUtil(int s, AdjacencyListWeightedGraph graph, Set<Edge> spanningTree) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(s);
+        while(!queue.isEmpty()) {
+            Integer current = queue.remove();
+            graph.visited[current] = true;
+            List<Edge> list = graph.adjListArray[current];
+            for(Edge edge : list) {
+                if(!graph.visited[edge.destination]) {
+                    spanningTree.add(edge);
+                    graph.visited[edge.destination] = true;
+                    queue.add(edge.destination);
+                }
+            }
+        }
     }
 }

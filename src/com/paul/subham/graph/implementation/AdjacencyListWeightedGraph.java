@@ -10,12 +10,13 @@ import java.util.Stack;
  *
  * 1. contains an edge
  * 2. add an edge
- * 3. remove an edge
- * 4. no of edges
- * 5. degree of a vertex
- * 6. Depth first search Traversal(Recursive)
- * 7. Depth first search Traversal(Iterative)
- * 8. Breadth first search traversal
+ * 3. add an edge undirected
+ * 4. remove an edge
+ * 5. no of edges
+ * 6. degree of a vertex
+ * 7. Depth first search Traversal(Recursive)
+ * 8. Depth first search Traversal(Iterative)
+ * 9. Breadth first search traversal
  */
 public class AdjacencyListWeightedGraph {
     public int vertex;
@@ -59,12 +60,20 @@ public class AdjacencyListWeightedGraph {
     public void addEdge(int u, int v, int w) {
         if(!contains(u,v)) {
             Edge e = new Edge(u,v,w);
-            //Edge re = new Edge(v,u,w);
             adjListArray[u].add(e);
-            //for undirected graph add extra
-            //adjListArray[v].add(re);
             edge++;
         }
+    }
+
+    /**
+     * Add an edge undirected
+     *
+     * TC: O(V)
+     * SC: O(1)
+     */
+    public void addEdgeUndirected(int u, int v, int w) {
+        addEdge(u,v,w);
+        addEdge(v,u,w);
     }
 
     /**
