@@ -1,7 +1,6 @@
 package com.paul.subham.graph.operations;
 
 import com.paul.subham.graph.implementation.AdjacencyListGraph;
-import com.paul.subham.graph.implementation.Edge;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,17 +29,18 @@ import java.util.Stack;
  * 17. Detecting cycle in undirected graph (Using BFS)
  * 18. Detecting cycle in directed graph (Using DFS)
  * 19. Detecting cycle in directed graph (Using BFS - Topological Sorting)
+ * 20. Depth of undirected acyclic graph from a source (Using BFS)
+ * 21. Depth of directed acyclic graph (Using BFS)
  */
 public class Structure {
     public static void main(String[] args) {
         AdjacencyListGraph g1 = new AdjacencyListGraph(10);
         g1.addEdge(1, 2);
-        g1.addEdge(3, 2);
         g1.addEdge(2, 4);
         g1.addEdge(5, 3);
         g1.addEdge(4, 5);
-        g1.addEdge(4, 6);
         g1.addEdge(5, 6);
+        System.out.println(depthDirected(g1));
 //        g1.addEdge(2,3);
 //        g1.addEdge(3,4);
 //        g1.addEdge(3,6);
@@ -49,7 +49,6 @@ public class Structure {
 //        g1.addEdge(5,6);
 //        g1.addEdge(6,7);
 //        g1.addEdge(7,5);
-        System.out.println(isCyclicDirectedTopologicalSortBFS(g1));
 //        g1.addEdgeUndirected(1,2);
 //        g1.addEdgeUndirected(1,3);
 //        g1.addEdgeUndirected(3,4);
@@ -741,5 +740,72 @@ public class Structure {
             }
         }
         return counter != graph.vertex;
+    }
+
+    /**
+     * Depth of undirected acyclic graph from a source (Using BFS)
+     *
+     * TC: O(V+E) = O(n^2)
+     * SC: O(V)
+     */
+    private static int depthUndirectedUtil(int s, AdjacencyListGraph graph) {
+        int[] distance = new int[graph.vertex];
+        Arrays.fill(distance, -1);
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(s);
+        distance[s] = 0;
+        while(!queue.isEmpty()) {
+            int current = queue.remove();
+            graph.visited[current] = true;
+            List<Integer> list = graph.adjListArray[current];
+            for(Integer i : list) {
+                if(!graph.visited[i]) {
+                    distance[i] = distance[current] + 1;
+                    queue.add(i);
+                }
+            }
+        }
+        int max = Integer.MIN_VALUE;
+        for(int j : distance) {
+            max = Math.max(j, max);
+        }
+        return max;
+    }
+
+    /**
+     * Depth of directed acyclic graph (Using BFS)
+     *
+     * TC: O(V+E) = O(n^2)
+     * SC: O(V)
+     */
+    public static int depthDirected(AdjacencyListGraph graph) {
+        int[] indegree = new int[graph.vertex];
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i=0; i<graph.vertex; i++) {
+            List<Integer> list = graph.adjListArray[i];
+            for(Integer j : list) {
+                indegree[j] ++;
+            }
+        }
+        for(int i=0; i<graph.vertex; i++)  {
+            if(indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        int count = 0;
+        while(!queue.isEmpty()) {
+            int nodeCount = queue.size();
+            count++;
+            while(nodeCount-->0) {
+                int current = queue.remove();
+                List<Integer> list = graph.adjListArray[current];
+                for(Integer i : list) {
+                    if(--indegree[i] == 0) {
+                        queue.add(i);
+                    }
+                }
+            }
+        }
+        return count-1;
     }
 }
