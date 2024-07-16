@@ -35,13 +35,18 @@ import java.util.PriorityQueue;
  * 24. Kth smallest elements in an array (Quick sort)
  * 25. Kth smallest elements in an array (Counting sort)
  * 26. Kth largest elements in an array (Counting sort)
+ * 27. Kth smallest elements in two sorted arrays
+ * 28. Kth smallest elements in two sorted arrays (Space optimized)
+ * 29. Kth smallest elements in two sorted arrays (Binary Search)
  */
 
 public class Selection {
     public static void main(String[] args) {
-        int[] a = {8,9,2,1,7,11,4,14};
+        int[] a = {7,11,12};
+        int[] b = {4,5,9};
+
         //kLargestElementsBinarySearch(a, 3);
-        System.out.println(kthLargestElementCountingSort(a, 5));
+        System.out.println(kthSmallestTwoSortedArraysBinarySearch(a, b,4));
     }
 
 
@@ -393,6 +398,17 @@ public class Selection {
      * TC: O(nlog(max-min))
      * SC: O(1)
      */
+    public static int kthLargestBinarySearch1(int[] a, int k) {
+        int mid = kthLargestBinarySearch(a, k);
+        int min = Integer.MAX_VALUE;
+        for(int j: a) {
+            if(j >= mid) {
+                min = Math.min(min, j);
+            }
+        }
+        return min;
+    }
+
     public static int kthLargestBinarySearch(int[] a, int k) {
         int low = Integer.MAX_VALUE;
         int high = Integer.MIN_VALUE;
@@ -426,6 +442,17 @@ public class Selection {
      * TC: O(nlog(max-min))
      * SC: O(1)
      */
+    public static int kthSmallestBinarySearch1(int[] a, int k) {
+        int mid = kthSmallestBinarySearch(a, k);
+        int max = Integer.MIN_VALUE;
+        for(int j: a) {
+            if(j <= mid) {
+                max = Math.max(max, j);
+            }
+        }
+        return max;
+    }
+
     public static int kthSmallestBinarySearch(int[] a, int k) {
         int low = Integer.MAX_VALUE;
         int high = Integer.MIN_VALUE;
@@ -578,6 +605,105 @@ public class Selection {
                 if(count == k) {
                     return i;
                 }
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Kth smallest elements in two sorted arrays
+     *
+     * TC: O(m+n)
+     * SC: O(m+n)
+     */
+    public static int kthSmallestTwoSortedArray(int[] a, int[] b, int k) {
+        int[] c = Manipulation.merge(a, b);
+        return c[k-1];
+    }
+
+    /**
+     * Kth smallest elements in two sorted arrays (Space optimized)
+     *
+     * TC: O(k)
+     * SC: O1)
+     */
+    public static int kthSmallestTwoSortedArraysEfficient(int[] a, int[] b, int k) {
+        int m = a.length;
+        int n = b.length;
+        int left = 0;
+        int right = 0;
+        int count = 0;
+        while(left < m && right < n) {
+            count++;
+            if(a[left] <= a[right]) {
+                if(count == k) {
+                    return a[left];
+                }
+                left++;
+            } else {
+                if(count == k) {
+                    return a[right];
+                }
+                right++;
+            }
+        }
+        while(left < m) {
+            count++;
+            if(count == k) {
+                return a[left];
+            }
+            left++;
+        }
+        while(right < n) {
+            count++;
+            if(count == k) {
+                return a[right];
+            }
+            right++;
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Kth smallest elements in two sorted arrays (Binary Search)
+     *
+     * TC: O(log(m+n))
+     * SC: O(1)
+     */
+    public static int kthSmallestTwoSortedArraysBinarySearch(int[] a, int[] b, int k) {
+        int na = a.length;
+        int nb = b.length;
+        // if no of elements in 2nd array is less than k, we need at least k-nb element from 1st array to be at left side
+        int low = Math.max(0, k - nb);
+        // We can have at max these many elements from first array to be at left side
+        int high = Math.min(na, k);
+        // no of elements to be at left side to find the kth element
+        int left = k;
+        while (low <= high) {
+            int midA = (low + high) / 2;
+            int midB = left - midA;
+            int lA = Integer.MIN_VALUE;
+            int lB = Integer.MIN_VALUE;
+            int rA = Integer.MAX_VALUE;
+            int rB = Integer.MAX_VALUE;
+            if (midA > 0) {
+                lA = a[midA - 1];
+            }
+            if (midB > 0) {
+                lB = b[midB - 1];
+            }
+            if (midA < na) {
+                rA = a[midA];
+            }
+            if (midB < nb) {
+                rB = b[midB];
+            }
+            if (lA <= rB && lB <= rA) {
+                return Math.max(lA, lB);
+            } else if (lA > rB) {
+                high = midA - 1;
+            } else {
+                low = midA + 1;
             }
         }
         return Integer.MIN_VALUE;
