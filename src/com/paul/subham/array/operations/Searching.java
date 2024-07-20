@@ -68,12 +68,14 @@ import java.util.*;
  * 59. Median of two sorted arrays of same size (Binary search)
  * 60. Median of two sorted arrays of different size (Count while merging)
  * 61. Median of two sorted arrays of different size (Binary search)
+ * 62. Local minima of an array (Binary search - recursive)
+ * 63. Local minima of an array (Binary search - iterative)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {1, 5, 9, 11, 14, 16};
-        int[] b = {3, 4, 7, 8, 10};
-        System.out.println(medianTwoSortedArraysDiffSizeBinarySearch(a, b));
+        int[] a = {11, 2, 12, 4, 6};
+        int[] b = {3, 7, 9, 11};
+        System.out.println(localMinimaIterative(a));
     }
 
     /**
@@ -1497,6 +1499,53 @@ public class Searching {
                 high = midA - 1;
             } else {
                 low = midA + 1;
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Local minima of an array (Binary search - recursive)
+     *
+     * TC: O(logn)
+     * SC: O(logn)
+     */
+    public static int localMinima(int[] a) {
+        return localMinimaUtil(a, 0, a.length-1, a.length);
+    }
+
+    private static int localMinimaUtil(int[] a, int low, int high, int n) {
+        if(low > high) {
+            return Integer.MIN_VALUE;
+        }
+        int mid = (low + high)/2;
+        if((mid == 0 || a[mid-1] > a[mid]) && (mid == n-1 || a[mid] < a[mid+1])) {
+            return a[mid];
+        }
+        if(mid > 0 && a[mid-1] < a[mid]) {
+            return localMinimaUtil(a, low, mid-1, n);
+        }
+        return localMinimaUtil(a, mid+1, high, n);
+    }
+
+    /**
+     * Local minima of an array (Binary search - iterative)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int localMinimaIterative(int[] a) {
+        int low = 0;
+        int high = a.length-1;
+        while(low <= high) {
+            int mid = (low + high)/2;
+            if((mid == 0 || a[mid-1] > a[mid]) && (mid == a.length-1 || a[mid] < a[mid+1])) {
+                return a[mid];
+            }
+            if(mid > 0 && a[mid-1] < a[mid]) {
+                high = mid-1;
+            } else {
+                low = mid+1;
             }
         }
         return Integer.MIN_VALUE;
