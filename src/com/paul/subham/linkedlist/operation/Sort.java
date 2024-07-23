@@ -13,10 +13,11 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 3. Merge sort of doubly linked list
  * 4. Sort bitonic doubly linked list
  * 5. Sort bitonic doubly linked list (Efficient)
+ * 6. Quick sort of singly linked list
  */
 public class Sort {
     public static void main(String[] args) {
-        DoublyLinkedList linkedList = new DoublyLinkedList();
+        LinkedList linkedList = new LinkedList();
         linkedList.insertAtEnd(1);
         linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(4);
@@ -25,7 +26,7 @@ public class Sort {
         linkedList.insertAtEnd(3);
         linkedList.insertAtEnd(2);
         linkedList.print();
-        bitonicSortDLL(linkedList);
+        quickSort(linkedList);
         System.out.println();
         linkedList.print();
     }
@@ -237,5 +238,49 @@ public class Sort {
         front.pre = resEnd;
         linkedList.head = res.next;
         linkedList.head.pre = null;
+    }
+
+    /**
+     * Quick sort of singly linked list
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void quickSort(LinkedList linkedList) {
+        Node start = linkedList.head;
+        Node end = linkedList.head;
+        while(end.next != null) {
+            end = end.next;
+        }
+        quickSortUtil(start, end);
+    }
+
+    private static void quickSortUtil(Node start, Node end) {
+        if(end != null && start != end && end.next != start) {
+            Node pivotPrev = partition(start, end);
+            quickSortUtil(start, pivotPrev);
+            if(pivotPrev.next != null) {
+                quickSortUtil(pivotPrev.next.next, end);
+            }
+        }
+    }
+
+    private static Node partition(Node start, Node end) {
+        int pivot = end.data;
+        Node pIndex = start;
+        Node prePivot = start;
+        for(Node i = start; i != end; i = i.next) {
+            if(i.data <= pivot) {
+                prePivot = pIndex;
+                int temp = i.data;
+                i.data = pIndex.data;
+                pIndex.data = temp;
+                pIndex = pIndex.next;
+            }
+        }
+        int temp = end.data;
+        end.data = pIndex.data;
+        pIndex.data = temp;
+        return prePivot;
     }
 }
