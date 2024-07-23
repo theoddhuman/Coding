@@ -38,44 +38,48 @@ import java.util.*;
  * 29. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Recursive)
  * 30. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Iterative)
  * 31. Searching an element in sorted and rotated array (Using pivot)
- * 32. Searching an element in sorted and rotated array (Binary Search - Recursive)
- * 33. Searching an element in sorted and rotated array (Binary Search - Iterative)
- * 34. Median of sequence of elements
- * 35. First occurrence of an element in an array (Binary Search - Recursive)
- * 36. First occurrence of an element in an array (Binary Search - Iterative)
- * 37. Last occurrence of an element in an array (Binary Search - Recursive)
- * 38. Last occurrence of an element in an array (Binary Search - Iterative)
- * 39. Count no of occurrences of an element in an array (Linear search)
- * 40. Count no of occurrences of an element in an array (Binary Search)
- * 41. Count no of occurrences of an element in an array (Binary Search - improved)
- * 42. Find smallest and second-smallest elements in an array (Sorting)
- * 43. Find smallest and second-smallest elements in an array (Scanning twice)
- * 44. Find smallest and second-smallest elements in an array (Scanning once)
- * 45. Find smallest and second-smallest elements in an array (Using priority queue)
- * 46. Find the smallest element in sorted and rotated array (Binary search - iterative)
- * 47. Find the smallest element in sorted and rotated array (Binary search - recursive)
- * 48. Majority element of an array
- * 49. Majority element of an array (Using binary search tree)
- * 50. Majority element of an array (Using sorting)
- * 51. Majority element of an array (Moore's Voting algorithm)
- * 52. Majority element of an array (Using hashing)
- * 53. Majority element of an array (Using bit manipulation)
- * 54. The second-largest element of an array (Using tournament tree)
- * 55. Print all pairs with given sum in an array (Hashing)
- * 56. Print all pairs with given sum in an array (Two Pointer)
- * 57. Median of two sorted arrays (Merging)
- * 58. Median of two sorted arrays of same size (Count while merging)
- * 59. Median of two sorted arrays of same size (Binary search)
- * 60. Median of two sorted arrays of different size (Count while merging)
- * 61. Median of two sorted arrays of different size (Binary search)
- * 62. Local minima of an array (Binary search - recursive)
- * 63. Local minima of an array (Binary search - iterative)
+ * 32. Maximum in sorted and rotated array (Binary Search)
+ * 33. Searching an element in sorted and rotated array (Binary Search - Recursive)
+ * 34. Searching an element in sorted and rotated array (Binary Search - Iterative)
+ * 35. Median of sequence of elements
+ * 36. First occurrence of an element in an array (Binary Search - Recursive)
+ * 37. First occurrence of an element in an array (Binary Search - Iterative)
+ * 38. Last occurrence of an element in an array (Binary Search - Recursive)
+ * 39. Last occurrence of an element in an array (Binary Search - Iterative)
+ * 40. Count no of occurrences of an element in an array (Linear search)
+ * 41. Count no of occurrences of an element in an array (Binary Search)
+ * 42. Count no of occurrences of an element in an array (Binary Search - improved)
+ * 43. Find smallest and second-smallest elements in an array (Sorting)
+ * 44. Find smallest and second-smallest elements in an array (Scanning twice)
+ * 45. Find smallest and second-smallest elements in an array (Scanning once)
+ * 46. Find smallest and second-smallest elements in an array (Using priority queue)
+ * 47. Find the smallest element in sorted and rotated array (Binary search - iterative)
+ * 48. Find the smallest element in sorted and rotated array (Binary search - recursive)
+ * 49. Majority element of an array
+ * 50. Majority element of an array (Using binary search tree)
+ * 51. Majority element of an array (Using sorting)
+ * 52. Majority element of an array (Moore's Voting algorithm)
+ * 53. Majority element of an array (Using hashing)
+ * 54. Majority element of an array (Using bit manipulation)
+ * 55. The second-largest element of an array (Using tournament tree)
+ * 56. Print all pairs with given sum in an array (Hashing)
+ * 57. Print all pairs with given sum in an array (Two Pointer)
+ * 58. Median of two sorted arrays (Merging)
+ * 59. Median of two sorted arrays of same size (Count while merging)
+ * 60. Median of two sorted arrays of same size (Binary search)
+ * 61. Median of two sorted arrays of different size (Count while merging)
+ * 62. Median of two sorted arrays of different size (Binary search)
+ * 63. Local minima of an array (Binary search - recursive)
+ * 64. Local minima of an array (Binary search - iterative)
+ * 65. Pairs with given sum in a sorted and rotated array
+ * 66. Pairs with given sum in a sorted and rotated array (Max using Binary Search)
+ * 67. Count pairs with given sum in a sorted and rotated array (Max using Binary Search)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {11, 2, 12, 4, 6};
+        int[] a = {5,8,1,2,3,4};
         int[] b = {3, 7, 9, 11};
-        System.out.println(localMinimaIterative(a));
+        System.out.println(countPairSumSortedRotatedBinary(a, 7,6));
     }
 
     /**
@@ -713,6 +717,12 @@ public class Searching {
         }
     }
 
+    /**
+     * Maximum in sorted and rotated array (Binary Search)
+     * <p>
+     * TC: O(logn)
+     * SC: O(logn)
+     */
     private static int findPivot(int[] a, int low, int high) {
         if (low > high) {
             return -1;
@@ -1549,6 +1559,94 @@ public class Searching {
             }
         }
         return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Pairs with given sum in a sorted and rotated array
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void pairSumSortedRotated(int[] a, int sum, int n) {
+        int i = 0;
+        for (; i < n - 1; i++) {
+            if (a[i] > a[i + 1]) {
+                break;
+            }
+        }
+        int left = (i + 1) % n;
+        int right = i;
+        while (left != right) {
+            int s = a[left] + a[right];
+            if (s == sum) {
+                System.out.println(a[left] + " " + a[right]);
+                if(left == (n + right - 1) % n) {
+                    break;
+                }
+                right = (n + right - 1) % n;
+                left = (left + 1) % n;
+            } else if (s > sum) {
+                right = (n + right - 1) % n;
+            } else {
+                left = (left + 1) % n;
+            }
+        }
+    }
+
+    /**
+     * Pairs with given sum in a sorted and rotated array (Max using Binary Search)
+     *
+     * TC: O(n)
+     * SC: O(logn)
+     */
+    public static void pairSumSortedRotatedBinary(int[] a, int sum, int n) {
+        int i = findPivot(a, 0, n-1);
+        int left = (i + 1) % n;
+        int right = i;
+        while (left != right) {
+            int s = a[left] + a[right];
+            if (s == sum) {
+                System.out.println(a[left] + " " + a[right]);
+                if(left == (n + right - 1) % n) {
+                    break;
+                }
+                right = (n + right - 1) % n;
+                left = (left + 1) % n;
+            } else if (s > sum) {
+                right = (n + right - 1) % n;
+            } else {
+                left = (left + 1) % n;
+            }
+        }
+    }
+
+    /**
+     * Count pairs with given sum in a sorted and rotated array (Max using Binary Search)
+     *
+     * TC: O(n)
+     * SC: O(logn)
+     */
+    public static int countPairSumSortedRotatedBinary(int[] a, int sum, int n) {
+        int i = findPivot(a, 0, n-1);
+        int left = (i + 1) % n;
+        int right = i;
+        int count = 0;
+        while (left != right) {
+            int s = a[left] + a[right];
+            if (s == sum) {
+                count++;
+                if(left == (n + right - 1) % n) {
+                    break;
+                }
+                right = (n + right - 1) % n;
+                left = (left + 1) % n;
+            } else if (s > sum) {
+                right = (n + right - 1) % n;
+            } else {
+                left = (left + 1) % n;
+            }
+        }
+        return count;
     }
 }
 
