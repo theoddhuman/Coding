@@ -31,12 +31,13 @@ import java.util.Set;
  * 17. Splitting a circular linked list in two halves
  * 18. Sorted insert in a circular linked list
  * 19. Inserting data in sorted doubly linked list
- * 20. Clone a linked list with nex t and random pointer (Extra space)
- * 21. Clone a linked list with nex t and random pointer (Space efficient)
+ * 20. Clone a linked list with next and random pointer (Extra space)
+ * 21. Clone a linked list with next and random pointer (Space efficient)
  * 22. Remove duplicates from a sorted doubly linked list
  * 23. Remove all occurrences of an element from a doubly linked list
  * 24. Remove duplicates from a doubly linked list (Sorting)
  * 25. Remove duplicates from a doubly linked list (Hashing)
+ * 26. Rotate doubly linked list by k positions
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -49,7 +50,7 @@ public class Manipulation {
         linkedList.insertAtEnd(2);
         linkedList.print();
         System.out.println();
-        removeDuplicatesDLLHashing(linkedList);
+        rotateDLL(linkedList, 2);
         linkedList.print();
 //        CircularLinkedList part1 = new CircularLinkedList();
 //        CircularLinkedList part2 = new CircularLinkedList();
@@ -745,6 +746,34 @@ public class Manipulation {
             }
             current = current.next;
         }
+    }
+
+    /**
+     * Rotate doubly linked list by k positions
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void rotateDLL(DoublyLinkedList linkedList, int k) {
+        if( k == 0 || linkedList.head == null) {
+            return;
+        }
+        DLNode newHead = linkedList.head;
+        for(int i=0; i<k; i++) {
+            newHead = newHead.next;
+        }
+        if(newHead == null) {
+            return;
+        }
+        DLNode last = linkedList.head;
+        while(last.next != null) {
+            last = last.next;
+        }
+        last.next = linkedList.head;
+        linkedList.head.pre = last;
+        newHead.pre.next = null;
+        newHead.pre = null;
+        linkedList.head = newHead;
     }
 
 }

@@ -18,16 +18,23 @@ import java.util.Stack;
  * 6. Reverse a linked list in group (Recursive)
  * 7. Reverse a doubly linked list
  * 8. Reverse a doubly linked list (Using stack)
+ * 9. Reverse a doubly linked list in group of size k
  */
 public class Reverse {
     public static void main(String[] args) {
-        LinkedList linkedList = new LinkedList();
+        DoublyLinkedList linkedList = new DoublyLinkedList();
         linkedList.insertAtEnd(1);
+        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(3);
+        linkedList.insertAtEnd(4);
         linkedList.insertAtEnd(5);
+        linkedList.insertAtEnd(6);
         linkedList.insertAtEnd(7);
-        linkedList.insertAtEnd(11);
+        linkedList.insertAtEnd(8);
         linkedList.print();
+        reverseK(linkedList, 3);
         System.out.println();
+        linkedList.print();
     }
 
     /**
@@ -207,5 +214,37 @@ public class Reverse {
             current.data = stack.pop();
             current = current.next;
         }
+    }
+
+    /**
+     * Reverse a doubly linked list in group of size k
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void reverseK(DoublyLinkedList linkedList, int k) {
+        linkedList.head = reverseK(linkedList.head, k);
+        linkedList.head.pre = null;
+    }
+
+    private static DLNode reverseK(DLNode node, int k) {
+        DLNode newHead = null;
+        DLNode current = node;
+        int count = 0;
+        while(current != null && count < k) {
+            DLNode next = current.next;
+            current.next = newHead;
+            if(newHead != null) {
+                newHead.pre = current;
+            }
+            newHead = current;
+            current = next;
+            count++;
+        }
+        if(current != null) {
+            node.next = reverseK(current, k);
+            node.next.pre = node;
+        }
+        return newHead;
     }
 }
