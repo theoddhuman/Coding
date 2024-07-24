@@ -7,6 +7,7 @@ import java.util.Stack;
  *
  * 1. Sort a stack (by recursion)
  * 2. Sort a stack (by temporary stack)
+ * 3. Sort array using stack
  */
 public class Sort {
     public static void main(String[] args) {
@@ -18,6 +19,9 @@ public class Sort {
 //        stack.print();
 //        reverseEfficient(stack);
 //        stack.print();
+        int[] a = {5,2,3,1,4};
+        sortArray(a, 5);
+
 
         Stack<Integer> stack = new Stack<>();
         stack.push(3);
@@ -72,4 +76,21 @@ public class Sort {
         }
         return sort;
     }
+
+    /**
+     * Sort array using stack
+     * 
+     * TC: O(n)
+     * SC: O(1)
+     */
+   public static void sortArray(int[] a, int n) {
+        Stack<Integer> stack = new Stack<>();
+        for(int i=0; i<n; i++) {
+            stack.push(a[i]);
+        }
+        Stack<Integer> sortedStack = sortByTemporaryStack(stack);
+        for(int i=n-1; i>=0; i--) {
+            a[i] = sortedStack.pop();
+        }
+   }
 }
