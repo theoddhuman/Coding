@@ -34,7 +34,8 @@ import java.util.Stack;
  * 21. Reverse level order traversal (Using stack and queue)
  * 22. Reverse level order traversal (Hashing)
  * 23. Reverse inorder traversal (Recursive)
- * 24. Zigzag traversal
+ * 24. Zigzag traversal (Recursive)
+ * 25. Zigzag traversal
  *
  */
 public class BinaryTree {
@@ -531,6 +532,37 @@ public class BinaryTree {
             reverseInorderUtil(node.right);
             System.out.print(node.data + " ");
             reverseInorderUtil(node.left);
+        }
+    }
+
+    /**
+     * Zigzag traversal (Recursive)
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public void zigzagTraversalRecursive() {
+        int height = Structure.heightRecursive(this);
+        boolean ltr = false;
+        for(int i=1; i<=height; i++) {
+            printGivenLevel(root, i, ltr);
+            ltr = !ltr;
+        }
+    }
+
+    private void printGivenLevel(Node node, int level, boolean ltr) {
+        if(node == null) {
+            return;
+        }
+        if(level == 1) {
+            System.out.print(node.data + " ");
+        } else if(level > 1) {
+            if(ltr) {
+                printGivenLevel(node.left, level-1, ltr);
+                printGivenLevel(node.right, level-1, ltr);
+            } else {
+                printGivenLevel(node.right, level-1, ltr);
+                printGivenLevel(node.left, level-1, ltr);
+            }
         }
     }
 
