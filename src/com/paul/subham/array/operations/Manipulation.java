@@ -2,11 +2,13 @@ package com.paul.subham.array.operations;
 
 import com.paul.subham.mathematics.Basic;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * @author subham.paul
@@ -33,16 +35,16 @@ import java.util.Set;
  * 20. Segregate 0's and 1's in an array (Count 0)
  * 21. Segregate 0's and 1's in an array (Two indices)
  * 22. Segregate 0's and 1's in an array (Single traversal)
+ * 23. Delete array elements which are smaller than next or become smaller
+ * 24. Delete array elements which are smaller than next or become smaller (Using stack)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {1,0, 1,1,0,0,1,0};
+        int[] a = {20,10,25,30,40};
 //        int[] b = {3,4,11,23};
 //        int[] res = merge(a, b);
-        segregate0And1SingleTraversal(a);
-        for(int i: a) {
-            System.out.print(i + " ");
-        }
+        deleteSmallerByStack(a, 5, 2);
+        System.out.println();
 //        int[][] a = {{1, 3, 45, 46},
 //                {21, 34, 35, 89},
 //                {1, 2, 3, 11},
@@ -559,5 +561,60 @@ public class Manipulation {
                 l++;
             }
         }
+    }
+
+    /**
+     * Delete array elements which are smaller than next or become smaller
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void deleteSmaller(int[] a, int n, int k) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int value : a) {
+            list.add(value);
+        }
+        int counter = 0;
+        int i=0;
+        while( i<n-1) {
+            int pointer = 0;
+            for(int j=1; j< list.size(); j++) {
+                if(list.get(pointer) < list.get(j)) {
+                    list.remove(pointer);
+                    counter++;
+                    break;
+                } else {
+                    pointer++;
+                }
+            }
+            if(counter==k) {
+                break;
+            }
+            i++;
+        }
+        list.forEach(val -> System.out.print(val + " "));
+    }
+
+    /**
+     * Delete array elements which are smaller than next or become smaller (Using stack)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int[] deleteSmallerByStack(int[] a, int n, int k) {
+        Stack<Integer> stack = new Stack<>();
+        int counter = 0;
+        for(int i=0; i<n; i++) {
+            while(!stack.isEmpty() && stack.peek() < a[i] && counter < k) {
+                stack.pop();
+                counter++;
+            }
+            stack.push(a[i]);
+        }
+        int[] v = new int[stack.size()];
+        for(int i=v.length-1; i>=0; i--) {
+            v[i] = stack.pop();
+        }
+        return v;
     }
 }
