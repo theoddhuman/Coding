@@ -1,5 +1,8 @@
 package com.paul.subham.tree.operations;
 
+import com.paul.subham.tree.implementation.binary.BinaryTree;
+import com.paul.subham.tree.implementation.binary.Node;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +14,8 @@ import java.util.Map;
  * 2. Print postorder traversal from preorder and inorder (Efficient)
  * 3. Print postorder traversal from preorder and inorder (Using Hashing)
  * 4. Print postorder traversal from preorder
+ * 5. kth node of postorder traversal of binary tree
+ * 6. kth node of inorder traversal of binary tree
  */
 public class Traversal {
     public static void main(String[] args) {
@@ -116,5 +121,53 @@ public class Traversal {
         printPostFromPre(pre, min, root);
         printPostFromPre(pre, root, max);
         System.out.print(root + " ");
+    }
+
+    /**
+     * kth node of postorder traversal of binary tree
+     *
+     * TC: O(n)
+     * SC: O(k)
+     */
+    public static void kthPostorder(BinaryTree binaryTree, int k) {
+        kthPostorder(binaryTree.root, k);
+    }
+    
+    private static int count = 0;
+    private static void kthPostorder(Node node, int k) {
+        if(node == null) {
+            return;
+        }
+        if(count < k) {
+            kthPostorder(node.left, k);
+            kthPostorder(node.right, k);
+            count++;
+            if(count == k) {
+                System.out.println(node.data);
+            }
+        }
+    }
+
+    /**
+     * kth node of inorder traversal of binary tree
+     *
+     * TC: O(n)
+     * SC: O(k)
+     */
+    public static void kthInorder(BinaryTree binaryTree, int k) {
+        kthInorder(binaryTree.root, k);
+    }
+    private static void kthInorder(Node node, int k) {
+        if(node == null) {
+            return;
+        }
+        if(count < k) {
+            kthInorder(node.left, k);
+            count++;
+            if(count == k) {
+                System.out.println(node.data);
+            }
+            kthInorder(node.right, k);
+        }
     }
 }
