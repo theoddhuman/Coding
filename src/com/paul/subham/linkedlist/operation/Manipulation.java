@@ -38,6 +38,7 @@ import java.util.Set;
  * 24. Remove duplicates from a doubly linked list (Sorting)
  * 25. Remove duplicates from a doubly linked list (Hashing)
  * 26. Rotate doubly linked list by k positions
+ * 27. Swap kth node from start and end in doubly linked list
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -46,11 +47,11 @@ public class Manipulation {
         linkedList.insertAtEnd(2);
         linkedList.insertAtEnd(4);
         linkedList.insertAtEnd(3);
-        linkedList.insertAtEnd(4);
-        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(41);
+        linkedList.insertAtEnd(21);
         linkedList.print();
         System.out.println();
-        rotateDLL(linkedList, 2);
+        swapK(linkedList, 2);
         linkedList.print();
 //        CircularLinkedList part1 = new CircularLinkedList();
 //        CircularLinkedList part2 = new CircularLinkedList();
@@ -774,6 +775,58 @@ public class Manipulation {
         newHead.pre.next = null;
         newHead.pre = null;
         linkedList.head = newHead;
+    }
+
+    /**
+     * Swap kth node from start and end in doubly linked list
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void swapK(DoublyLinkedList linkedList, int k) {
+        int count = 0;
+        DLNode current = linkedList.head;
+        while(current != null) {
+            count++;
+            current = current.next;
+        }
+        if(count < k || 2*k-1 == count ) {
+            return;
+        }
+        DLNode x = linkedList.head;
+        for(int i=1; i<k; i++) {
+            x = x.next;
+        }
+        DLNode y = linkedList.head;
+        for(int i=1; i<count-k+1;i++){
+            y = y.next;
+        }
+        DLNode xPre = x.pre;
+        DLNode xNext = x.next;
+        DLNode yPre = y.pre;
+        DLNode yNext = y.next;
+        if(xPre != null) {
+            xPre.next = y;
+        }
+        if(yNext != null) {
+            yNext.pre = x;
+        }
+        if(xNext != null) {
+            xNext.pre = y;
+        }
+        if(yPre != null) {
+            yPre.next = x;
+        }
+        x.next = yNext;
+        x.pre = yPre;
+        y.next = xNext;
+        y.pre = xPre;
+        if(k==1) {
+            linkedList.head = y;
+        }
+        if(k==count) {
+            linkedList.head = x;
+        }
     }
 
 }
