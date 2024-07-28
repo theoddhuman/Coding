@@ -12,10 +12,12 @@ import java.util.Stack;
  * 7. Prefix to Infix conversion
  * 8. Prefix to Postfix conversion
  * 9. Postfix to Prefix conversion
+ * 10. Maximum depth of nested parenthesis in a string (using stack)
+ * 11. Maximum depth of nested parenthesis in a string (space optimized)
  */
 public class Expression {
     public static void main(String[] args) {
-        System.out.println(postfixToPrefix("12+3/45*+"));
+        System.out.println(maxDepthEfficient("( a(b) (c) (d(e(f)g)h) I (j(k)l)m)"));
     }
 
 
@@ -327,5 +329,60 @@ public class Expression {
             }
         }
         return stack.pop();
+    }
+
+    /**
+     * Maximum depth of nested parenthesis in a string (using stack)
+     * ((x(y)))
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int maxDepth(String s) {
+        Stack<Character> stack = new Stack<>();
+        int maxDepth = -1;
+        for(int i=0; i<s.length(); i++) {
+            if(s.charAt(i) == '(') {
+                stack.push(s.charAt(i));
+            } else if (s.charAt(i) == ')') {
+                if(stack.isEmpty()) {
+                    return -1;
+                }
+                maxDepth = Math.max(maxDepth, stack.size());
+                stack.pop();
+            }
+        }
+        if(!stack.isEmpty()) {
+            return -1;
+        }
+        return maxDepth;
+    }
+
+    /**
+     * Maximum depth of nested parenthesis in a string (space optimized)
+     * ((x(y)))
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int maxDepthEfficient(String s) {
+        int count = 0;
+        int max = -1;
+        for(int i=0; i<s.length(); i++) {
+            if(s.charAt(i) == '(') {
+                count++;
+                max = Math.max(max, count);
+            } else if (s.charAt(i) == ')') {
+                if(count > 0) {
+                    count--;
+                } else {
+                    return -1;
+                }
+            }
+        }
+        if(count > 0) {
+            return -1;
+        }
+        return max;
     }
 }

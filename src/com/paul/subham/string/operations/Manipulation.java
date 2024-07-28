@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
  * 1. Remove specified characters from a string
  * 2. Reverse individual words in a string (Using stack)
  * 3. Reverse individual words in a string (Using Java stream)
+ * 4. Reverse a string using stack
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -74,5 +75,22 @@ public class Manipulation {
         return Arrays.stream(s.split(" "))
                 .map(str -> new StringBuilder(str).reverse())
                 .collect(Collectors.joining(" "));
+    }
+
+    /**
+     * Reverse a string using stack
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static StringBuffer reverse(StringBuffer s) {
+        Stack<Character> stack = new Stack<>();
+        for(int i=0; i<s.length(); i++) {
+            stack.push(s.charAt(i));
+        }
+        for(int i=0; i<s.length(); i++) {
+            s.setCharAt(i, stack.pop());
+        }
+        return s;
     }
 }
