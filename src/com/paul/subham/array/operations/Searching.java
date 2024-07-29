@@ -74,12 +74,13 @@ import java.util.*;
  * 65. Pairs with given sum in a sorted and rotated array
  * 66. Pairs with given sum in a sorted and rotated array (Max using Binary Search)
  * 67. Count pairs with given sum in a sorted and rotated array (Max using Binary Search)
+ * 68. Search an element in infinite array
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {5,8,1,2,3,4};
+        int[] a = {1,2,3,4,5,6};
         int[] b = {3, 7, 9, 11};
-        System.out.println(countPairSumSortedRotatedBinary(a, 7,6));
+        System.out.println(searchInfinite(a, 5));
     }
 
     /**
@@ -1647,6 +1648,24 @@ public class Searching {
             }
         }
         return count;
+    }
+
+    /**
+     * Search an element in infinite array
+     *
+     * TC: O(logp)
+     * SC: O(logn)
+     */
+    public static int searchInfinite(int[] a, int data) {
+        int low = 0;
+        int high = 1;
+        int val = a[high];
+        while(val < data) {
+            low = high+1;
+            high *=2;
+            val = a[high];
+        }
+        return BinarySearch.searchRecursive(a, low, high, data);
     }
 }
 
