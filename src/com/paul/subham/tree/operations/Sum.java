@@ -4,9 +4,14 @@ import com.paul.subham.linkedlist.implementation.doubly.DLNode;
 import com.paul.subham.tree.implementation.binary.BinaryTree;
 import com.paul.subham.tree.implementation.binary.Node;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * @author subham.paul
@@ -27,6 +32,11 @@ import java.util.TreeMap;
  * 14. Sum of left leaves of a binary tree (Iterative)
  * 15. Sum of right leaves of a binary tree (Recursive)
  * 16. Sum of right leaves of a binary tree (Iterative)
+ * 17. Sum of all nodes of the given perfect binary tree
+ * 18. Sum of all nodes of the given perfect binary tree (Efficient)
+ * 19. Diagonal sum of a binary tree
+ * 20. Diagonal sum of a binary tree (diagonal relation in matrices)
+ *
  */
 public class Sum {
     /**
@@ -51,9 +61,11 @@ public class Sum {
         bt.root.left.right.left = new Node(6);
         bt.root.left.right.right = new Node(8);
         bt.root.left.right.left.right = new Node(7);
-        bt.levelOrder();
-        System.out.println();
-        System.out.println(rightLeavesSumIterative(bt));
+        System.out.println(diagonalSumMatrix(bt));
+//        bt.levelOrder();
+//        System.out.println();
+//        System.out.println(rightLeavesSumIterative(bt));
+        //System.out.println(sumPerfectBinaryTreeEfficient(3));
         //System.out.println(sumWithSpecificChildRecursive(bt, 6));
 
     }
@@ -462,5 +474,109 @@ public class Sum {
             }
         }
         return sum;
+    }
+
+    /**
+     * Sum of all nodes of the given perfect binary tree
+     *
+     * The leaf nodes in the perfect binary tree are numbered starting from 1 to n, total no of leaves.
+     * Parent node is the sum of two child nodes.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int sumPerfectBinaryTree(int level) {
+        int leafNodeCount = (int) Math.pow(2,level-1);
+        List<List<Integer>> list = new ArrayList<>();
+        for(int i=0;i<level;i++) {
+            list.add(new ArrayList<>());
+        }
+        for(int i=1;i<=leafNodeCount; i++) {
+            list.get(level-1).add(i);
+        }
+        for(int i=level-2; i>=0; i--) {
+            int k = 0;
+            while (k<list.get(i+1).size()) {
+                list.get(i).add(list.get(i+1).get(k) +list.get(i+1).get(k+1));
+                k += 2;
+            }
+        }
+        int sum = 0;
+        for(int i=0;i<level;i++) {
+            for(int j=0;j<list.get(i).size();j++) {
+                sum+=list.get(i).get(j);
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * Sum of all nodes of the given perfect binary tree (Efficient)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int sumPerfectBinaryTreeEfficient(int level) {
+        int n = (int) Math.pow(2, level-1);
+        int sumLevel = n*(n+1)/2;
+        return sumLevel*level;
+    }
+
+    /**
+     * Diagonal sum of a binary tree
+     *
+     * TC: O(n)
+     * SC: O(h+d), h is height and d is no of diagonals
+     */
+    public static List<Integer> diagonalSum(BinaryTree binaryTree) {
+        Map<Integer, Integer> sumMap = new TreeMap<>();
+        Map<Node, Integer> verticalDistanceMap = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        verticalDistanceMap.put(binaryTree.root, 0);
+        queue.add(binaryTree.root);
+        while(!queue.isEmpty()) {
+            Node current = queue.remove();
+            int verticalDistance = verticalDistanceMap.get(current);
+            while(current != null) {
+                int prevSum = sumMap.getOrDefault(verticalDistance, 0);
+                sumMap.put(verticalDistance, prevSum + current.data);
+                if(current.left != null) {
+                    queue.add(current.left);
+                    verticalDistanceMap.put(current.left, verticalDistance+1);
+                }
+                current = current.right;
+            }
+        }
+        return new ArrayList<>(sumMap.values());
+    }
+
+
+    /**
+     * Diagonal sum of a binary tree (diagonal relation in matrices)
+     *
+     * The difference of the respective row and column indices of each element on diagonal is same
+     * Similarly, every diagonal has its own unique difference of rows and column,
+     * and with the help of this, we can identify each element, that to which diagonal it belongs.
+     *
+     * TC: O(n)
+     * SC: O(h+d), h is height and d is no of diagonals
+     */
+    public static List<Integer> diagonalSumMatrix(BinaryTree binaryTree) {
+        Map<Integer, Integer> grid = new HashMap<>();
+        constructGrid(binaryTree.root, 0, 0, grid);
+        return new ArrayList<>(grid.values());
+    }
+
+    private static void constructGrid(Node node, int level, int index, Map<Integer, Integer> grid) {
+        if(node == null) {
+            return;
+        }
+        if(grid.containsKey(level-index)) {
+            grid.put(level-index, grid.get(level-index) + node.data);
+        } else {
+            grid.put(level-index, node.data);
+        }
+        constructGrid(node.left, level+1, index-1, grid);
+        constructGrid(node.right, level+1, index+1, grid);
     }
 }

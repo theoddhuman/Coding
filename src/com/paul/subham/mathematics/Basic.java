@@ -8,10 +8,11 @@ package com.paul.subham.mathematics;
  * 3. Find GCD (Euclidean Algorithm Optimized)
  * 4. Find GCD (Division)
  * 5. Find GCD (Division, Iterative)
+ * 6. Decimal to binary
  */
 public class Basic {
     public static void main(String[] args) {
-        System.out.println(gcdUsingDivisionIterative(20, 25));
+        System.out.println(decimalToBinary(14));
     }
 
 
@@ -99,5 +100,23 @@ public class Basic {
             return a;
         }
         return b;
+    }
+
+    /**
+     * Decimal to binary
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static String decimalToBinary(int n) {
+        if(n == 0) {
+            return "0";
+        }
+        StringBuffer s = new StringBuffer();
+        while(n > 0) {
+            s.append(n%2);
+            n /= 2;
+        }
+        return s.reverse().toString();
     }
 }
