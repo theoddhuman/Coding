@@ -31,6 +31,7 @@ import java.util.Stack;
  * 19. Detecting cycle in directed graph (Using BFS - Topological Sorting)
  * 20. Depth of undirected acyclic graph from a source (Using BFS)
  * 21. Depth of directed acyclic graph (Using BFS)
+ * 22. No of islands in a matrix
  */
 public class Structure {
     public static void main(String[] args) {
@@ -807,5 +808,35 @@ public class Structure {
             }
         }
         return count-1;
+    }
+
+    /**
+     * No of islands in a matrix
+     * 
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int noOfIslands(int[][] a) {
+        int count = 0;
+        for(int i=0; i<a.length; i++) {
+            for(int j=0; j<a[0].length; j++) {
+                if(a[i][j] == 0) {
+                    island(a, i, j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    private static void island(int[][] a, int i, int j) {
+        if(i<0 || j<0 || i>=a.length || j>=a[0].length || a[i][j] == 1) {
+            return;
+        }
+        a[i][j] = 0;
+        island(a, i-1, j);
+        island(a, i, j-1);
+        island(a, i+1, j);
+        island(a, i, j+1);
     }
 }
