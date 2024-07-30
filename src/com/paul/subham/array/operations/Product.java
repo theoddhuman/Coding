@@ -1,18 +1,18 @@
 package com.paul.subham.array.operations;
 
-import java.util.Arrays;
-
 /**
  * @author subham.paul
  *
  * 1. Product of array except self
  * 2. Product of array except self (Space efficient)
  * 3. Product of array except self (Counting zero)
+ * 4. Maximum product sub array
+ * 5. Maximum product sub array (efficient)
  */
 public class Product {
     public static void main(String[] args) {
-        int[] a = { 10, 3, 0, 6, 0 };
-        System.out.println(Arrays.toString(productCountingZero(a, 5)));
+        int[] a = { -10, 3, -1, 6, 0 };
+        System.out.println(maxProductSubArrayEfficient(a));
     }
 
     /**
@@ -99,5 +99,45 @@ public class Product {
             }
         }
         return productArray;
+    }
+
+    /**
+     * Maximum product sub array
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int maxProductSubArray(int[] a) {
+        int maxProduct = a[0];
+        for(int i=0; i<a.length; i++) {
+            int mul = a[i];
+            for(int j=i+1; j<a.length; j++) {
+                mul *= a[j];
+                maxProduct = Math.max(maxProduct, mul);
+            }
+        }
+        return maxProduct;
+    }
+
+    /**
+     * Maximum product sub array (efficient)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int maxProductSubArrayEfficient(int[] a) {
+        int n = a.length;
+        int left = 1;
+        int right = 1;
+        int maxProduct = a[0];
+        for(int i=0; i<n; i++) {
+            //if we encounter a zero we will start a new substring, so left or right will be set to 1.
+            left = (left == 0? 1: left) * a[i];
+            //odd number of negative values can be problematic, that's why if we start from left 1 odd negative can be eliminated and from
+            // right another one can be eliminated.
+            right = (right == 0? 1: right) * a[n-1-i];
+            maxProduct = Math.max(maxProduct, Math.max(left, right));
+        }
+        return maxProduct;
     }
 }
