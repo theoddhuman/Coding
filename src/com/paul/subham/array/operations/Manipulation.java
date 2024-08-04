@@ -37,13 +37,16 @@ import java.util.Stack;
  * 22. Segregate 0's and 1's in an array (Single traversal)
  * 23. Delete array elements which are smaller than next or become smaller
  * 24. Delete array elements which are smaller than next or become smaller (Using stack)
+ * 25. Next greater element with same set of digits
+ * 26. Sort an array of 0's, 1's and 2's (counting appearances)
+ * 27. Sort an array of 0's, 1's and 2's (Single traversal - 3 pointer)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {20,10,25,30,40};
+        int[] a = {0,1,2,1,0,2};
 //        int[] b = {3,4,11,23};
 //        int[] res = merge(a, b);
-        deleteSmallerByStack(a, 5, 2);
+        a = sort0And1And2(a);
         System.out.println();
 //        int[][] a = {{1, 3, 45, 46},
 //                {21, 34, 35, 89},
@@ -616,5 +619,94 @@ public class Manipulation {
             v[i] = stack.pop();
         }
         return v;
+    }
+
+    /**
+     * Next greater element with same set of digits
+     * 2,3,4,2,1 -> 4,1,2,2,3
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] nextGreaterSameSetDigits(int[] a) {
+        int x = -1;
+        int n = a.length;
+        for (int i = n - 1; i > 0; i--) {
+            if (a[i] > a[i - 1]) {
+                x = i - 1;
+                break;
+            }
+        }
+        for (int i = n - 1; i > x && x != -1; i--) {
+            if (a[i] > a[x]) {
+                int temp = a[x];
+                a[x] = a[i];
+                a[i] = temp;
+                break;
+            }
+        }
+        int low = x + 1;
+        int high = n - 1;
+        while (low < high) {
+            int temp = a[low];
+            a[low] = a[high];
+            a[high] = temp;
+            low++;
+            high--;
+        }
+        return a;
+    }
+
+    /**
+     * Sort an array of 0's, 1's and 2's (counting appearances)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] sort0And1And2(int[] a) {
+        int[] count = new int[3];
+        for (int j : a) {
+            count[j]++;
+        }
+        int k =0;
+        for(int i=0; i<count[0]; i++) {
+            a[k++] = 0;
+        }
+        for(int i=0; i<count[1]; i++) {
+            a[k++] = 1;
+        }
+        for(int i=0; i<count[2]; i++) {
+            a[k++] = 2;
+        }
+        return a;
+    }
+
+    /**
+     * Sort an array of 0's, 1's and 2's (Single traversal - 3 pointer)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] sort0And1And2Efficient(int[] a) {
+        int low = 0;
+        int mid = 0;
+        int high = a.length-1;
+        while(mid <= high) {
+            if(a[mid] == 0) {
+                int temp = a[low];
+                a[low] = a[mid];
+                a[mid] = temp;
+                low++;
+                mid++;
+            } else if (a[mid] == 1) {
+                mid++;
+            } else {
+                int temp = a[high];
+                a[high] = a[mid];
+                a[mid] = temp;
+                high--;
+            }
+        }
+        return a;
     }
 }
