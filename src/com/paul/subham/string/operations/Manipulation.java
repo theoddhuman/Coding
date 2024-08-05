@@ -13,11 +13,13 @@ import java.util.stream.Collectors;
  * 2. Reverse individual words in a string (Using stack)
  * 3. Reverse individual words in a string (Using Java stream)
  * 4. Reverse a string using stack
+ * 5. Reverse sequence of words in a string (Using stack)
+ * 6. Reverse sequence of words in a string (Space optimized)
  */
 public class Manipulation {
     public static void main(String[] args) {
         //char[] res = removeSpecificChars("hellobaby".toCharArray(), new char[]{'l','o','a'});
-        System.out.println(reverseWordA("I am Subham"));
+        System.out.println(reverseSequenceWordEfficient("I    am Subham  "));
     }
 
     /**
@@ -44,6 +46,8 @@ public class Manipulation {
 
     /**
      * Reverse individual words in a string (Using stack)
+     *
+     * HELLO DADDY -> OLLEH YDDAD
      *
      * TC: O(n)
      * SC: O(n)
@@ -92,5 +96,62 @@ public class Manipulation {
             s.setCharAt(i, stack.pop());
         }
         return s;
+    }
+
+    /**
+     * Reverse sequence of words in a string (Using stack)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String reverseSequenceWord(String s) {
+        Stack<String> stack = new Stack<>();
+        String str = "";
+        for(int i=0; i<s.length(); i++) {
+            if(s.charAt(i) != ' ') {
+                str += s.charAt(i);
+            } else {
+                if(!str.isEmpty()) {
+                    stack.push(str);
+                }
+                str = "";
+            }
+        }
+        stack.push(str);
+        str = "";
+        while(!stack.isEmpty()) {
+            str = str + stack.pop() + " ";
+        }
+        return str.trim();
+    }
+
+    /**
+     * Reverse sequence of words in a string (Space optimized)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static String reverseSequenceWordEfficient(String s) {
+        Stack<String> stack = new Stack<>();
+        String str = "";
+        String result = "";
+        for(int i=0; i<s.length(); i++) {
+            if(s.charAt(i) != ' ') {
+                str += s.charAt(i);
+            } else {
+                if(!str.isEmpty()) {
+                    result = " " + str + result;
+                }
+                str = "";
+            }
+        }
+        if(!str.isEmpty()) {
+            if(!result.isEmpty()) {
+                result = str + result;
+            } else {
+                result = str;
+            }
+        }
+        return result.trim();
     }
 }
