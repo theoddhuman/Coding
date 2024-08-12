@@ -19,23 +19,24 @@ import java.util.Stack;
  * 6. preorder traversal iterative
  * 7. inorder traversal iterative
  * 8. Inorder traversal (Morris)
- * 9. postorder traversal iterative
- * 10. level order traversal
- * 11. level order traversal (recursive)
- * 12. find maximum recursive
- * 13. find maximum iterative
- * 14. find minimum recursive
- * 15. find minimum iterative
- * 16. search an element recursive
- * 17. search an element iterative
- * 18. size of tree recursive
- * 19. size of tree iterative
- * 20. Reverse level order traversal (recursive)
- * 21. Reverse level order traversal (Using stack and queue)
- * 22. Reverse level order traversal (Hashing)
- * 23. Reverse inorder traversal (Recursive)
- * 24. Zigzag traversal (Recursive)
- * 25. Zigzag traversal
+ * 9. Preorder traversal (Morris)
+ * 10. postorder traversal iterative
+ * 11. level order traversal
+ * 12. level order traversal (recursive)
+ * 13. find maximum recursive
+ * 14. find maximum iterative
+ * 15. find minimum recursive
+ * 16. find minimum iterative
+ * 17. search an element recursive
+ * 18. search an element iterative
+ * 19. size of tree recursive
+ * 20. size of tree iterative
+ * 21. Reverse level order traversal (recursive)
+ * 22. Reverse level order traversal (Using stack and queue)
+ * 23. Reverse level order traversal (Hashing)
+ * 24. Reverse inorder traversal (Recursive)
+ * 25. Zigzag traversal (Recursive)
+ * 26. Zigzag traversal
  *
  */
 public class BinaryTree {
@@ -255,6 +256,35 @@ public class BinaryTree {
                 } else {
                     pred.right = null;
                     System.out.print(current.data +" ");
+                    current = current.right;
+                }
+            }
+        }
+    }
+
+    /**
+     * Preorder traversal (Morris)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public void preOrderMorris() {
+        Node current = root;
+        while(current != null) {
+            if(current.left == null) {
+                System.out.print(current.data + " ");
+                current = current.right;
+            } else {
+                Node pred = current.left;
+                while(pred.right != null && pred.right != current) {
+                    pred = pred.right;
+                }
+                if(pred.right == null) {
+                    System.out.print(current.data + " ");
+                    pred.right = current;
+                    current = current.left;
+                } else {
+                    pred.right = null;
                     current = current.right;
                 }
             }
