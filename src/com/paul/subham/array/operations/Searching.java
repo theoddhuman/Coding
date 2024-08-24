@@ -10,77 +10,84 @@ import java.util.*;
  * 1. Finding duplicate in an array (Using sorting)
  * 2. Finding duplicate in an array (Using hashing)
  * 3. Finding duplicate in an array (space optimized)
- * 4. Finding most appearing element in an array (using hashing)
- * 5. Finding most appearing element in an array (space optimized)
- * 6. Finding first repeating element in an array (using hashing)
- * 7. Finding missing number in an array (Sorting Technique)
- * 8. Finding missing number in an array (Hashing Technique)
- * 9. Finding missing number in an array (Summation Technique)
- * 10. Finding missing number in an array (XOR Technique)
- * 11. Finding odd occurring number in an array
- * 12. Finding two repeating elements in an array
- * 13. Finding two repeating elements in an array (Hashing Technique)
- * 14. Finding two repeating elements in an array (Using Mathematics)
- * 15. Finding two repeating elements in an array (Using XOR)
- * 16. Finding two repeating elements in an array (Using Index)
- * 17. Finding two repeating elements in an array (By modifying array)
- * 18. Finding pair with given sum in array
- * 19. Finding pair with given sum in array (Using sorting and two pointer)
- * 20. Finding pair with given sum in array (Using binary search)
- * 21. Finding pair with given sum in array (Using hashing)
- * 22. Finding pair with given sum in array (Using Remainder)
- * 23. Finding two elements with sum closest to zero
- * 24. Finding two elements with sum closest to zero (By sorting and two pointer)
- * 25. Finding an element which appears odd no of times in an array (Nested loop)
- * 26. Finding an element which appears odd no of times in an array (Hashing)
- * 27. Finding an element which appears odd no of times in an array (Bit manipulation - XOR)
- * 28. Finding an element which appears odd no of times in an array (Binary search)
- * 29. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Recursive)
- * 30. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Iterative)
- * 31. Searching an element in sorted and rotated array (Using pivot)
- * 32. Maximum in sorted and rotated array (Binary Search)
- * 33. Searching an element in sorted and rotated array (Binary Search - Recursive)
- * 34. Searching an element in sorted and rotated array (Binary Search - Iterative)
- * 35. Median of sequence of elements
- * 36. First occurrence of an element in an array (Binary Search - Recursive)
- * 37. First occurrence of an element in an array (Binary Search - Iterative)
- * 38. Last occurrence of an element in an array (Binary Search - Recursive)
- * 39. Last occurrence of an element in an array (Binary Search - Iterative)
- * 40. Count no of occurrences of an element in an array (Linear search)
- * 41. Count no of occurrences of an element in an array (Binary Search)
- * 42. Count no of occurrences of an element in an array (Binary Search - improved)
- * 43. Find smallest and second-smallest elements in an array (Sorting)
- * 44. Find smallest and second-smallest elements in an array (Scanning twice)
- * 45. Find smallest and second-smallest elements in an array (Scanning once)
- * 46. Find smallest and second-smallest elements in an array (Using priority queue)
- * 47. Find the smallest element in sorted and rotated array (Binary search - iterative)
- * 48. Find the smallest element in sorted and rotated array (Binary search - recursive)
- * 49. Majority element of an array
- * 50. Majority element of an array (Using binary search tree)
- * 51. Majority element of an array (Using sorting)
- * 52. Majority element of an array (Moore's Voting algorithm)
- * 53. Majority element of an array (Using hashing)
- * 54. Majority element of an array (Using bit manipulation)
- * 55. The second-largest element of an array (Using tournament tree)
- * 56. Print all pairs with given sum in an array (Hashing)
- * 57. Print all pairs with given sum in an array (Two Pointer)
- * 58. Median of two sorted arrays (Merging)
- * 59. Median of two sorted arrays of same size (Count while merging)
- * 60. Median of two sorted arrays of same size (Binary search)
- * 61. Median of two sorted arrays of different size (Count while merging)
- * 62. Median of two sorted arrays of different size (Binary search)
- * 63. Local minima of an array (Binary search - recursive)
- * 64. Local minima of an array (Binary search - iterative)
- * 65. Pairs with given sum in a sorted and rotated array
- * 66. Pairs with given sum in a sorted and rotated array (Max using Binary Search)
- * 67. Count pairs with given sum in a sorted and rotated array (Max using Binary Search)
- * 68. Search an element in infinite array
+ * 4. Finding duplicate in an array (Circular list method)
+ * 5. Finding most appearing element in an array (using hashing)
+ * 6. Finding most appearing element in an array (space optimized)
+ * 7. Finding first repeating element in an array (using hashing)
+ * 8. Finding missing number in an array (Sorting Technique)
+ * 9. Finding missing number in an array (Hashing Technique)
+ * 10. Finding missing number in an array (Summation Technique)
+ * 11. Finding missing number in an array (XOR Technique)
+ * 12. Finding odd occurring number in an array
+ * 13. Finding two repeating elements in an array
+ * 14. Finding two repeating elements in an array (Hashing Technique)
+ * 15. Finding two repeating elements in an array (Using Mathematics)
+ * 16. Finding two repeating elements in an array (Using XOR)
+ * 17. Finding two repeating elements in an array (Using Index)
+ * 18. Finding two repeating elements in an array (By modifying array)
+ * 19. Finding pair with given sum in array
+ * 20. Finding pair with given sum in array (Using sorting and two pointer)
+ * 21. Finding pair with given sum in array (Using binary search)
+ * 22. Finding pair with given sum in array (Using hashing)
+ * 23. Finding pair with given sum in array (Using Remainder)
+ * 24. Finding two elements with sum closest to zero
+ * 25. Finding two elements with sum closest to zero (By sorting and two pointer)
+ * 26. Finding an element which appears odd no of times in an array (Nested loop)
+ * 27. Finding an element which appears odd no of times in an array (Hashing)
+ * 28. Finding an element which appears odd no of times in an array (Bit manipulation - XOR)
+ * 29. Finding an element which appears odd no of times in an array (Binary search)
+ * 30. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Recursive)
+ * 31. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Iterative)
+ * 32. Searching an element in sorted and rotated array (Using pivot)
+ * 33. Maximum in sorted and rotated array (Binary Search)
+ * 34. Searching an element in sorted and rotated array (Binary Search - Recursive)
+ * 35. Searching an element in sorted and rotated array (Binary Search - Iterative)
+ * 36. Median of sequence of elements
+ * 37. First occurrence of an element in an array (Binary Search - Recursive)
+ * 38. First occurrence of an element in an array (Binary Search - Iterative)
+ * 39. Last occurrence of an element in an array (Binary Search - Recursive)
+ * 40. Last occurrence of an element in an array (Binary Search - Iterative)
+ * 41. Count no of occurrences of an element in an array (Linear search)
+ * 42. Count no of occurrences of an element in an array (Binary Search)
+ * 43. Count no of occurrences of an element in an array (Binary Search - improved)
+ * 44. Find smallest and second-smallest elements in an array (Sorting)
+ * 45. Find smallest and second-smallest elements in an array (Scanning twice)
+ * 46. Find smallest and second-smallest elements in an array (Scanning once)
+ * 47. Find smallest and second-smallest elements in an array (Using priority queue)
+ * 48. Find the smallest element in sorted and rotated array (Binary search - iterative)
+ * 49. Find the smallest element in sorted and rotated array (Binary search - recursive)
+ * 50. Majority element of an array
+ * 51. Majority element of an array (Using binary search tree)
+ * 52. Majority element of an array (Using sorting)
+ * 53. Majority element of an array (Moore's Voting algorithm)
+ * 54. Majority element of an array (Using hashing)
+ * 55. Majority element of an array (Using bit manipulation)
+ * 56. The second-largest element of an array (Using tournament tree)
+ * 57. Print all pairs with given sum in an array (Hashing)
+ * 58. Print all pairs with given sum in an array (Two Pointer)
+ * 59. Median of two sorted arrays (Merging)
+ * 60. Median of two sorted arrays of same size (Count while merging)
+ * 61. Median of two sorted arrays of same size (Binary search)
+ * 62. Median of two sorted arrays of different size (Count while merging)
+ * 63. Median of two sorted arrays of different size (Binary search)
+ * 64. Local minima of an array (Binary search - recursive)
+ * 65. Local minima of an array (Binary search - iterative)
+ * 66. Pairs with given sum in a sorted and rotated array
+ * 67. Pairs with given sum in a sorted and rotated array (Max using Binary Search)
+ * 68. Count pairs with given sum in a sorted and rotated array (Max using Binary Search)
+ * 69. Search an element in infinite array
+ * 70. Find repeated and missing number (Brute force)
+ * 71. Find repeated and missing number (Hashing)
+ * 72. Find repeated and missing number (Array manipulation)
+ * 73. Find repeated and missing number (Mathematics)
+ * 74. Find repeated and missing number (Using XOR)
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {1,2,3,4,5,6};
+        int[] a = {3,1,2,5,3};
         int[] b = {3, 7, 9, 11};
-        System.out.println(searchInfinite(a, 5));
+        int[] res = findMissingRepeatingNumbers(a, 5);
+        System.out.println(res[0] + " " + res[1]);
     }
 
     /**
@@ -129,6 +136,27 @@ public class Searching {
             a[Math.abs(a[i])] = -a[Math.abs(a[i])];
         }
         return false;
+    }
+
+    /**
+     * Finding duplicate in an array (Circular list method)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int findDuplicate(int[] a) {
+        int slow = a[0];
+        int fast = a[0];
+        do {
+            slow = a[slow];
+            fast = a[a[fast]];
+        } while (slow != fast);
+        fast = a[0];
+        while(slow != fast) {
+            slow = a[slow];
+            fast = a[fast];
+        }
+        return slow;
     }
 
     /**
@@ -493,7 +521,6 @@ public class Searching {
                     System.out.println(k / 2 + " " + (k - k / 2));
                 }
             }
-
         }
     }
 
@@ -1666,6 +1693,156 @@ public class Searching {
             val = a[high];
         }
         return BinarySearch.searchRecursive(a, low, high, data);
+    }
+
+    /**
+     * Find repeated and missing number (Brute force)
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int[] repeatAndMissBruteForce(int[] a, int n) {
+        int[] res = new int[2];
+        for(int i=1; i<=n; i++) {
+            int count = 0;
+            for(int j=0; j<n; j++) {
+                if(a[j] == i) {
+                    count++;
+                }
+            }
+            if(count == 2) {
+                res[0] = i;
+            }
+            if(count == 0) {
+                res[1] = i;
+            }
+            if(res[0] > 0 && res[1] > 0) {
+                break;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Find repeated and missing number (Hashing)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int[] repeatAndMissingHashing(int[] a, int n) {
+        int[] hash = new int[n+1];
+        for(int i=0; i<n; i++) {
+            hash[a[i]]++;
+        }
+        int[] res = new int[2];
+        for(int i=1; i<=n; i++) {
+            if(hash[i] == 2) {
+                res[0] = i;
+            }
+            if(hash[i] == 0) {
+                res[1] = i;
+            }
+            if(res[0] > 0 && res[1] > 0) {
+                break;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Find repeated and missing number (Array manipulation)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] repeatAndMissingManipulation(int[] a, int n) {
+        int[] res = new int[2];
+        for(int i=0; i<n; i++) {
+            if(a[Math.abs(a[i]) - 1] < 0) {
+                res[0] = Math.abs(a[i]);
+                continue;
+            }
+            a[Math.abs(a[i]) - 1] *= -1;
+        }
+        for(int i=0; i<n; i++) {
+            if(a[i] > 0) {
+                res[1] = i+1;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Find repeated and missing number (Mathematics)
+     *
+     * sum of numbers from 1 to n, Sn = n*(n+1)/2
+     * sum of numbers from 1 to n^2, Sn2 = n*(n+1)*(2n+1)/6
+     * x -> repeated element, y -> missing element
+     * x - y = sum of array - Sn
+     * x^2 - y^2 = square sum of array - Sn2
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] repeatAndMissingMaths(int[] a, int n) {
+        int sumN = n*(n+1)/2;
+        int sumN2 = n*(n+1)*(2*n+1)/6;
+        int sumA = 0;
+        int sumA2 = 0;
+        for(int i=0; i<n; i++) {
+            sumA += a[i];
+            sumA2 += (a[i] * a[i]);
+        }
+        int[] res = new int[2];
+        int val1 = sumA - sumN;
+        int val2 = sumA2 - sumN2;
+        val2 = val2/val1;
+        res[0] = (val1 + val2)/2;
+        res[1] = res[0] - val1;
+        return res;
+    }
+
+    /**
+     * Find repeated and missing number (Using XOR)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] findMissingRepeatingNumbers(int[] a, int n) {
+        int xr = 0;
+        for (int i = 0; i < n; i++) {
+            xr = xr ^ a[i];
+            xr = xr ^ (i + 1);
+        }
+        //Find the differentiating bit number:
+        int number = (xr & ~(xr - 1));
+
+        //Group the numbers:
+        int zero = 0;
+        int one = 0;
+        for (int i = 0; i < n; i++) {
+            if ((a[i] & number) != 0) {
+                one = one ^ a[i];
+            }
+            else {
+                zero = zero ^ a[i];
+            }
+        }
+        for (int i = 1; i <= n; i++) {
+            if ((i & number) != 0) {
+                one = one ^ i;
+            }
+            else {
+                zero = zero ^ i;
+            }
+        }
+        // Identify the numbers:
+        int cnt = 0;
+        for (int i = 0; i < n; i++) {
+            if (a[i] == zero) cnt++;
+        }
+        if (cnt == 2) return new int[] {zero, one};
+        return new int[] {one, zero};
     }
 }
 
