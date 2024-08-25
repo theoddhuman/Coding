@@ -7,16 +7,22 @@ import java.util.List;
 
 /**
  * @author subham.paul
- * 
+ *
  * 1. Longest increasing subsequence (Recursion)
  * 2. Longest increasing subsequence (Memoization)
  * 3. Longest increasing subsequence (Tabulation)
  * 4. Longest increasing subsequence (Binary Search)
+ * 5. Longest common subsequence (Recursion)
+ * 6. Longest common subsequence (memoization)
+ * 7. Longest common subsequence (Tabulation)
+ * 8. Longest common subsequence (Tabulation - space optimized)
  */
 public class Subsequence {
     public static void main(String[] args) {
         int[] a = {10,9,2,5,3,7,101,18};
-        System.out.println(longestIncreasingSubsequenceBinarySearch(a));
+        String s1 = "abcde";
+        String s2 = "ace";
+        System.out.println(lcsTabulation(s1, s2));
     }
 
 
@@ -126,4 +132,127 @@ public class Subsequence {
         }
         return ans.size();
     }
+
+
+    /**
+     * Longest common subsequence (Recursion)
+     *
+     * "abcde", "ace" -> "ace" -> 3
+     *
+     * TC: O(2^(min(m,n)))
+     * SC: O(min(m,n))
+     *
+     */
+    public static int longestCommonSubSequence(String s1, String s2) {
+        return longestCommonSubsequenceUtil(s1, s2, s1.length()-1, s2.length()-1);
+    }
+
+    private static int longestCommonSubsequenceUtil(String s1, String s2, int l1, int l2) {
+        if(l1 < 0 || l2 < 0) {
+            return 0;
+        }
+        if(s1.charAt(l1) == s2.charAt(l2)) {
+            return 1 + longestCommonSubsequenceUtil(s1, s2, l1-1, l2-1);
+        }
+        return Math.max(longestCommonSubsequenceUtil(s1, s2, l1-1, l2),
+                longestCommonSubsequenceUtil(s1, s2, l1, l2-1));
+    }
+
+    /**
+     * Longest common subsequence (Memoization)
+     *
+     * TC: O(mn)
+     * SC: O(mn)
+     *
+     */
+    public static int longestCommonSubSequenceMemoization(String s1, String s2) {
+        int l1 = s1.length();
+        int l2 = s2.length();
+        int[][] dp = new int[l1][l2];
+        for(int i=0; i<l1; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return lcsMemoization(s1, s2, l1-1, l2-1, dp);
+    }
+
+    private static int lcsMemoization(String s1, String s2, int m, int n, int[][] dp) {
+        if(m < 0 || n < 0) {
+            return 0;
+        }
+        if(dp[m][n] != -1) {
+            return dp[m][n];
+        }
+        if(s1.charAt(m) == s2.charAt(n)) {
+            return dp[m][n] = 1 + longestCommonSubsequenceUtil(s1, s2, m-1, n-1);
+        }
+        return dp[m][n] = Math.max(longestCommonSubsequenceUtil(s1, s2, m-1, n),
+                longestCommonSubsequenceUtil(s1, s2, m, n-1));
+    }
+
+    /**
+     * Longest common subsequence (Tabulation)
+     *
+     * TC: O(mn)
+     * SC: O(mn)
+     *
+     */
+    public static int longestCommonSubsequenceTabulation(String s1, String s2) {
+        int m = s1.length();
+        int n = s2.length();
+        int[][] dp = new int[m][n];
+        if(s1.charAt(0) == s2.charAt(0)) {
+            dp[0][0] = 1;
+        }
+        for(int i=1; i<m; i++) {
+            if(s1.charAt(i) == s2.charAt(0)) {
+                dp[i][0] = 1;
+            } else {
+                dp[i][0] = dp[i-1][0];
+            }
+        }
+        for(int i=1; i<n; i++) {
+            if(s1.charAt(0) == s2.charAt(i)) {
+                dp[0][i] = 1;
+            } else {
+                dp[0][i] = dp[0][i-1];
+            }
+        }
+        for (int i=1; i<m; i++) {
+            for(int j=1; j<n; j++) {
+                if(s1.charAt(i) == s2.charAt(j)) {
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                } else {
+                    dp[i][j] = Math.max(dp[i][j-1], dp[i-1][j]);
+                }
+            }
+        }
+        return dp[m-1][n-1];
+    }
+
+    /**
+     * Longest common subsequence (Tabulation - space optimized)
+     *
+     * TC: O(mn)
+     * SC: O(mn)
+     *
+     */
+    public static int lcsTabulation(String s1, String s2) {
+        int m = s1.length();
+        int n = s2.length();
+        int[][] dp = new int[2][n+1];
+        int rowIndex = 0;
+        for (int i=1; i<=m; i++) {
+            rowIndex = 1&i;
+            for(int j=1; j<=n; j++) {
+                if(s1.charAt(i-1) == s2.charAt(j-1)) {
+                    dp[rowIndex][j] = 1 + dp[1-rowIndex][j-1];
+                } else {
+                    dp[rowIndex][j] = Math.max(dp[rowIndex][j-1], dp[1-rowIndex][j]);
+                }
+            }
+        }
+        return dp[rowIndex][n];
+    }
+
+
 }
