@@ -8,6 +8,9 @@ public class Node {
     // not mandatory
     public Node parent;
 
+    //not mandatory
+    public int horizontalDistance;
+
     public Node(int data) {
         this.data = data;
         left = right = null;
