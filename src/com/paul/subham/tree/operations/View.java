@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * @author subham.paul
@@ -18,7 +18,10 @@ import java.util.stream.Collectors;
  * 2. Right view of a binary tree (recursion)
  * 3. Left view of a binary tree (level order)
  * 4. Bottom view of a binary tree (level order)
- * 5. Bottom view of a binary tree (Post order)
+ * 5. Bottom view of a binary tree (Preorder)
+ * 6. Top view of a binary tree (Preorder)
+ * 7. Top view of a binary tree (level order)
+ * 8. Top view of a binary tree (level order - optimized)
  */
 public class View {
     public static void main(String[] args) {
@@ -31,18 +34,15 @@ public class View {
 //        tree.root.right.right = new Node(15);
 //        tree.root.right.left = new Node(12);
 //        tree.root.right.right.left = new Node(14);
-        Node root = new Node(20);
-        root.left = new Node(8);
-        root.right = new Node(22);
-        root.left.left = new Node(5);
-        root.left.right = new Node(3);
-        root.right.left = new Node(4);
-        root.right.right = new Node(25);
-        root.left.right.left = new Node(10);
-        root.left.right.right = new Node(14);
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.right = new Node(4);
+        root.left.right.right = new Node(5);
+        root.left.right.right.right = new Node(6);
         tree.root = root;
 
-        bottomViewPostorder(tree);
+        topViewLevelOrderOptimized(tree);
     }
 
     /**
@@ -151,7 +151,7 @@ public class View {
     }
 
     /**
-     * Bottom view of a binary tree (Post order)
+     * Bottom view of a binary tree (Preorder)
      *
      * TC: O(nlogn)
      * SC: O(n)
@@ -182,5 +182,117 @@ public class View {
         }
         bottomView(node.left, level+1, hd-1, map);
         bottomView(node.right, level+1, hd+1, map);
+    }
+
+    /**
+     * Top view of a binary tree (Preorder)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    static void topView(BinaryTree binaryTree) {
+        Map<Integer, List<Integer>> map = new TreeMap<>();
+        bottomView(binaryTree.root, 0, 0, map);
+        for(List<Integer> list : map.values()) {
+            System.out.print(list.get(0) + " ");
+        }
+    }
+
+    private static void topView(Node node, int level, int hd, Map<Integer, List<Integer>> map) {
+        if(node == null) {
+            return;
+        }
+        if(!map.containsKey(hd)) {
+            List<Integer> list = new ArrayList<>();
+            list.add(node.data);
+            list.add(level);
+            map.put(hd, new ArrayList<>(list));
+        } else {
+            List<Integer> oldList = map.get(hd);
+            if(oldList.get(1) > level) {
+                oldList.add(0, node.data);
+                oldList.add(1, level);
+            }
+        }
+        topView(node.left, level+1, hd-1, map);
+        topView(node.right, level+1, hd+1, map);
+    }
+
+    /**
+     * Top view of a binary tree (level order)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static void topViewLevelOrder(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        //it will store the lowest node at horizontal distances
+        Map<Integer, Integer> map = new TreeMap<>();
+        Node root = binaryTree.root;
+        root.horizontalDistance = 0;
+        queue.add(root);
+        Node current;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            if(!map.containsKey(current.horizontalDistance)) {
+                map.put(current.horizontalDistance, current.data);
+            }
+            if(current.left != null) {
+                current.left.horizontalDistance = current.horizontalDistance - 1;
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                current.right.horizontalDistance = current.horizontalDistance +1;
+                queue.add(current.right);
+            }
+        }
+        for(Integer i : map.values()) {
+            System.out.print(i + " ");
+        }
+    }
+
+    /**
+     * Top view of a binary tree (level order - optimized)
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static void topViewLevelOrderOptimized(BinaryTree binaryTree) {
+        Queue<Node> queue = new LinkedList<>();
+        int l = 0;
+        int r = 0;
+        Stack<Integer> stack = new Stack<>();
+        List<Integer> list = new ArrayList<>();
+        Node root = binaryTree.root;
+        root.horizontalDistance = 0;
+        queue.add(root);
+        Node current;
+        while(!queue.isEmpty()) {
+            current = queue.remove();
+            int hd = current.horizontalDistance;
+            if(hd < l) {
+                stack.push(current.data);
+                l = hd;
+            }
+            if(hd > r) {
+                list.add(current.data);
+                r = hd;
+            }
+            if(current.left != null) {
+                current.left.horizontalDistance = current.horizontalDistance - 1;
+                queue.add(current.left);
+            }
+            if(current.right != null) {
+                current.right.horizontalDistance = current.horizontalDistance +1;
+                queue.add(current.right);
+            }
+        }
+        while(!stack.empty()) {
+            System.out.print(stack.pop() + " ");
+        }
+        System.out.print(binaryTree.root.data + " ");
+        for(Integer i : list) {
+            System.out.print(i + " ");
+        }
     }
 }
