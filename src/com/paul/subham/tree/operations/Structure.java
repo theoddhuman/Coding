@@ -28,29 +28,34 @@ import java.util.Queue;
  * 13. No of half nodes in a binary tree (Iterative)
  * 14. No of non-leaf nodes in a binary tree (Recursive)
  * 15. No of non-leaf nodes in a binary tree (Iterative)
- * 16. Width of a level in a binary tree (Recursive)
- * 17. Width of a level in a binary tree (Iterative)
- * 18. Maximum width of a binary tree
- * 19. Maximum width of a binary tree (Using level order)
- * 20. Maximum width of a binary tree (Using preorder)
- * 21. Level of a node in a binary tree (Recursive)
- * 22. Level of a node in a binary tree (Iterative)
- * 23. Check if given binary tree is a BST (Naive approach)
- * 24. Check if given binary tree is a BST (Efficient recursive)
- * 25. Check if given binary tree is a BST (Inorder)
- * 26. Check if given binary tree is a BST (Using nodes)
- * 27. Check if given binary tree is a BST (Using Morris Traversal)
- * 28. Lowest common ancestor of binary search tree (Recursive)
- * 29. Lowest common ancestor of binary search tree (Iterative)
- * 30. Print all possible binary trees from given inorder
- * 31. Fill next sibling (consider all node at same level as sibling)
- * 32. Fill next sibling (consider all node at same level as sibling - Recursive)
- * 33. Leftmost node of a node in binary tree
- * 34. Rightmost node of a node in binary tree
- * 35. Inorder successor of a binary tree
- * 36. Inorder successor of a binary tree (Using reverse inorder)
- * 37. Preorder successor of a binary tree (Using parent pointer)
- * 38. Postorder successor of a binary tree (Using parent pointer)
+ * 16. Diameter of a binary tree (Recursive optimized approach)
+ * 17. Diameter of a binary tree (Recursive optimized approach)
+ * 18. Diameter of a binary tree (Recursive optimized approach - using static variable)
+ * 19. Width of a level in a binary tree (Recursive)
+ * 20. Width of a level in a binary tree (Iterative)
+ * 21. Maximum width of a binary tree
+ * 22. Maximum width of a binary tree (Using level order)
+ * 23. Maximum width of a binary tree (Using preorder)
+ * 24. Level of a node in a binary tree (Recursive)
+ * 25. Level of a node in a binary tree (Iterative)
+ * 26. Check if given binary tree is a BST (Naive approach)
+ * 27. Check if given binary tree is a BST (Efficient recursive)
+ * 28. Check if given binary tree is a BST (Inorder)
+ * 29. Check if given binary tree is a BST (Using nodes)
+ * 30. Check if given binary tree is a BST (Using Morris Traversal)
+ * 31. Lowest common ancestor of binary search tree (Recursive)
+ * 32. Lowest common ancestor of binary search tree (Iterative)
+ * 33. Print all possible binary trees from given inorder
+ * 34. Fill next sibling (consider all node at same level as sibling)
+ * 35. Fill next sibling (consider all node at same level as sibling - Recursive)
+ * 36. Leftmost node of a node in binary tree
+ * 37. Rightmost node of a node in binary tree
+ * 38. Inorder successor of a binary tree
+ * 39. Inorder successor of a binary tree (Using reverse inorder)
+ * 40. Preorder successor of a binary tree (Using parent pointer)
+ * 41. Postorder successor of a binary tree (Using parent pointer)
+ * 42. Is a binary tree height balanced (Space optimized)
+ * 43. Is a binary tree height balanced (Space optimized)
  */
 
 public class Structure {
@@ -81,7 +86,7 @@ public class Structure {
 //        bt.insertWithParentPointer(4);
 //        bt.insertWithParentPointer(5);
 //        bt.insertWithParentPointer(6);
-        bt.postOrderIterative();
+        System.out.println(isHeightBalancedSpaceOptimized(bt));
 
 //        bt.insert(4);
 //        bt.insert(5);
@@ -497,11 +502,32 @@ public class Structure {
         int lDiameter = diameterOptUtil(node.left, lHeight);
         int rDiameter = diameterOptUtil(node.right, rHeight);
         height.value = Math.max(lHeight.value, rHeight.value) + 1;
-        return Math.max(lHeight.value + rHeight.value + 1, Math.max(lDiameter, rDiameter));
+        return Math.max(lHeight.value + rHeight.value, Math.max(lDiameter, rDiameter));
     }
 
     static class Height{
         int value;
+    }
+
+    /**
+     * Diameter of a binary tree (Recursive optimized approach - using static variable)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static int diameterX(BinaryTree binaryTree) {
+        return diameterUtil(binaryTree.root);
+    }
+
+    private static int diameter = 0;
+    private static int diameterUtil(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        int lHeight = diameterUtil(node.left);
+        int rHeight = diameterUtil(node.right);
+        diameter = Math.max(lHeight + rHeight, diameter);
+        return Math.max(lHeight, rHeight) + 1;
     }
 
     /**
@@ -1101,6 +1127,74 @@ public class Structure {
         return current;
     }
 
+    /**
+     * Is a binary tree height balanced
+     *
+     * A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isHeightBalanced(BinaryTree binaryTree) {
+        if(binaryTree.root == null) {
+            return true;
+        }
+        return isBalanced(binaryTree.root, new Height());
+    }
+
+    private static boolean isBalanced(Node node, Height height) {
+        if(node == null) {
+            return true;
+        }
+        Height lHeight = new Height();
+        Height rHeight = new Height();
+        boolean l = isBalanced(node.left, lHeight);
+        boolean r = isBalanced(node.right, rHeight);
+        height.value = Math.max(lHeight.value, rHeight.value) + 1;
+        if(Math.abs(lHeight.value - rHeight.value) > 1) {
+            return false;
+        }
+        if(!l || !r) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Is a binary tree height balanced (Space optimized)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isHeightBalancedSpaceOptimized(BinaryTree binaryTree) {
+        if(binaryTree.root == null) {
+            return true;
+        }
+        return isBalanced(binaryTree.root) != -1;
+    }
+
+    private static int isBalanced(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        int lHeight = isBalanced(node.left);
+        if(lHeight == -1) {
+            return -1;
+        }
+        int rHeight = isBalanced(node.right);
+        if(rHeight == -1) {
+            return -1;
+        }
+        if(Math.abs(lHeight - rHeight) > 1) {
+            return -1;
+        }
+        return Math.max(lHeight, rHeight) + 1;
+    }
+
+}
+
+class Height {
+    int value;
 }
 
 class BNSNode {
