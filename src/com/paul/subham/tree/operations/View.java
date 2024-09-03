@@ -22,18 +22,19 @@ import java.util.TreeMap;
  * 6. Top view of a binary tree (Preorder)
  * 7. Top view of a binary tree (level order)
  * 8. Top view of a binary tree (level order - optimized)
+ * 9. Boundary traversal of binary tree
  */
 public class View {
     public static void main(String[] args) {
         BinaryTree tree = new BinaryTree();
 //        tree.root = new Node(10);
-//        tree.root.left = new Node(2);
+//        tree.root.leftBoundary = new Node(2);
 //        tree.root.right = new Node(3);
-//        tree.root.left.left = new Node(7);
-//        tree.root.left.right = new Node(8);
+//        tree.root.leftBoundary.leftBoundary = new Node(7);
+//        tree.root.leftBoundary.right = new Node(8);
 //        tree.root.right.right = new Node(15);
-//        tree.root.right.left = new Node(12);
-//        tree.root.right.right.left = new Node(14);
+//        tree.root.right.leftBoundary = new Node(12);
+//        tree.root.right.right.leftBoundary = new Node(14);
         Node root = new Node(1);
         root.left = new Node(2);
         root.right = new Node(3);
@@ -294,5 +295,59 @@ public class View {
         for(Integer i : list) {
             System.out.print(i + " ");
         }
+    }
+
+    /**
+     * Boundary traversal of a binary tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static List<Integer> traverseBoundary(Node root){
+        List<Integer> res = new ArrayList<>();
+        res.add(root.data);
+        leftBoundary(root.left, res);
+        leafBoundary(root, res);
+        rightBoundary(root.right, res);
+        return res;
+    }
+
+    private static void leftBoundary(Node node, List<Integer> list) {
+        if(node == null) {
+            return;
+        }
+        if(node.left!= null || node.right != null) {
+            list.add(node.data);
+        }
+        if(node.left != null) {
+            leftBoundary(node.left, list);
+        } else {
+            leftBoundary(node.right, list);
+        }
+    }
+
+    private static void rightBoundary(Node node, List<Integer> list) {
+        if(node == null) {
+            return;
+        }
+        if(node.right != null) {
+            rightBoundary(node.right, list);
+        } else {
+            rightBoundary(node.left, list);
+        }
+        if(node.left!= null || node.right != null) {
+            list.add(node.data);
+        }
+    }
+
+    private static void leafBoundary(Node node, List<Integer> list) {
+        if(node == null) {
+            return;
+        }
+        if(node.left == null && node.right == null) {
+            list.add(node.data);
+        }
+        leafBoundary(node.left, list);
+        leafBoundary(node.right, list);
     }
 }
