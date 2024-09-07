@@ -10,6 +10,8 @@ import java.util.PriorityQueue;
  * 1. Maximum meetings possible in one room based on start and end time
  * 2. Maximum no of platform required for given train timings
  * 3. Maximum no of platform required for given train timings (Optimized)
+ * 4. Job sequencing problem
+ * 5. Fractional Knapsack Problem
  */
 public class Classic {
     public static void main(String[] args) {
@@ -52,9 +54,9 @@ public class Classic {
     /**
      * Maximum no of platform required for given train timings
      *
-     * Given two arrays that represent the arrival and departure times of trains that stop at the platform. 
+     * Given two arrays that represent the arrival and departure times of trains that stop at the platform.
      * Need to find the minimum number of platforms needed at the railway station so that no train has to wait.
-     * 
+     *
      * TC: O(n^2)
      * SC: O(1)
      */
@@ -97,5 +99,91 @@ public class Classic {
             max = Math.max(platform, max);
         }
         return max;
+    }
+
+    /**
+     * Job sequencing problem
+     *
+     * Given a set of N jobs where each job comes with a deadline and profit.
+     * The profit can only be earned upon completing the job within its deadline.
+     * Find the number of jobs done and the maximum profit that can be obtained.
+     * Each job takes a single unit of time and only one job can be performed at a time.
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public static void JobScheduling(Job[] arr, int n) {
+        Arrays.sort(arr, (job1, job2) -> job2.profit - job1.profit);
+        int maxDeadline = 0;
+        for (Job job : arr) {
+            maxDeadline = Math.max(maxDeadline, job.deadline);
+        }
+        int maxProfit = 0;
+        int jobCompleted = 0;
+        boolean[] visited = new boolean[maxDeadline+1];
+        for(int i=0; i<arr.length; i++) {
+            for(int j = arr[i].deadline; j>0; j--) {
+                if(!visited[j]) {
+                    maxProfit += arr[i].profit;
+                    jobCompleted++;
+                    visited[j] = true;
+                    break;
+                }
+            }
+        }
+        System.out.println("max profit: " + maxProfit + " Job: " + jobCompleted);
+    }
+
+    /**
+     * Fractional Knapsack Problem
+     *
+     * The weight of N items and their corresponding values are given.
+     * We have to put these items in a knapsack of weight W such that the total value obtained is maximized.
+     * We can either take the item as a whole or break it into smaller units.
+     *
+     * TC: O(nlogn)
+     * SC: O(1)
+     */
+    double fractionalKnapsack(int w, Item[] arr) {
+        Arrays.sort(arr, (item1, item2) -> {
+            double w2 = item2.value/(1.0*item2.weight);
+            double w1 = item1.value/(1.0*item1.weight);
+            if(w2 == w1) {
+                return 0;
+            }
+            if(w2 > w1) {
+                return 1;
+            }
+            return -1;
+        });
+        double max = 0;
+        for(int i=0; i<arr.length && w>0; i++) {
+            if(arr[i].weight <= w) {
+                max += arr[i].value;
+                w -= arr[i].weight;
+            } else {
+                double weight = w/(1.0 * arr[i].weight);
+                max += arr[i].value * weight;
+                w = 0;
+            }
+        }
+        return max;
+    }
+}
+
+class Job {
+    int id, profit, deadline;
+    Job(int x, int y, int z){
+        this.id = x;
+        this.deadline = y;
+        this.profit = z;
+    }
+}
+
+class Item {
+    int value, weight;
+    Item(int x, int y){
+        this.value = x;
+        this.weight = y;
     }
 }
