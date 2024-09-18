@@ -16,13 +16,21 @@ import java.util.List;
  * 6. Longest common subsequence (memoization)
  * 7. Longest common subsequence (Tabulation)
  * 8. Longest common subsequence (Tabulation - space optimized)
+ * 9. Maximum sum increasing subsequence (Recursion)
+ * 10. Maximum sum increasing subsequence (Memoization)
+ * 11. Maximum sum increasing subsequence (Tabulation)
+ * 12. Subset sum equal to k (Recursion)
+ * 13. Subset sum equal to k (Memoization)
+ * 14. Subset sum equal to k (Tabulation)
  */
 public class Subsequence {
     public static void main(String[] args) {
-        int[] a = {10,9,2,5,3,7,101,18};
+        int[] a = { 3, 34, 4, 12, 5, 2 };
+        //int[] a = {1,1,1,1};
         String s1 = "abcde";
         String s2 = "ace";
-        System.out.println(lcsTabulation(s1, s2));
+        //System.out.println(lcsTabulation(s1, s2));
+        System.out.println(subSetSumTabulation(a, 13));
     }
 
 
@@ -254,5 +262,164 @@ public class Subsequence {
         return dp[rowIndex][n];
     }
 
+    /**
+     * Maximum sum increasing subsequence (Recursion)
+     *
+     * Given an array of n positive integers.
+     * Find the sum of the maximum sum subsequence of the given array such that the integers
+     * in the subsequence are sorted in strictly increasing order
+     *
+     * {1,100,2,3,1,100} -> {1,2,3,100} -> 106
+     *
+     * TC: O(2^n)
+     * SC: O(n)
+     */
+    public static int maxSumIncreasingSubsequence(int[] a) {
+        return maxSumIncreasingSubsequence(a, 0, Integer.MIN_VALUE);
+    }
 
+    private static int maxSumIncreasingSubsequence(int[] a, int i, int prev) {
+        if(i == a.length) {
+            return 0;
+        }
+        int take = Integer.MIN_VALUE;
+        if(a[i] >= prev) {
+            take = a[i] + maxSumIncreasingSubsequence(a, i+1, a[i]);
+        }
+        int nonTake = maxSumIncreasingSubsequence(a, i+1, prev);
+        return Math.max(take, nonTake);
+    }
+
+    /**
+     * Maximum sum increasing subsequence (Memoization)
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static int maxIncreasingSumSubsequence(int[] a) {
+        int n = a.length;
+        int[][] dp = new int[n][n+1];
+        for(int i=0; i<n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return maxSumIncreasingSubsequence(a, 0, -1, dp);
+    }
+
+    private static int maxSumIncreasingSubsequence(int[] a, int i, int prevIndex, int[][] dp) {
+        if(i == a.length) {
+            return 0;
+        }
+        if(dp[i][prevIndex+1] != -1) {
+            return dp[i][prevIndex+1];
+        }
+        int take = Integer.MIN_VALUE;
+        if(prevIndex == -1 || a[i] >= a[prevIndex]) {
+            take = a[i] + maxSumIncreasingSubsequence(a, i+1, i, dp);
+        }
+        int nonTake = maxSumIncreasingSubsequence(a, i+1, prevIndex, dp);
+        return dp[i][prevIndex+1] = Math.max(take, nonTake);
+    }
+
+    /**
+     * Maximum sum increasing subsequence (Tabulation)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static int maxSumIncreasingSubsequenceTabulation(int[] a) {
+        int n = a.length;
+        int[] dp = new int[n];
+        for(int i=0; i<n; i++) {
+            dp[i] = a[i];
+        }
+        for(int i=1; i<n; i++) {
+            for(int j=0; j<i; j++) {
+                if (a[i] > a[j]) {
+                    dp[i] = Math.max(a[i] + dp[j], dp[i]);
+                }
+            }
+        }
+        int max = dp[0];
+        for(int i=1; i<n; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+
+    /**
+     * Subset sum equal to k (Recursion)
+     *
+     * TC: O(2^n)
+     * SC: O(n)
+     */
+    public static boolean subSetSum(int[] a, int k) {
+        return subSetSum(a, a.length, k);
+    }
+
+    private static boolean subSetSum(int[] a, int i, int target) {
+        if(i==0) {
+            return false;
+        }
+        if(target == 0) {
+            return true;
+        }
+        if(a[i-1] > target) {
+            return subSetSum(a, i-1, target);
+        }
+        return subSetSum(a, i-1, target) || subSetSum(a, i-1, target-a[i-1]);
+    }
+
+    /**
+     * Subset sum equal to k (Memoization)
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static boolean subSetSumMemo(int[] a, int k) {
+        Boolean[][] dp = new Boolean[a.length+1][k+1];
+        return subSetSum(a, a.length, k, dp);
+    }
+
+    private static boolean subSetSum(int[] a, int i, int target, Boolean[][] dp) {
+        if(target == 0) {
+            return true;
+        }
+        if(i==0) {
+            return false;
+        }
+        if(dp[i][target] != null) {
+            return dp[i][target];
+        }
+        if(a[i-1] > target) {
+            return dp[i][target] = subSetSum(a, i-1, target, dp);
+        }
+        return dp[i][target] = subSetSum(a, i-1, target-a[i-1], dp) || subSetSum(a, i-1, target, dp);
+    }
+
+    /**
+     * Subset sum equal to k (Tabulation)
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static boolean subSetSumTabulation(int[] a, int k) {
+        int n = a.length;
+        boolean[][] dp = new boolean[n+1][k+1];
+        for(int i=0; i<=n; i++) {
+            dp[i][0] = true;
+        }
+        for(int i=1; i<=k; i++) {
+            dp[0][i] = false;
+        }
+        for(int i=1; i<=n; i++) {
+            for(int j=1; j<=k; j++) {
+                if(a[i-1] > j) {
+                    dp[i][j] = dp[i-1][j];
+                } else {
+                    dp[i][j] = dp[i-1][j] || dp[i-1][j-a[i-1]];
+                }
+            }
+        }
+        return dp[n][k];
+    }
 }
