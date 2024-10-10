@@ -24,6 +24,9 @@ import java.util.List;
  * 16. Minimum falling path sum (Memoization)
  * 17. Minimum falling path sum (Tabulation)
  * 18. Minimum falling path sum (Tabulation - Space optimized)
+ * 19. Ninja and his friends - chocolate pickup (Memoization)
+ * 20. Ninja and his friends - chocolate pickup (Tabulation)
+ * 21. Ninja and his friends - chocolate pickup (Tabulation - Space optimized)
  */
 public class TwoD {
     public static void main(String[] args) {
@@ -525,5 +528,147 @@ public class TwoD {
             min = Math.min(min, prev[i]);
         }
         return min;
+    }
+
+    /**
+     * Ninja and his friends - chocolate pickup (Memoization)
+     *
+     * We are given an ‘M*N’ matrix. Every cell of the matrix has some chocolates on it, a[i][j] gives us the number of chocolates.
+     * We have two friends ‘Alice’ and ‘Bob’. initially, Alice is standing on the cell(0,0) and Bob is standing on the cell(0, M-1).
+     * Both of them can move only to the cells below them in these three directions: to the bottom cell (↓),
+     * to the bottom-right cell(↘), or to the bottom-left cell(↙).
+     *
+     * When Alica and Bob visit a cell, they take all the chocolates from that cell with them.
+     * It can happen that they visit the same cell, in that case, the chocolates need to be considered only once.
+     *
+     * They cannot go out of the boundary of the given matrix,
+     * we need to return the maximum number of chocolates that Bob and Alice can together collect.
+     *
+     * TC: O(9mn^2)
+     * SC: O(mn^2)
+     */
+    public static int maximumChocolates(int r, int c, int[][] a) {
+        // Write your code here.
+        int[][][] dp = new int[r][c][c];
+        return max(a, 0, 0, c-1, r,c, dp);
+    }
+
+    private static int max(int[][] a, int i, int aj, int bj, int m, int n, int[][][] dp) {
+        if(aj < 0 || aj > n-1 || bj < 0 || bj > n-1) {
+            return 0;
+        }
+        if(i==m-1) {
+            if(aj==bj) {
+                return a[i][aj];
+            } else {
+                return a[i][aj] + a[i][bj];
+            }
+        }
+        if(dp[i][aj][bj] != 0) {
+            return dp[i][aj][bj];
+        }
+        int max = Integer.MIN_VALUE;
+        for(int p=-1; p<=1; p++) {
+            for(int q=-1; q<=1; q++) {
+                max = Math.max(max, max(a, i+1, aj+p, bj+q, m, n, dp));
+            }
+        }
+
+        if(aj==bj) {
+            return dp[i][aj][bj] = a[i][aj] + max;
+        }
+        return dp[i][aj][bj] = a[i][aj] + a[i][bj] + max;
+    }
+
+    /**
+     * Ninja and his friends - chocolate pickup (Tabulation)
+     *
+     * TC: O(9mn^2)
+     * SC: O(mn^2)
+     */
+    public static int maximumChocolatesTab(int m, int n, int[][] a) {
+        int[][][] dp = new int[m][n][n];
+
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                if(i==j) {
+                    dp[m-1][i][j] = a[m-1][i];
+                } else {
+                    dp[m-1][i][j] = a[m-1][i] + a[m-1][j];
+                }
+            }
+        }
+
+        for(int i=m-2; i>=0; i--) {
+            for(int aj=0; aj<n; aj++) {
+                for(int bj=n-1; bj>=0; bj--) {
+                    int max = Integer.MIN_VALUE;
+                    for(int p=-1; p<=1; p++) {
+                        for(int q=-1; q<=1; q++) {
+                            if((aj+p <0) || (aj+p >= n) || (bj+q < 0) || (bj+q >= n)) {
+                                max = Math.max(max, Integer.MIN_VALUE);
+                            } else {
+                                max = Math.max(max, dp[i+1][aj+p][bj+q]);
+                            }
+                        }
+                    }
+                    if(aj == bj) {
+                        dp[i][aj][bj] = a[i][aj] + max;
+                    } else {
+                        dp[i][aj][bj] = a[i][aj] + a[i][bj] + max;
+                    }
+                }
+            }
+        }
+        return dp[0][0][n-1];
+    }
+
+    /**
+     * Ninja and his friends - chocolate pickup (Tabulation - Space optimized)
+     *
+     * TC: O(9mn^2)
+     * SC: O(n^2)
+     */
+    public static int maximumChocolatesTabSpaceOpt(int m, int n, int[][] a) {
+        int[][] pre = new int[n][n];
+        int[][] cur = new int[n][n];
+
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                if(i==j) {
+                    pre[i][j] = a[m-1][i];
+                } else {
+                    pre[i][j] = a[m-1][i] + a[m-1][j];
+                }
+            }
+        }
+
+        for(int i=m-2; i>=0; i--) {
+            for(int aj=0; aj<n; aj++) {
+                for(int bj=n-1; bj>=0; bj--) {
+                    int max = Integer.MIN_VALUE;
+                    for(int p=-1; p<=1; p++) {
+                        for(int q=-1; q<=1; q++) {
+                            if((aj+p <0) || (aj+p >= n) || (bj+q < 0) || (bj+q >= n)) {
+                                max = Math.max(max, Integer.MIN_VALUE);
+                            } else {
+                                max = Math.max(max, pre[aj+p][bj+q]);
+                            }
+                        }
+                    }
+                    if(aj == bj) {
+                        cur[aj][bj] = a[i][aj] + max;
+                    } else {
+                        cur[aj][bj] = a[i][aj] + a[i][bj] + max;
+                    }
+                }
+            }
+            for(int aj=0; aj<n; aj++) {
+                for(int bj=0; bj<n; bj++) {
+                    pre[aj][bj] = cur[aj][bj];
+                }
+            }
+        }
+        return pre[0][n-1];
     }
 }
