@@ -9,7 +9,7 @@ import java.util.Arrays;
  * 2. Matrix chain multiplication (Memoization)
  * 3. Matrix chain multiplication (Tabulation)
  */
-public class Partition {
+public class PartitionDP {
     public static void main(String[] args) {
         int arr[] = {40, 20, 30, 10, 30};
         System.out.println(matrixChainMultiplicationTabulation(arr));
