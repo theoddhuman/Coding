@@ -19,7 +19,6 @@ public class Classic {
 //        int[] value = {12,35,41,25,32};
 //        System.out.println(knapsackTabulationSpaceOptimized(weight, value, 100, 5));
         int[] a = {2};
-        System.out.println(minCoinTabulation(a, 3));
     }
 
 
