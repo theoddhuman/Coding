@@ -22,6 +22,15 @@ import java.util.Arrays;
  * 17. Coin change - Minimum coins (Memoization - Iteration approach)
  * 18. Coin change - Minimum coins (Tabulation - Iteration approach)
  * 19. Target sum - no of ways(Tabulation - Space optimized)
+ * 20. Coin change - no of ways(Memoization)
+ * 21. Coin change - no of ways(Tabulation)
+ * 22. Coin change - no of ways(Tabulation - Space optimized)
+ * 23. Unbounded knapsack (Memoization)
+ * 24. Unbounded knapsack (Tabulation)
+ * 25. Unbounded knapsack (Tabulation - Space optimized)
+ * 26. Rod cutting problem - variation of unbounded knapsack (Memoization)
+ * 27. Rod cutting problem - variation of unbounded knapsack (Tabulation)
+ * 28. Rod cutting problem - variation of unbounded knapsack (Tabulation - Space optimized)
  */
 public class Subsequence {
     public static void main(String[] args) {
@@ -591,5 +600,243 @@ public class Subsequence {
             return 0;
         }
         return findWaysTabSpace(a, (sum+target)/2);
+    }
+
+    /**
+     * Coin change - no of ways(Memoization)
+     *
+     * We are given an array Arr with N distinct coins and a target.
+     * We have an infinite supply of each coin denomination.
+     * We need to find the number of ways we sum up the coin values to give us the target.
+     *
+     * TC: O(nk)
+     * SC: O(nk)
+     */
+    public static int change(int amount, int[] coins) {
+        int n = coins.length;
+        int[][] dp = new int[n+1][amount+1];
+        for(int i=0; i<=n; i++){
+            Arrays.fill(dp[i],-1);
+        }
+        return change(coins, n, amount, dp);
+    }
+
+    private static int change(int[] a, int i, int target, int[][] dp) {
+        if(target == 0) {
+            return 1;
+        }
+        if(i==0) {
+            return 0;
+        }
+        if(dp[i][target] != -1) {
+            return dp[i][target];
+        }
+        if(a[i-1] > target) {
+            return dp[i][target] = change(a, i-1, target, dp);
+        }
+        return dp[i][target] = change(a, i-1, target, dp) + change(a, i, target-a[i-1], dp);
+    }
+
+    /**
+     * Coin change - no of ways(Tabulation)
+     *
+     * TC: O(nk)
+     * SC: O(nk)
+     */
+    public int changeTab(int amount, int[] coins) {
+        int n = coins.length;
+        int[][] dp = new int[n+1][amount+1];
+        for(int i=0; i<=n; i++) {
+            dp[i][0] = 1;
+        }
+        for(int i=1;i<=n;i++) {
+            for(int j=1;j<=amount;j++) {
+                if(coins[i-1] > j){
+                    dp[i][j] = dp[i-1][j];
+                } else {
+                    dp[i][j] = dp[i-1][j]+dp[i][j-coins[i-1]];
+                }
+            }
+        }
+        return dp[n][amount];
+    }
+
+    /**
+     * Coin change - no of ways(Tabulation - Space optimized)
+     *
+     * TC: O(nk)
+     * SC: O(k)
+     */
+    public int changeTabSpaceOpt(int amount, int[] coins) {
+        int n = coins.length;
+        int[] pre = new int[amount+1];
+        int[] cur = new int[amount+1];
+        pre[0]=cur[0]=1;
+        for(int i=1;i<=n;i++) {
+            for(int j=1;j<=amount;j++) {
+                if(coins[i-1] > j){
+                    cur[j] = pre[j];
+                } else {
+                    cur[j] = pre[j]+cur[j-coins[i-1]];
+                }
+            }
+            System.arraycopy(cur,0,pre,0,amount+1);
+        }
+        return pre[amount];
+    }
+
+    /**
+     * Unbounded knapsack (Memoization)
+     *
+     * Given ‘n’ items with certain ‘profit’ and ‘weight’ and a knapsack with weight capacity ‘w’.
+     * Need to fill the knapsack with the items in such a way that results maximum profit.
+     * Allowed to take one item multiple times.
+     * n = 3, w = 10,
+     * profit = [5, 11, 13]
+     * weight = [2, 4, 6]
+     * output = 11+11+5 = 27 (4+4+2)
+     *
+     * TC: O(nw)
+     * SC: O(nw)
+     */
+    public static int unboundedKnapsack(int n, int w, int[] profit, int[] weight) {
+        int[][] dp = new int[n+1][w+1];
+        for(int i=0;i<=n; i++){
+            Arrays.fill(dp[i], -1);
+        }
+        return unboundedKnapsack(profit, weight, n, w, dp);
+    }
+
+    private static int unboundedKnapsack(int[] profit, int[] weight, int i, int w, int[][] dp) {
+        if(i==0 || w==0) {
+            return 0;
+        }
+        if(dp[i][w] != -1) {
+            return dp[i][w];
+        }
+        if(weight[i-1]>w) {
+            return dp[i][w] = unboundedKnapsack(profit, weight, i-1, w, dp);
+        }
+        return dp[i][w]=Math.max(unboundedKnapsack(profit, weight, i-1, w, dp),
+                profit[i-1] + unboundedKnapsack(profit, weight, i, w-weight[i-1], dp));
+    }
+
+    /**
+     * Unbounded knapsack (Tabulation)
+     *
+     * TC: O(nw)
+     * SC: O(nw)
+     */
+    public static int unboundedKnapsackTab(int n, int w, int[] profit, int[] weight) {
+        int[][] dp = new int[n+1][w+1];
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=w;j++){
+                if(weight[i-1]>j) {
+                    dp[i][j] = dp[i-1][j];
+                } else {
+                    dp[i][j] = Math.max(dp[i-1][j],profit[i-1]+dp[i][j-weight[i-1]]);
+                }
+            }
+        }
+        return dp[n][w];
+    }
+
+    /**
+     * Unbounded knapsack (Tabulation - Space optimized)
+     *
+     * TC: O(nw)
+     * SC: O(nw)
+     */
+    public static int unboundedKnapsackSpaceOpt(int n, int w, int[] profit, int[] weight) {
+        int[] pre = new int[w+1];
+        int[] cur = new int[w+1];
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=w;j++){
+                if(weight[i-1]>j) {
+                    cur[j] = pre[j];
+                } else {
+                    cur[j] = Math.max(pre[j],profit[i-1]+cur[j-weight[i-1]]);
+                }
+            }
+            System.arraycopy(cur, 0, pre, 0, w+1);
+        }
+        return pre[w];
+    }
+
+    /**
+     * Rod cutting problem - variation of unbounded knapsack (Memoization)
+     *
+     * We are given a rod of size n. It can be cut into pieces.
+     * Each length of a piece has a particular price given by the price array.
+     * Our task is to find the maximum revenue that can be generated by selling the rod after cutting( if required) into pieces.
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static int cutRod(int[] price, int n) {
+        // Write your code here.
+        int[][] dp = new int[n+1][n+1];
+        for(int i=0; i<=n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return cutRoad(price, n, n, dp);
+    }
+
+    private static int cutRoad(int[] price, int i, int l, int[][] dp) {
+        if(i==0 || l==0) {
+            return 0;
+        }
+        if(dp[i][l] != -1) {
+            return dp[i][l];
+        }
+        if(i > l) {
+            return dp[i][l] = cutRoad(price, i-1, l, dp);
+        }
+        return dp[i][l] = Math.max(cutRoad(price, i-1, l, dp),
+                price[i-1] + cutRoad(price, i, l-i, dp));
+    }
+
+    /**
+     * Rod cutting problem - variation of unbounded knapsack (Tabulation)
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static int cutRodTab(int price[], int n) {
+        // Write your code here.
+        int[][] dp = new int[n+1][n+1];
+        for(int i=1;i<=n;i++){
+            for(int j=1; j<=n;j++){
+                if((i-1)+1 > j) {
+                    dp[i][j] = dp[i-1][j];
+                } else {
+                    dp[i][j] = Math.max(dp[i-1][j], price[i-1] + dp[i][j-i]);
+                }
+            }
+        }
+        return dp[n][n];
+    }
+
+    /**
+     * Rod cutting problem - variation of unbounded knapsack (Tabulation - Space optimized)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static int cutRodTabSpaceOpt(int price[], int n) {
+        // Write your code here.
+        int[] pre = new int[n+1];
+        int[] cur = new int[n+1];
+        for(int i=1;i<=n;i++){
+            for(int j=1; j<=n;j++){
+                if(i > j) {
+                    cur[j] = pre[j];
+                } else {
+                    cur[j] = Math.max(pre[j], price[i-1] + cur[j-i]);
+                }
+            }
+            System.arraycopy(cur, 0, pre, 0, n+1);
+        }
+        return pre[n];
     }
 }
