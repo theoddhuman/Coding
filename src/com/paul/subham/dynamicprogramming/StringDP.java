@@ -10,6 +10,10 @@ import java.util.Arrays;
  * 5. Longest common substring (Memoization)
  * 6. Longest common substring (Tabulation)
  * 7. Longest common substring (Tabulation - Space optimized)
+ * 8. Longest Palindromic subsequence (Tabulation - Space optimized)
+ * 9. Minimum insertions to make a string palindrome (Tabulation - Space optimized)
+ * 10. Minimum insertions/deletions to convert a string(Tabulation - Space optimized)
+ * 11. Shortest Common Supersequence (Tabulation)
  */
 public class StringDP {
     public static void main(String[] args) {
@@ -209,5 +213,85 @@ public class StringDP {
             System.arraycopy(cur, 0, pre, 0, n+1);
         }
         return max;
+    }
+
+    /**
+     * Longest Palindromic subsequence (Tabulation - Space optimized)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static int longestPalindromeSubsequence(String s) {
+        String revS = new StringBuffer(s).reverse().toString();
+        return longestCommonSubsequence(s, revS);
+    }
+
+    /**
+     * Minimum insertions to make a string palindrome (Tabulation - Space optimized)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static int minInsertions(String s) {
+        return s.length() - longestPalindromeSubsequence(s);
+    }
+
+    /**
+     * Minimum insertions/deletions to convert a string(Tabulation - Space optimized)
+     *
+     * TC: O(mn)
+     * SC: O(n)
+     */
+    public static int minDistance(String word1, String word2) {
+        int k = longestCommonSubsequence(word1, word2);
+        return (word1.length() - k) + (word2.length() - k);
+    }
+
+    /**
+     * Shortest Common Supersequence (Tabulation)
+     *
+     * A supersequence is defined as the string which contains both the strings S1 and S2 as subsequences.
+     *
+     * TC: O(mn)
+     * SC: O(mn)
+     */
+    public static String shortestCommonSuperSequence(String s1, String s2) {
+        int m = s1.length();
+        int n = s2.length();
+        int[][] dp = new int[m+1][n+1];
+        for(int i=1; i<=m; i++) {
+            for(int j=1; j<=n; j++) {
+                if(s1.charAt(i-1) == s2.charAt(j-1)) {
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                } else {
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        int i = m;
+        int j = n;
+        StringBuilder sb = new StringBuilder();
+        while(i>0 && j>0) {
+            if(s1.charAt(i-1) == s2.charAt(j-1)) {
+                sb.insert(0, s1.charAt(i-1));
+                i--;
+                j--;
+            } else if (dp[i-1][j] > dp[i][j-1]) {
+                sb.insert(0, s1.charAt(i-1));
+                i--;
+            } else {
+                sb.insert(0, s2.charAt(j-1));
+                j--;
+            }
+        }
+        while(i>0) {
+            sb.insert(0, s1.charAt(i-1));
+            i--;
+        }
+        while(j>0) {
+            sb.insert(0, s2.charAt(j-1));
+            j--;
+        }
+        return sb.toString();
     }
 }
