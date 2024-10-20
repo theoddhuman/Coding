@@ -1,58 +1,62 @@
 package com.paul.subham.dynamicprogramming;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author subham.paul
  *
+ * 1. Longest increasing subsequence (Memoization - take/not-take approach)
  * 2. Longest increasing subsequence (Memoization)
  * 3. Longest increasing subsequence (Tabulation)
  * 4. Longest increasing subsequence (Binary Search)
- * 5. Longest common subsequence (Recursion)
- * 6. Longest common subsequence (memoization)
- * 7. Longest common subsequence (Tabulation)
- * 8. Longest common subsequence (Tabulation - space optimized)
- * 9. Maximum sum increasing subsequence (Recursion)
- * 10. Maximum sum increasing subsequence (Memoization)
- * 11. Maximum sum increasing subsequence (Tabulation)
+ * 5. Print longest increasing subsequence (Tabulation)
+ * 6. Print longest divisible subset (Tabulation)
+ * 7. Longest Subset of String Chain (Memoization)
+ * 8. Longest Subset of String Chain (Tabulation)
+ * 9. Longest Bitonic Subsequence (Tabulation)
+ * 10. Number of longest increasing subsequences (Tabulation)
+ * 11 Maximum sum increasing subsequence (Recursion)
+ * 12. Maximum sum increasing subsequence (Memoization)
+ * 13. Maximum sum increasing subsequence (Tabulation)
+ *
  */
 public class LIS {
     public static void main(String[] args) {
-        int[] a = { 3, 34, 4, 12, 5, 2 };
-        //int[] a = {1,1,1,1};
+        //int[] a = { 3, 34, 4, 12, 5, 2 };
+        int[] a = {4,10,4,3,8,9};
         String s1 = "abcde";
         String s2 = "ace";
+        System.out.println(lengthOfLISMem(a));
     }
-
-
 
     /**
-     * Longest increasing subsequence (Recursion)
+     * Longest increasing subsequence (Memoization - take/not-take approach)
      * 10,9,2,5,3,7,101,18 -> 2,3,7,101 -> size 4
      *
-     * TC: O(Exponential)
-     * SC: O(n)
+     * TC: O(n^2)
+     * SC: O(n^2)
      *
      */
-    private static int longest=1;
-    public static int longestIncreasingSubsequenceRecursion(int[] a) {
-        for(int i=0; i<a.length; i++) {
-            count(a, Integer.MIN_VALUE, i, 0);
+    public static int lengthOfLISMem(int[] a) {
+        int n = a.length;
+        int[][] dp = new int[n][n];
+        for(int i=0;i<n;i++) {
+            Arrays.fill(dp[i],-1);
         }
-        return longest;
+        return lengthOfLIS(a,0,-1,dp);
     }
-    private static void count(int[] a, int last, int current, int count) {
-        if(a[current] > last) {
-            count += 1;
-            longest = Math.max(count, longest);
-            last = a[current];
+
+    private static int lengthOfLIS(int[] a, int i, int pre, int[][] dp) {
+        if(i==a.length) {
+            return 0;
         }
-        for(int i=current+1; i<a.length; i++) {
-            count(a, last, i, count);
+        if(dp[i][pre+1] != -1) {
+            return dp[i][pre+1];
         }
+        if(pre == -1 || a[pre] < a[i]) {
+            return dp[i][pre+1] = Math.max(1 + lengthOfLIS(a, i+1, i, dp), lengthOfLIS(a, i+1, pre, dp));
+        }
+        return dp[i][pre+1] = lengthOfLIS(a, i+1, pre, dp);
     }
 
     /**
@@ -135,125 +139,246 @@ public class LIS {
         return ans.size();
     }
 
-
     /**
-     * Longest common subsequence (Recursion)
+     * Print longest increasing subsequence (Tabulation)
      *
-     * "abcde", "ace" -> "ace" -> 3
-     *
-     * TC: O(2^(min(m,n)))
-     * SC: O(min(m,n))
+     * TC: O(n^2)
+     * SC: O(n)
      *
      */
-    public static int longestCommonSubSequence(String s1, String s2) {
-        return longestCommonSubsequenceUtil(s1, s2, s1.length()-1, s2.length()-1);
-    }
-
-    private static int longestCommonSubsequenceUtil(String s1, String s2, int l1, int l2) {
-        if(l1 < 0 || l2 < 0) {
-            return 0;
+    public static ArrayList<Integer> longestIncreasingSubsequence(int n, int[] a) {
+        int[] dp = new int[n];
+        int[] hash = new int[n];
+        Arrays.fill(dp, 1);
+        for(int i=0; i<n; i++) {
+            hash[i]=i;
         }
-        if(s1.charAt(l1) == s2.charAt(l2)) {
-            return 1 + longestCommonSubsequenceUtil(s1, s2, l1-1, l2-1);
-        }
-        return Math.max(longestCommonSubsequenceUtil(s1, s2, l1-1, l2),
-                longestCommonSubsequenceUtil(s1, s2, l1, l2-1));
-    }
-
-    /**
-     * Longest common subsequence (Memoization)
-     *
-     * TC: O(mn)
-     * SC: O(mn)
-     *
-     */
-    public static int longestCommonSubSequenceMemoization(String s1, String s2) {
-        int l1 = s1.length();
-        int l2 = s2.length();
-        int[][] dp = new int[l1][l2];
-        for(int i=0; i<l1; i++) {
-            Arrays.fill(dp[i], -1);
-        }
-        return lcsMemoization(s1, s2, l1-1, l2-1, dp);
-    }
-
-    private static int lcsMemoization(String s1, String s2, int m, int n, int[][] dp) {
-        if(m < 0 || n < 0) {
-            return 0;
-        }
-        if(dp[m][n] != -1) {
-            return dp[m][n];
-        }
-        if(s1.charAt(m) == s2.charAt(n)) {
-            return dp[m][n] = 1 + longestCommonSubsequenceUtil(s1, s2, m-1, n-1);
-        }
-        return dp[m][n] = Math.max(longestCommonSubsequenceUtil(s1, s2, m-1, n),
-                longestCommonSubsequenceUtil(s1, s2, m, n-1));
-    }
-
-    /**
-     * Longest common subsequence (Tabulation)
-     *
-     * TC: O(mn)
-     * SC: O(mn)
-     *
-     */
-    public static int longestCommonSubsequenceTabulation(String s1, String s2) {
-        int m = s1.length();
-        int n = s2.length();
-        int[][] dp = new int[m][n];
-        if(s1.charAt(0) == s2.charAt(0)) {
-            dp[0][0] = 1;
-        }
-        for(int i=1; i<m; i++) {
-            if(s1.charAt(i) == s2.charAt(0)) {
-                dp[i][0] = 1;
-            } else {
-                dp[i][0] = dp[i-1][0];
+        int index = 0;
+        int max = 1;
+        for(int i=1;i<n;i++) {
+            for(int j=0; j<i; j++) {
+                if(a[i] > a[j]) {
+                    if(dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        hash[i] = j;
+                    }
+                }
+            }
+            if(dp[i] > max) {
+                max = dp[i];
+                index = i;
             }
         }
+
+        ArrayList<Integer> list = new ArrayList<>();
+        while(hash[index] != index) {
+            list.add(a[index]);
+            index = hash[index];
+        }
+        list.add(a[index]);
+        Collections.reverse(list);
+        return list;
+    }
+
+    /**
+     * Print longest divisible subset (Tabulation)
+     *
+     * A divisible subset is the one in which if we pick two elements i and j from the subset,
+     * then either arr[i]%arr[j] == 0 or arr[j] % arr[i] == 0.
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     *
+     */
+    public List<Integer> largestDivisibleSubset(int[] a) {
+        int n = a.length;
+        int[] dp = new int[n];
+        int[] hash = new int[n];
+        Arrays.fill(dp, 1);
+        Arrays.sort(a);
+        for(int i=0; i<n; i++) {
+            hash[i] = i;
+        }
+
+        int index = 0;
+        int max = 1;
+        for(int i=1;i<n;i++) {
+            for(int j=0; j<i; j++) {
+                if(a[i] % a[j] == 0) {
+                    if(dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j]+1;
+                        hash[i] = j;
+                    }
+                }
+            }
+            if(dp[i] > max) {
+                max = dp[i];
+                index = i;
+            }
+        }
+
+        ArrayList<Integer> list = new ArrayList<>();
+        while (hash[index] != index) {
+            list.add(a[index]);
+            index = hash[index];
+        }
+        list.add(a[index]);
+        Collections.reverse(list);
+        return list;
+    }
+
+    /**
+     * Longest Subset of String Chain (Memoization)
+     *
+     * Given an array of words where each word consists of lowercase English letters.
+     *
+     * wordA is a predecessor of wordB if and only if we can insert exactly one letter anywhere in wordA
+     * without changing the order of the other characters to make it equal to wordB.
+     *
+     * Return the length of the longest possible word chain with words chosen from the given list of words
+     *
+     * As we need subset we can sort the array based on size, order doesn't matter for subsets.
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     *
+     */
+    public static int longestStrChain(String[] words) {
+        int n = words.length;
+        Arrays.sort(words, (s1,s2) -> s1.length()-s2.length());
+        int[] dp = new int[n];
+        Arrays.fill(dp, -1);
+        int longest = 1;
+        for(int i=0; i<n;i++) {
+            longest = Math.max(longest, lsc(words,i,dp));
+        }
+        return longest;
+    }
+
+    public static int lsc(String[] words, int i, int[] dp) {
+        if(dp[i] != -1) {
+            return dp[i];
+        }
+        int longest = 1;
+        for(int k=i+1; k<words.length; k++) {
+            if(compare(words[i], words[k])) {
+                longest = Math.max(longest, 1+lsc(words, k, dp));
+            }
+        }
+        return dp[i] = longest;
+    }
+
+    private static boolean compare(String s1, String s2) {
+        if(s1.length() + 1 != s2.length()) {
+            return false;
+        }
+        int i = 0;
+        int j = 0;
+        while(j < s2.length()) {
+            if(i < s1.length() && s1.charAt(i) == s2.charAt(j)) {
+                i++;
+                j++;
+            } else {
+                j++;
+            }
+        }
+        return (i == s1.length()) && (j == s2.length());
+    }
+
+    /**
+     * Longest Subset of String Chain (Tabulation)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     *
+     */
+    public int longestStrChainTab(String[] words) {
+        int n = words.length;
+        Arrays.sort(words, Comparator.comparingInt(String::length));
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        int longest = 1;
+        for(int i=1; i<n;i++) {
+            for(int j=0; j<i;j++) {
+                if(compare(words[j],words[i])){
+                    dp[i] = Math.max(dp[i],dp[j]+1);
+                }
+            }
+            longest = Math.max(longest, dp[i]);
+        }
+        return longest;
+    }
+
+    /**
+     * Longest Bitonic Subsequence (Tabulation)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     *
+     */
+    public static int LongestBitonicSequence(int n, int[] a) {
+        int[] dp1 = new int[n];
+        int[] dp2 = new int[n];
+        Arrays.fill(dp1, 1);
+        Arrays.fill(dp2, 1);
+        for(int i=1;i<n;i++) {
+            for(int j=0; j<i; j++) {
+                if(a[i] > a[j]) {
+                    dp1[i] = Math.max(dp1[i], dp1[j]+1);
+                }
+            }
+        }
+        for(int i=n-2;i>=0;i--) {
+            for(int j=n-1; j>i; j--) {
+                if(a[i] > a[j]) {
+                    dp2[i] = Math.max(dp2[i], dp2[j]+1);
+                }
+            }
+        }
+        int longest = 0;
+        for(int i=0; i<n; i++) {
+            //this condition is required if we don't consider increasing or decreasing subsequence as bitonic
+            if(dp1[i] > 1 && dp2[i] > 1) {
+                longest = Math.max(longest, dp1[i]+dp2[i]-1);
+            }
+        }
+        return longest;
+    }
+
+    /**
+     * Number of longest increasing subsequences (Tabulation)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     *
+     */
+    public int findNumberOfLIS(int[] a) {
+        int n = a.length;
+        int[] dp = new int[n];
+        int[] ct = new int[n];
+        Arrays.fill(dp, 1);
+        Arrays.fill(ct,1);
+        int max = 1;
         for(int i=1; i<n; i++) {
-            if(s1.charAt(0) == s2.charAt(i)) {
-                dp[0][i] = 1;
-            } else {
-                dp[0][i] = dp[0][i-1];
-            }
-        }
-        for (int i=1; i<m; i++) {
-            for(int j=1; j<n; j++) {
-                if(s1.charAt(i) == s2.charAt(j)) {
-                    dp[i][j] = 1 + dp[i-1][j-1];
-                } else {
-                    dp[i][j] = Math.max(dp[i][j-1], dp[i-1][j]);
+            for(int j=0; j<i; j++) {
+                if(a[i] > a[j]) {
+                    if(dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j]+1;
+                        ct[i] = ct[j];
+                    } else if (dp[j]+1 == dp[i]) {
+                        ct[i] += ct[j];
+                    }
                 }
             }
+            max = Math.max(max, dp[i]);
         }
-        return dp[m-1][n-1];
-    }
-
-    /**
-     * Longest common subsequence (Tabulation - space optimized)
-     *
-     * TC: O(mn)
-     * SC: O(mn)
-     *
-     */
-    public static int lcsTabulation(String s1, String s2) {
-        int m = s1.length();
-        int n = s2.length();
-        int[][] dp = new int[2][n+1];
-        int rowIndex = 0;
-        for (int i=1; i<=m; i++) {
-            rowIndex = 1&i;
-            for(int j=1; j<=n; j++) {
-                if(s1.charAt(i-1) == s2.charAt(j-1)) {
-                    dp[rowIndex][j] = 1 + dp[1-rowIndex][j-1];
-                } else {
-                    dp[rowIndex][j] = Math.max(dp[rowIndex][j-1], dp[1-rowIndex][j]);
-                }
+        int count = 0;
+        for(int i=0;i<n;i++){
+            if(dp[i] == max) {
+                count += ct[i];
             }
         }
-        return dp[rowIndex][n];
+        return count;
     }
 
     /**
