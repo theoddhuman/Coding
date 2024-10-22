@@ -1,15 +1,14 @@
 package com.paul.subham.greedy;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+
+import java.util.*;
 
 /**
  * @author subham.paul
  *
  * 1. Maximum meetings possible in one room based on start and end time
- * 2. Maximum no of platform required for given train timings
- * 3. Maximum no of platform required for given train timings (Optimized)
+ * 2. Minimum no of platform required for given train timings
+ * 3. Minimum no of platform required for given train timings (Optimized)
  * 4. Job sequencing problem
  * 5. Fractional Knapsack Problem
  * 6. Assign cookies
@@ -17,6 +16,17 @@ import java.util.PriorityQueue;
  * 8. Lemonade change
  * 9. Valid parenthesis string (Memoization)
  * 10. Valid parenthesis string (Efficient)
+ * 11. Jump game
+ * 12. Jump game II (Memoization)
+ * 13. Jump game II (Efficient)
+ * 14. Candy
+ * 15. Candy (Efficient)
+ * 16. Candy (Constant space)
+ * 17. Shortest job first - CPU Scheduling
+ * 18. Merge overlapping intervals (Using stack)
+ * 19. Merge overlapping intervals (Efficient)
+ * 20. Insert interval and merge overlapping intervals
+ * 21. Non-overlapping Intervals
  */
 public class Classic {
     public static void main(String[] args) {
@@ -55,7 +65,7 @@ public class Classic {
     }
 
     /**
-     * Maximum no of platform required for given train timings
+     * Minimum no of platform required for given train timings
      *
      * Given two arrays that represent the arrival and departure times of trains that stop at the platform.
      * Need to find the minimum number of platforms needed at the railway station so that no train has to wait.
@@ -78,13 +88,13 @@ public class Classic {
     }
 
     /**
-     * Maximum no of platform required for given train timings (Optimized)
+     * Minimum no of platform required for given train timings (Optimized)
      *
      *
      * TC: O(nlogn)
      * SC: O(1)
      */
-    public static int findPlatform(int arr[], int dep[], int n) {
+    public static int findPlatform(int[] arr, int[] dep, int n) {
         Arrays.sort(arr);
         Arrays.sort(dep);
         int platform = 0;
@@ -337,6 +347,379 @@ public class Classic {
         }
         return min==0;
     }
+
+    /**
+     * Jump game
+     *
+     * Given an array where each element represents the maximum number of steps you can jump forward from that element,
+     * return true if we can reach the last index starting from the first index. Otherwise, return false.
+     * a = [3,2,1,0,4] -> false
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public boolean canJump(int[] a) {
+        int maxIndex = 0;
+        for(int i=0; i<a.length;i++){
+            if(i>maxIndex) {
+                return false;
+            }
+            maxIndex = Math.max(maxIndex, i+a[i]);
+        }
+        return true;
+    }
+
+    /**
+     * Jump game II (Memoization)
+     *
+     * You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+     * Each element nums[i] represents the maximum length of a forward jump from index i.
+     * Return min no of jumps to reach n-1;
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public int jump(int[] a) {
+        int n = a.length;
+        int[][] dp = new int[n][n];
+        for(int i=0; i<n;i++){
+            Arrays.fill(dp[i], -1);
+        }
+        return jump(a,0,0, dp);
+    }
+
+    private static int jump(int[] a, int i, int jump, int[][] dp) {
+        if(i>=a.length-1){
+            return jump;
+        }
+        if(dp[i][jump] != -1) {
+            return dp[i][jump];
+        }
+        int min = Integer.MAX_VALUE;
+        for(int k=1;k<=a[i];k++) {
+            min = Math.min(min, jump(a, i+k,jump+1, dp));
+        }
+        return dp[i][jump] = min;
+    }
+
+    /**
+     * Jump game II (Efficient)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int jump2(int[] a) {
+        int n = a.length;
+        int jump = 0;
+        int l=0;
+        int r=0;
+        while(r < n-1) {
+            int farthest = 0;
+            for(int i=l;i<=r;i++) {
+                farthest = Math.max(farthest, i+a[i]);
+            }
+            l = r+1;
+            r = farthest;
+            jump++;
+        }
+        return jump;
+    }
+
+    /**
+     * Candy
+     *
+     * There are n children standing in a line. Each child is assigned a rating value given in the integer array ratings.
+     *
+     * You are giving candies to these children subjected to the following requirements:
+     * Each child must have at least one candy.
+     * Children with a higher rating get more candies than their neighbors.
+     * Return the minimum number of candies you need to have to distribute the candies to the children.
+     * [1,0,2] -> 2+1+2 = 5
+     * [1 2 3] -> 1+2+3 = 6
+     *
+     *
+     * TC: O(3n)
+     * SC: O(2n)
+     */
+    public static int candy(int[] ratings) {
+        int n = ratings.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        left[0]=1;
+        right[n-1]=1;
+        for(int i=1;i<n;i++) {
+            if(ratings[i] > ratings[i-1]) {
+                left[i] = left[i-1]+1;
+            } else {
+                left[i] = 1;
+            }
+        }
+        for(int i=n-2;i>=0;i--) {
+            if(ratings[i] > ratings[i+1]) {
+                right[i] = right[i+1]+1;
+            } else {
+                right[i]=1;
+            }
+        }
+        int sum = 0;
+        for(int i=0; i<n; i++) {
+            System.out.println(left[i] +" "+right[i]);
+            sum += Math.max(left[i],right[i]);
+        }
+        return sum;
+    }
+
+    /**
+     * Candy (Efficient)
+     *
+     * TC: O(2n)
+     * SC: O(n)
+     */
+    public int candy1(int[] ratings) {
+        int n = ratings.length;
+
+        int[] left = new int[n];
+        left[0]=1;
+        for(int i=1;i<n;i++) {
+            if(ratings[i] > ratings[i-1]) {
+                left[i] = left[i-1]+1;
+            } else {
+                left[i] = 1;
+            }
+        }
+
+        int right=1;
+        int current;
+        int sum = Math.max(left[n-1], 1);
+        for(int i=n-2;i>=0;i--) {
+            if(ratings[i] > ratings[i+1]) {
+                current = right+1;
+            } else {
+                current=1;
+            }
+            right = current;
+            sum += Math.max(current, left[i]);
+        }
+        return sum;
+    }
+
+    /**
+     * Candy (Constant space)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public int candy2(int[] ratings) {
+        int n = ratings.length;
+        int sum = 1;
+        int i = 1;
+        while(i<n) {
+            if(ratings[i] == ratings[i-1]){
+                sum++;
+                i++;
+            }
+            int peak = 1;
+            while(i<n && ratings[i] > ratings[i-1]) {
+                peak++;
+                sum += peak;
+                i++;
+            }
+            int down = 1;
+            while(i<n && ratings[i] < ratings[i-1]) {
+                sum += down;
+                i++;
+                down++;
+            }
+            if(down > peak) {
+                sum += (down-peak);
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * Shortest job first - CPU Scheduling
+     *
+     * Given a list of job durations representing the time it takes to complete each job.
+     * Implement the Shortest Job First algorithm to find the average waiting time for these jobs.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int sjf(int bt[] ) {
+        int n = bt.length;
+        Arrays.sort(bt);
+        int totalTime = bt[0];
+        int waitTime = 0;
+        for(int i=1;i<n;i++) {
+            waitTime += totalTime;
+            totalTime += bt[i];
+        }
+        return waitTime/n;
+    }
+
+    /**
+     * Page Faults in LRU
+     *
+     * Given a sequence of pages in an array pages[] of length N and memory capacity C,
+     * find the number of page faults using Least Recently Used (LRU) Algorithm
+     *
+     * TC: O(nc)
+     * SC: O(n)
+     */
+    public static int pageFaults(int n, int c, int[] pages){
+        Set<Integer> set = new HashSet<>();
+        Deque<Integer> deque = new ArrayDeque<>();
+        int pageFault = 0;
+        for(int i=0; i<n; i++) {
+            if(set.contains(pages[i])) {
+                deque.remove(pages[i]);
+                deque.addLast(pages[i]);
+            } else {
+                if(deque.size() == c) {
+                    int x = deque.removeFirst();
+                    set.remove(x);
+                    deque.addLast(pages[i]);
+                    set.add(pages[i]);
+                } else {
+                    deque.addLast(pages[i]);
+                    set.add(pages[i]);
+                }
+                pageFault++;
+            }
+        }
+        return pageFault;
+    }
+
+    /**
+     * Merge overlapping intervals (Using stack)
+     *
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static void mergeIntervalsStack(Interval[] intervals) {
+        Stack<Interval> stack = new Stack<>();
+        Arrays.sort(intervals, Comparator.comparingInt(interval -> interval.start));
+        stack.push(intervals[0]);
+        for(int i=1; i<intervals.length; i++) {
+            Interval top = stack.peek();
+            Interval current = intervals[i];
+            if(top.end < current.start) {
+                stack.push(current);
+            } else if (top.end < current.end) {
+                top.end = current.end;
+            }
+        }
+        while(!stack.isEmpty()) {
+            Interval top = stack.pop();
+            System.out.println(top.start + " " + top.end);
+        }
+    }
+
+    /**
+     * Merge overlapping intervals
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static void mergeIntervals(Interval[] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(interval -> interval.start));
+        int index = 0;
+        for(int i=1; i<intervals.length; i++) {
+            Interval top = intervals[index];
+            Interval current = intervals[i];
+            if(top.end < current.start) {
+                index++;
+                intervals[index] = intervals[i];
+            } else {
+                top.end = Math.max(top.end, current.end);
+            }
+        }
+        for(int i=0; i<=index; i++) {
+            System.out.println(intervals[i].start + " " + intervals[i].end);
+        }
+    }
+
+    /**
+     * Insert interval and merge overlapping intervals
+     *
+     * You are given an array of non-overlapping intervals where
+     * intervals[i] = [starti, endi] represent the start and the end of the ith interval
+     * and intervals is sorted in ascending order by starting.
+     * You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
+     *
+     * Insert newInterval into intervals such that intervals is still sorted in ascending order by starting
+     * and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
+     *
+     * Return intervals after the insertion.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[][] insert(int[][] intervals, int[] newInterval) {
+        int n = intervals.length;
+        int[][] newIntervals = new int[n+1][2];
+        int index = 0;
+        boolean insert = false;
+        for(int i=0; i<n; i++) {
+            if(newInterval[0] < intervals[i][0] && !insert) {
+                newIntervals[index][0] = newInterval[0];
+                newIntervals[index][1] = newInterval[1];
+                insert = true;
+                index++;
+            }
+            newIntervals[index++] = intervals[i];
+        }
+        if(!insert) {
+            newIntervals[index][0] = newInterval[0];
+            newIntervals[index][1] = newInterval[1];
+        }
+        return merge(newIntervals);
+    }
+
+    private static int[][] merge(int[][] intervals) {
+        int index = 0;
+        for(int i=1; i<intervals.length;i++) {
+            int[] top = intervals[index];
+            int[] current = intervals[i];
+            if(top[1] < current[0]) {
+                index++;
+                intervals[index] = current;
+            } else {
+                intervals[index][1] = Math.max(top[1], current[1]);
+            }
+        }
+        int[][] res = new int[index+1][2];
+        for(int i=0; i<=index; i++) {
+            res[i] = intervals[i];
+        }
+        return res;
+    }
+
+    /**
+     * Non-overlapping Intervals
+     *
+     * Given an array of intervals where intervals[i] = [start, end],
+     * return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.
+     *
+     * TC: O(nlogn)
+     * SC: O(1)
+     */
+    public int eraseOverlapIntervals(int[][] intervals) {
+        int n = intervals.length;
+        Arrays.sort(intervals, (a, b) -> a[1] - b[1]);
+
+        int count = 1;
+        int[] top = intervals[0];
+        for(int i=1; i<n; i++) {
+            int[] current = intervals[i];
+            if(current[0] >= top[1]) {
+                count++;
+                top = current;
+            }
+        }
+        return n-count;
+    }
 }
 
 class Job {
@@ -353,5 +736,14 @@ class Item {
     Item(int x, int y){
         this.value = x;
         this.weight = y;
+    }
+}
+
+class Interval {
+    int start;
+    int end;
+    Interval(int start, int end) {
+        this.start = start;
+        this.end = end;
     }
 }
