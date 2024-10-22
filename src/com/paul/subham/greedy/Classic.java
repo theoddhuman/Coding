@@ -12,12 +12,17 @@ import java.util.PriorityQueue;
  * 3. Maximum no of platform required for given train timings (Optimized)
  * 4. Job sequencing problem
  * 5. Fractional Knapsack Problem
+ * 6. Assign cookies
+ * 7. Minimum no of coins
+ * 8. Lemonade change
+ * 9. Valid parenthesis string (Memoization)
+ * 10. Valid parenthesis string (Efficient)
  */
 public class Classic {
     public static void main(String[] args) {
         int[] arr ={900,945,955,1100,1500,1800};
         int[] dep={920,1200,1130,1150,1900,2000};
-        System.out.println(maxPlatform(arr, dep, 6));
+        System.out.println(coinChange(121));
     }
 
     /**
@@ -38,12 +43,10 @@ public class Classic {
             priorityQueue.add(i);
         }
         int x = priorityQueue.poll();
-        System.out.print(start[x] + " " + end[x]);
         int count = 1;
         while(!priorityQueue.isEmpty()) {
             int current = priorityQueue.poll();
             if(start[current] > end[x]) {
-                System.out.print(start[current] + " " + end[current]);
                 count++;
                 x = current;
             }
@@ -168,6 +171,171 @@ public class Classic {
             }
         }
         return max;
+    }
+
+    /**
+     * Assign cookies
+     *
+     * Given two arrays representing children’s green factor and cookie sizes, the goal is to maximise the number of content children.
+     *
+     * Each child i has a greed factor of g[i], which is the minimum size of a cookie that will make the child content.
+     * Each cookie j has a size of s[j].
+     * If s[j] >= g[j], we can assign cookie j to child i, making the child content.
+     * Each child can only receive one cookie.
+     *
+     * TC: O(nlogn + mlogm + max(m,n))
+     * SC: O(1)
+     */
+    public int findContentChildren(int[] g, int[] s) {
+        Arrays.sort(g);
+        Arrays.sort(s);
+        int m = g.length;
+        int n = s.length;
+        int count = 0;
+        int sizeIndex = 0;
+        while(sizeIndex < n && count < m) {
+            if(g[count] <= s[sizeIndex]) {
+                count++;
+            }
+            sizeIndex++;
+        }
+        return count;
+    }
+
+    /**
+     * Minimum no of coins
+     *
+     * Given a value V, if we want to make a change for V Rs,
+     * and we have an infinite supply of each of the denominations in Indian currency,
+     * i.e., we have an infinite supply of { 1, 2, 5, 10, 20, 50, 100, 500, 1000} valued coins/notes,
+     * what is the minimum number of coins and/or notes needed to make the change.
+     *
+     * TC: O(k)
+     * SC: O(1)
+     */
+    public static int coinChange(int k) {
+        int[] a = {1,2,5,10,20,50,100,200,500,2000};
+        int n = a.length;
+        int count = 0;
+        int i = n-1;
+        while(i>=0 && k>0) {
+            if(a[i] <= k) {
+                count++;
+                k -= a[i];
+            } else {
+                i--;
+            }
+        }
+        return count == 0? -1:count;
+    }
+
+    /**
+     * Lemonade change
+     *
+     * Given an array representing a queue of customers and the value of bills they hold,
+     * determine if it is possible to provide correct change to each customer.
+     * Customers can only pay with 5$, 10$ or 20$ bills, and we initially do not have any change at hand.
+     * Return true, if it is possible to provide correct change for each customer otherwise return false.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public boolean lemonadeChange(int[] bills) {
+        int five = 0;
+        int ten = 0;
+        for(int i=0; i<bills.length;i++) {
+            if(bills[i] == 5) {
+                five++;
+            } else if(bills[i]==10) {
+                if(five > 0) {
+                    five--;
+                    ten++;
+                } else {
+                    return false;
+                }
+            } else {
+                if(five > 0 && ten > 0) {
+                    five--;
+                    ten--;
+                } else if(five >= 3) {
+                    five -= 3;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Valid parenthesis string (Memoization)
+     *
+     * Given a string s containing only three types of characters: '(', ')' and '*', return true if s is valid.
+     *
+     * The following rules define a valid string:
+     * Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+     * Any right parenthesis ')' must have a corresponding left parenthesis '('.
+     * Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+     * '*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string "".
+     *
+     * (*)) -> T, ())( -> F
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static boolean checkValidString(String s) {
+        int n = s.length();
+        Boolean[][] dp = new Boolean[n][n+1];
+        return valid(s,0,0, dp);
+    }
+
+    private static boolean valid(String s, int i, int count, Boolean[][] dp) {
+        if(count < 0) {
+            return false;
+        }
+        if(i == s.length()) {
+            return count == 0;
+        }
+        if(dp[i][count] != null) {
+            return dp[i][count];
+        }
+        if(s.charAt(i) == '(') {
+            return valid(s, i+1, count+1, dp);
+        }
+        if(s.charAt(i) == ')') {
+            return valid(s, i+1, count -1, dp);
+        }
+        return valid(s, i+1, count, dp) || valid(s, i+1, count+1, dp) || valid(s, i+1, count-1, dp);
+    }
+
+    /**
+     * Valid parenthesis string (Efficient)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public boolean checkValidStringEfficient(String s) {
+        int min = 0;
+        int max = 0;
+        for(int i=0; i<s.length(); i++) {
+            if(s.charAt(i) == '(') {
+                min++;
+                max++;
+            } else if (s.charAt(i) == ')') {
+                min--;
+                max--;
+            } else {
+                min--;
+                max++;
+            }
+            if(min < 0) {
+                min = 0;
+            }
+            if(max < 0) {
+                return false;
+            }
+        }
+        return min==0;
     }
 }
 
