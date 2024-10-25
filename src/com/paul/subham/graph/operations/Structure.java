@@ -12,26 +12,24 @@ import java.util.Stack;
 /**
  * 1. Get level of each node from source in a graph (using BFS)
  * 2. Count of nodes at a level from source (using BFS)
- * 3. Counting no of tress in a forest (Using DFS)
- * 4. Counting no of tress in a forest (Using BFS)
- * 5. k core of an undirected graph
- * 6. Cut vertex or articulation points of a graph
- * 7. Cut vertex or articulation points of a graph (Tarjan's algorithm)
- * 8. Cut bridge or cut edge of a graph (Tarjan's algorithm)
- * 9. Is connected an undirected graph
- * 10. Is undirected graph an Eulerian Path
- * 11. Is undirected graph an Eulerian Path
- * 12. Strongly connected components of a directed graph
- * 13. Strongly connected components of a directed graph (Kosaraju's algorithm)
- * 14. Is the directed graph strongly connected
- * 15. Is the directed graph Eulerian Cycle
- * 16. Detecting cycle in undirected graph (Using DFS)
- * 17. Detecting cycle in undirected graph (Using BFS)
- * 18. Detecting cycle in directed graph (Using DFS)
- * 19. Detecting cycle in directed graph (Using BFS - Topological Sorting)
- * 20. Depth of undirected acyclic graph from a source (Using BFS)
- * 21. Depth of directed acyclic graph (Using BFS)
- * 22. No of islands in a matrix
+ * 3. k core of an undirected graph
+ * 4. Cut vertex or articulation points of a graph
+ * 5. Cut vertex or articulation points of a graph (Tarjan's algorithm)
+ * 6. Cut bridge or cut edge of a graph (Tarjan's algorithm)
+ * 7. Is connected an undirected graph
+ * 8. Is undirected graph an Eulerian Path
+ * 9. Is undirected graph an Eulerian Path
+ * 10. Strongly connected components of a directed graph
+ * 11. Strongly connected components of a directed graph (Kosaraju's algorithm)
+ * 12. Is the directed graph strongly connected
+ * 13. Is the directed graph Eulerian Cycle
+ * 14. Detecting cycle in undirected graph (Using DFS)
+ * 15. Detecting cycle in undirected graph (Using BFS)
+ * 16. Detecting cycle in directed graph (Using DFS)
+ * 17. Detecting cycle in directed graph (Using BFS - Topological Sorting)
+ * 18. Depth of undirected acyclic graph from a source (Using BFS)
+ * 19. Depth of directed acyclic graph (Using BFS)
+ * 20. Is a graph Bipartite
  */
 public class Structure {
     public static void main(String[] args) {
@@ -117,37 +115,7 @@ public class Structure {
         return count;
     }
 
-    /**
-     * Counting no of tress in a forest (Using DFS)
-     * TC: O(V+E)
-     * SC: O(V)
-     */
-    public static int countTreesInForestDFS(AdjacencyListGraph graph) {
-        int trees = 0;
-        for (int i = 0; i < graph.vertex; i++) {
-            if (!graph.visited[i]) {
-                graph.DFS(i);
-                trees++;
-            }
-        }
-        return trees;
-    }
 
-    /**
-     * Counting no of tress in a forest (Using BFS)
-     * TC: O(V+E)
-     * SC: O(V)
-     */
-    public static int countTreesInForestBFS(AdjacencyListGraph graph) {
-        int trees = 0;
-        for (int i = 0; i < graph.vertex; i++) {
-            if (!graph.visited[i]) {
-                graph.BFS(i);
-                trees++;
-            }
-        }
-        return trees;
-    }
 
     /**
      * k core of an undirected graph
@@ -811,32 +779,39 @@ public class Structure {
     }
 
     /**
-     * No of islands in a matrix
-     * 
-     * TC: O(n^2)
-     * SC: O(1)
+     * Is a graph Bipartite
+     *
+     * If we are able to colour a graph with two colours such that no adjacent nodes have the same colour, it is called a bipartite graph.
+     *
+     * TC: O(V+E) ~ o(n^2)
+     * SC: o(V)
      */
-    public static int noOfIslands(int[][] a) {
-        int count = 0;
-        for(int i=0; i<a.length; i++) {
-            for(int j=0; j<a[0].length; j++) {
-                if(a[i][j] == 0) {
-                    island(a, i, j);
-                    count++;
+    public static boolean isBipartite(AdjacencyListGraph graph) {
+        int v = graph.vertex;
+        int[] color = new int[v];
+        Arrays.fill(color, -1);
+        for(int i=0; i<v; i++) {
+            if(color[i] == -1) {
+                if(isBipartite(graph, i, color, 0)){
+                    return false;
                 }
             }
         }
-        return count;
+        return true;
     }
-    
-    private static void island(int[][] a, int i, int j) {
-        if(i<0 || j<0 || i>=a.length || j>=a[0].length || a[i][j] == 1) {
-            return;
+
+    private static boolean isBipartite(AdjacencyListGraph graph, int s, int[] color, int c) {
+        color[s] = c;
+        List<Integer> adjList = graph.adjListArray[s];
+        for(Integer i : adjList) {
+            if(color[i] == -1) {
+                if(isBipartite(graph, i, color, 1 - c)){
+                    return true;
+                }
+            } else if (color[i] == c) {
+                return true;
+            }
         }
-        a[i][j] = 0;
-        island(a, i-1, j);
-        island(a, i, j-1);
-        island(a, i+1, j);
-        island(a, i, j+1);
+        return false;
     }
 }

@@ -9,10 +9,12 @@ package com.paul.subham.mathematics;
  * 4. Find GCD (Division)
  * 5. Find GCD (Division, Iterative)
  * 6. Decimal to binary
+ * 7. Is armstrong number
+ * 8. Is primary number
  */
 public class Basic {
     public static void main(String[] args) {
-        System.out.println(decimalToBinary(14));
+        System.out.println(isPrime(110));
     }
 
 
@@ -118,5 +120,43 @@ public class Basic {
             n /= 2;
         }
         return s.reverse().toString();
+    }
+
+    /**
+     * Is armstrong number
+     *
+     * An Armstrong number is a number that is equal to the sum of its own digits each raised to the power of the number of digits.
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static boolean isArmstrong(int num) {
+        int n = num;
+        int length = String.valueOf(n).length();
+        int sum = 0;
+        while( n> 0) {
+            int digit = n%10;
+            sum += (int) Math.pow(digit, length);
+            n /= 10;
+        }
+        return sum == num;
+    }
+
+    /**
+     * Is primary number
+     *
+     * TC: O(n^1/2)
+     * SC: O(1)
+     */
+    public static boolean isPrime(int n) {
+        if(n == 0 || n==1) {
+            return false;
+        }
+        for(int i=2; i<=Math.sqrt(n); i++) {
+            if(n%i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
