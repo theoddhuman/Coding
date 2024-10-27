@@ -5,25 +5,25 @@ import com.paul.subham.graph.implementation.AdjacencyListWeightedGraph;
 import com.paul.subham.graph.implementation.AdjacencyMatrixWeightedGraph;
 import com.paul.subham.graph.implementation.Edge;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * 1. Shortest path in unweighted graph
- * 2. Shortest path in weighted graph - Dijkstra's Algorithm
- * 3. Shortest path in weighted graph - Dijkstra's Algorithm (Using Array)
- * 4. Shortest path in weighted graph - Bellman-ford Algorithm
- * 5. Searching simple path from source to destination
- * 6. Count all simple paths from source to destination
- * 7. Transitive closure of a graph (Using Floyd Warshall Algorithm)
- * 8. Transitive closure of a graph (Using DFS)
- * 9. The shortest path of all pair (Using Floyd Warshall Algorithm)
+ * 2. Shortest path in a directed acyclic weighted graph
+ * 3. Shortest path in a directed acyclic weighted graph (Topological Sorting)
+ * 4. Shortest path in weighted graph - Dijkstra's Algorithm
+ * 5. Shortest path in weighted graph - Dijkstra's Algorithm (Using Array)
+ * 6. Shortest path in weighted graph - Bellman-ford Algorithm
+ * 7. Searching simple path from source to destination
+ * 8. Count all simple paths from source to destination
+ * 9. Transitive closure of a graph (Using Floyd Warshall Algorithm)
+ * 10. Transitive closure of a graph (Using DFS)
+ * 11. The shortest path of all pair (Using Floyd Warshall Algorithm)
+ * 12. Shortest Path in binary matrix (0 pass through) (BFS)
+ * 13. Path With Minimum Effort (Dijkstra)
+ * 14. Cheapest Flights Within K Stops (BFS)
+ * 15. Network Delay Time (BFS)
+ * 16. No of ways to arrive at a destination in minimum time (BFS)
  */
 public class Path {
     public static void main(String[] args) {
@@ -87,7 +87,68 @@ public class Path {
     }
 
     /**
+     * Shortest path in a directed acyclic weighted graph
+     *
+     * TC: O(V+E), more than E as some edges can be repeated
+     * SC: O(V)
+     */
+    public void shortestPath(int V, int E, List<List<Edge>> adj, int s) {
+        int[] distance = new int[V];
+        int[] path = new int[V];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(s);
+        distance[s] = 0;
+        path[s] = -1;
+        while(!queue.isEmpty()){
+            int current = queue.remove();
+            List<Edge> list = adj.get(current);
+            for(Edge edge : list) {
+                int dest = edge.destination;
+                int d = distance[current] + edge.weight;
+                if (distance[dest] > d) {
+                    distance[dest] = d;
+                    queue.add(dest);
+                }
+            }
+        }
+        for(int i=0; i<V; i++) {
+            System.out.println(path[i] + " " + distance[i]);
+        }
+    }
+
+    /**
+     * Shortest path in a directed acyclic weighted graph (Topological Sorting)
+     *
+     * TC: O(V+E), more than E as some edges can be repeated
+     * SC: O(V)
+     */
+    public static void shortestPath(int V, AdjacencyListWeightedGraph graph, int s) {
+        boolean[] visited = new boolean[V];
+        int[] distance = new int[V];
+        int[] path = new int[V];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        distance[s] = 0;
+        Stack<Integer> stack = new Stack<>();
+        Sorting.dfsTopo(graph, s, visited, stack);
+        while(!stack.isEmpty()) {
+            int current = stack.pop();
+            for(Edge edge : graph.adjListArray[current]) {
+                int des = edge.destination;
+                if(distance[des] > distance[current]+edge.weight) {
+                    distance[des] = distance[current]+edge.weight;
+                    path[des] = current;
+                }
+            }
+        }
+        for(int i=0; i<V; i++) {
+            System.out.println(path[i] + " " + distance[i]);
+        }
+    }
+
+    /**
      * Shortest path in weighted graph - Dijkstra's Algorithm
+     *
      * TC: Using PQ, V delete min + E updates, O(VlogV + ElogV) = O(ElogV),
      * If V = n, total possible edge = n*(n-1)/2, O(n^2logn)
      * TC: for adjacency matrix, O(V^2logV)
@@ -408,5 +469,264 @@ public class Path {
                 }
             }
         }
+    }
+
+    /**
+     * Shortest Path in binary matrix (0 pass through) (BFS)
+     *
+     * Given an n x n binary matrix grid, return the length of the shortest clear path in the matrix. If there is no clear path, return -1.
+     *
+     * A clear path in a binary matrix is a path from the source to destination such that:
+     * a. All the visited cells of the path are 0.
+     * b. All the adjacent cells of the path are 8-directionally connected (i.e., they are different and they share an edge or a corner).
+     * c. The length of a clear path is the number of visited cells of this path.
+     *
+     * Input: grid = [[0,0,0],[1,1,0],[1,1,0]]
+     * Output: 4
+     *
+     * TC: O(mn)
+     * SC: O(mn)
+     */
+    public static int shortestPathBinaryMatrix(int[][] grid, int[] source, int[] destination) {
+        if(grid[source[0]][source[1]]==1) {
+            return -1;
+        }
+        if(source[0] == destination[0] && source[1] == destination[1]) {
+            return 1;
+        }
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] distance = new int[m][n];
+        for(int i=0; i<m; i++) {
+            Arrays.fill(distance[i],Integer.MAX_VALUE);
+        }
+        Queue<IndexPair> queue = new LinkedList<>();
+        queue.add(new IndexPair(source[0],source[1]));
+        distance[source[0]][source[1]]=1;
+        int[] delRow = {-1,-1,-1,0,1,1,1,0};
+        int[] delCol = {-1,0,1,1,1,0,-1,-1};
+        while(!queue.isEmpty()) {
+            IndexPair current = queue.remove();
+            int i = current.r;
+            int j = current.c;
+            for(int k=0; k<8; k++) {
+                int ni = i + delRow[k];
+                int nj = j + delCol[k];
+                if(ni>=0 && nj>=0 && ni<m && nj<n && grid[ni][nj] == 0 && distance[i][j] + 1 < distance[ni][nj]) {
+                    distance[ni][nj] = distance[i][j]+1;
+                    if(ni==destination[0] && nj==destination[1]) {
+                        return distance[ni][nj];
+                    }
+                    queue.add(new IndexPair(ni,nj));
+                }
+            }
+        }
+        return -1;
+    }
+
+
+    /**
+     * Path With Minimum Effort (Dijkstra)
+     *
+     * You are a hiker preparing for an upcoming hike.
+     * You are given heights, a 2D array of size rows x columns, where heights[row][col] represents the height of the cell (row, col).
+     * You are situated in the top-left cell, (0, 0), and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e.,0-indexed). You can move up, down, left, or right, and you wish to find a route that requires the minimum effort.
+     *
+     * A route's effort is the maximum absolute difference in heights between two consecutive cells of the route.
+     *
+     * TC: O(mn*log(mn))
+     * SC: O(mn)
+     */
+    public static int minimumEffortPath(int[][] heights) {
+        int m = heights.length;
+        int n = heights[0].length;
+        int[][] diff = new int[m][n];
+        for(int i=0; i<m; i++){
+            Arrays.fill(diff[i], Integer.MAX_VALUE);
+        }
+        PriorityQueue<IndexPair> pq = new PriorityQueue<>(Comparator.comparing(idxPair -> diff[idxPair.r][idxPair.c]));
+        pq.add(new IndexPair(0,0));
+        diff[0][0]=0;
+        int[] delRow = {-1,0,1,0};
+        int[] delCol = {0,1,0,-1};
+        while(!pq.isEmpty()) {
+            IndexPair current = pq.remove();
+            int i = current.r;
+            int j = current.c;
+            for(int k=0; k<4; k++) {
+                int ni = i + delRow[k];
+                int nj = j + delCol[k];
+                if(ni>=0 && nj>=0 && ni<m && nj<n) {
+                    int newEffort = Math.max(Math.abs(heights[i][j]-heights[ni][nj]), diff[i][j]);
+                    if(newEffort < diff[ni][nj]) {
+                        diff[ni][nj]=newEffort;
+                        pq.add(new IndexPair(ni,nj));
+                    }
+                }
+            }
+        }
+        return diff[m-1][n-1];
+    }
+
+    /**
+     * Cheapest Flights Within K Stops (BFS)
+     *
+     * There are n cities connected by some number of flights.
+     * You are given an array flights where flights[i] = from[i], to[i], price[i] indicates that there is a flight from city from[i] to city to[i] with cost price[i].
+     * You are also given three integers src, dst, and k, return the cheapest price from src to dst with at most k stops. If there is no such route, return -1.
+     *
+     * TC: O(V+ElogV)
+     * SC: O(V+E)
+     */
+    public static int findCheapestPrice(int v, int[][] flights, int src, int dst, int k) {
+        List<List<Edge>> adj = new ArrayList<>();
+        for(int i=0; i<v; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for(int i=0; i<flights.length; i++) {
+            adj.get(flights[i][0]).add(new Edge(flights[i][0], flights[i][1], flights[i][2]));
+        }
+        int[] minCost = new int[v];
+        Arrays.fill(minCost, Integer.MAX_VALUE);
+        Queue<Tuple> pq = new LinkedList<>();
+        minCost[src] = 0;
+        pq.add(new Tuple(0, src, 0));
+        while(!pq.isEmpty()){
+            Tuple current = pq.remove();
+            int cost = current.cost;
+            int stopCount = current.stopCount;
+            int node = current.node;
+            if(stopCount > k) {
+                continue;
+            }
+            List<Edge> list = adj.get(node);
+            for(Edge edge : list) {
+                int d = edge.weight + cost;
+                int next = edge.destination;
+                if(minCost[next] > d ) {
+                    minCost[next] = d;
+                    pq.add(new Tuple(stopCount+1, next, minCost[next]));
+                }
+            }
+        }
+        return minCost[dst] == Integer.MAX_VALUE?-1 : minCost[dst];
+    }
+
+    /**
+     * Network Delay Time (BFS)
+     *
+     * You are given a network of n nodes, labeled from 1 to n.
+     * You are also given times, a list of travel times as directed edges times[i] = (ui, vi, wi),
+     * where ui is the source node, vi is the target node, and wi is the time it takes for a signal to travel from source to target.
+     *
+     * We will send a signal from a given node k. Return the minimum time it takes for all the n nodes to receive the signal.
+     * If it is impossible for all the n nodes to receive the signal, return -1.
+     *
+     * TC: O(V+E)
+     * SC: O(V+E)
+     */
+    public static int networkDelayTime(int[][] times, int n, int k) {
+        List<List<Edge>> adj = new ArrayList<>();
+        for(int i=0; i<=n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for(int i=0; i<times.length; i++) {
+            adj.get(times[i][0]).add(new Edge(times[i][0],times[i][1],times[i][2]));
+        }
+        int[] distance = new int[n+1];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparing(a->distance[a]));
+        distance[k] = 0;
+        pq.add(k);
+        while(!pq.isEmpty()){
+            int current = pq.remove();
+            for(Edge edge: adj.get(current)) {
+                int d = distance[current]+edge.weight;
+                int next = edge.destination;
+                if(distance[next] > d) {
+                    pq.remove(next);
+                    distance[next]=d;
+                    pq.add(next);
+                }
+            }
+        }
+        int max = 0;
+        for(int i=1;i<=n;i++) {
+            //System.out.print(distance[i]+" ");
+            if(distance[i] == Integer.MAX_VALUE) {
+                return -1;
+            }
+            max = Math.max(max, distance[i]);
+        }
+        return max;
+    }
+
+    /**
+     * No of ways to arrive at a destination in minimum time (BFS)
+     *
+     * ou are in a city that consists of n intersections numbered from 0 to n - 1 with bidirectional roads between some intersections.
+     * The inputs are generated such that you can reach any intersection from any other intersection and that there is at most one road between any two intersections.
+     * You are given an integer n and a 2D integer array roads where roads[i] = [ui, vi, timei] means that there is a road between intersections ui and vi that takes timei minutes to travel.
+     * You want to know in how many ways you can travel from intersection 0 to intersection n - 1 in the shortest amount of time.
+     *
+     * Return the number of ways you can arrive at your destination in the shortest amount of time. Since the answer may be large, return it modulo 109 + 7.
+     *
+     * TC: O(V+E)
+     * SC: O(E+V)
+     */
+    public int countPaths(int n, int[][] roads) {
+        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < roads.length; i++) {
+            adj.get(roads[i][0]).add(new Pair(roads[i][1], roads[i][2]));
+            adj.get(roads[i][1]).add(new Pair(roads[i][0], roads[i][2]));
+        }
+        PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingLong(p->p.distance));
+        long dist[] = new long[n];
+        Arrays.fill(dist, Long.MAX_VALUE);
+        long ways[] = new long[n];
+        long mod = (int)(1e9 + 7);
+
+        dist[0] = 0;
+        ways[0] = 1;
+        pq.add(new Pair(0, 0));
+        while (!pq.isEmpty()) {
+            Pair current = pq.remove();
+            int node = current.node;
+            for (Pair edge : adj.get(node)) {
+                int adjNode = edge.node;
+                long d = edge.distance + current.distance;
+                if (d < dist[adjNode]) {
+                    dist[adjNode] = d;
+                    pq.add(new Pair(adjNode,d));
+                    ways[adjNode] = ways[node];
+                } else if (d == dist[adjNode]) {
+                    ways[adjNode] = (ways[adjNode] + ways[node]) % mod;
+                }
+            }
+        }
+        return (int)(ways[n - 1] % mod);
+    }
+}
+
+class Pair {
+    int node;
+    long distance;
+    Pair(int node, long distance) {
+        this.node = node;
+        this.distance = distance;
+    }
+}
+
+class Tuple {
+    int stopCount;
+    int node;
+    int cost;
+    Tuple(int stopCount, int node, int cost) {
+        this.stopCount = stopCount;
+        this.node = node;
+        this.cost = cost;
     }
 }

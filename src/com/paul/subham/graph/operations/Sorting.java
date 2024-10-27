@@ -9,10 +9,11 @@ import java.util.*;
 /**
  * 1. Topological Sort (BFS)(Kahn's Algorithm)
  * 2. Topological Sort (DFS)
- * 3. Course Schedule I (DFS)
- * 4. Course Schedule II (BFS)
- * 5. Find Eventual Safe States (BFS - Topological Sort)
- * 6. Alien Dictionary - (Topological Sort)
+ * 3. Topological Sort - weighted graph (DFS)
+ * 4. Course Schedule I (DFS)
+ * 5. Course Schedule II (BFS)
+ * 6. Find Eventual Safe States (BFS - Topological Sort)
+ * 7. Alien Dictionary - (Topological Sort)
  */
 public class Sorting {
     public static void main(String[] args) {
@@ -96,6 +97,38 @@ public class Sorting {
         for(Integer i: adjList) {
             if(!graph.visited[i]) {
                 DFS(i, stack, graph);
+            }
+        }
+        stack.push(s);
+    }
+
+    /**
+     * Topological Sort - weighted graph (DFS)
+     * TC: O(V+E)
+     * SC: O(V)
+     */
+    public static int[] topoSort(AdjacencyListWeightedGraph graph) {
+        int v = graph.vertex;
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[v];
+        for(int i=0; i<v; i++) {
+            if(!graph.visited[i]) {
+                dfsTopo(graph, i, visited, stack);
+            }
+        }
+        int[] res = new int[v];
+        int i = 0;
+        while(!stack.isEmpty()) {
+            res[i++] = stack.pop();
+        }
+        return res;
+    }
+
+    public static void dfsTopo(AdjacencyListWeightedGraph graph, int s, boolean[] visited, Stack<Integer> stack) {
+        visited[s] = true;
+        for(Edge edge : graph.adjListArray[s]) {
+            if(!visited[edge.destination]) {
+                dfsTopo(graph,edge.destination,visited,stack);
             }
         }
         stack.push(s);

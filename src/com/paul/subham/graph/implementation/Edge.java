@@ -5,7 +5,7 @@ public class Edge {
     public int destination;
     public int weight;
 
-    Edge(int source, int destination, int weight) {
+    public Edge(int source, int destination, int weight) {
         this.source = source;
         this.weight = weight;
         this.destination = destination;
