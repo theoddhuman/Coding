@@ -235,8 +235,8 @@ public class Searching {
 
     /**
      * Finding missing number in an array (Hashing Technique)
-     * TC: O(nlogn)
-     * SC: O(1)
+     * TC: O(n)
+     * SC: O(n)
      */
     public static int getMissingNumberHashing(int[] a) {
         int[] count = new int[a.length + 2];

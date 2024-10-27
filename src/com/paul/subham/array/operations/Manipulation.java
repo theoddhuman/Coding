@@ -40,6 +40,7 @@ import java.util.Stack;
  * 25. Next greater element with same set of digits
  * 26. Sort an array of 0's, 1's and 2's (counting appearances)
  * 27. Sort an array of 0's, 1's and 2's (Single traversal - 3 pointer)
+ * 28. Union of two sorted arrays
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -708,5 +709,46 @@ public class Manipulation {
             }
         }
         return a;
+    }
+
+    /**
+     * Union of two sorted arrays
+     *
+     * TC: O(m+n)
+     * SC: O(1)
+     */
+    public static ArrayList<Integer> findUnion(int a[], int b[]) {
+        // add your code here
+        ArrayList<Integer> list = new ArrayList<>();
+        int l = 0;
+        int r = 0;
+        list.add(Math.min(a[0],b[0]));
+        while(l<a.length && r<b.length) {
+            if(a[l] <= b[r]) {
+                if(list.get(list.size()-1) != a[l]) {
+                    list.add(a[l]);
+                }
+                l++;
+            } else {
+                if(list.get(list.size()-1) != b[r]) {
+                    list.add(b[r]);
+                }
+                r++;
+            }
+        }
+        while(l<a.length) {
+            if(list.get(list.size()-1) != a[l]) {
+                list.add(a[l]);
+            }
+            l++;
+        }
+        while(r<b.length) {
+            if(list.get(list.size()-1) != b[r]) {
+                list.add(b[r]);
+            }
+            r++;
+
+        }
+        return list;
     }
 }

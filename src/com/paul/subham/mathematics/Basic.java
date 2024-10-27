@@ -11,6 +11,8 @@ package com.paul.subham.mathematics;
  * 6. Decimal to binary
  * 7. Is armstrong number
  * 8. Is primary number
+ * 9. Power of a number (Recursion)
+ * 10. Power of a number (Iterative)
  */
 public class Basic {
     public static void main(String[] args) {
@@ -158,5 +160,56 @@ public class Basic {
             }
         }
         return true;
+    }
+
+    /**
+     * Power of a number (Recursion)
+     *
+     * TC: O(logp)
+     * sc: O(logp)
+     */
+    public static double myPow(double x, int p) {
+        double n = p;
+        if(n<0) {
+            return 1/pow(x,-n);
+        }
+        return pow(x,n);
+    }
+
+    private static double pow(double x, double n) {
+        if(n==0) {
+            return 1;
+        }
+        if(n%2==0) {
+            return pow(x*x, n/2);
+        }
+        return x*pow(x,n-1);
+    }
+
+    /**
+     * Power of a number (Iterative)
+     *
+     * TC: O(logp)
+     * sc: O(logp)
+     */
+    public static double myPowIterative(double x, int p) {
+        double n = p;
+        if(n<0) {
+            return 1/pow(x,-n);
+        }
+        double ans = 1.0;
+        while(n > 0) {
+            if(n%2==0) {
+                x = x*x;
+                n /= 2;
+            } else {
+                ans *= x;
+                n -= 1;
+            }
+        }
+        if(p<0) {
+            return 1/ans;
+        }
+        return ans;
     }
 }
