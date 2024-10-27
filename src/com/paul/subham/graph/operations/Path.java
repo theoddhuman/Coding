@@ -13,17 +13,20 @@ import java.util.*;
  * 3. Shortest path in a directed acyclic weighted graph (Topological Sorting)
  * 4. Shortest path in weighted graph - Dijkstra's Algorithm
  * 5. Shortest path in weighted graph - Dijkstra's Algorithm (Using Array)
- * 6. Shortest path in weighted graph - Bellman-ford Algorithm
- * 7. Searching simple path from source to destination
- * 8. Count all simple paths from source to destination
- * 9. Transitive closure of a graph (Using Floyd Warshall Algorithm)
- * 10. Transitive closure of a graph (Using DFS)
- * 11. The shortest path of all pair (Using Floyd Warshall Algorithm)
- * 12. Shortest Path in binary matrix (0 pass through) (BFS)
- * 13. Path With Minimum Effort (Dijkstra)
- * 14. Cheapest Flights Within K Stops (BFS)
- * 15. Network Delay Time (BFS)
- * 16. No of ways to arrive at a destination in minimum time (BFS)
+ * 6. Shortest path in weighted graph - Bellman-ford Algorithm (BFS)
+ * 7. Shortest path in weighted graph - detect negative cycle - Bellman-ford Algorithm (Iteration approach)
+ * 8. Searching simple path from source to destination
+ * 9. Count all simple paths from source to destination
+ * 10. Transitive closure of a graph (Using Floyd Warshall Algorithm)
+ * 11. Transitive closure of a graph (Using DFS)
+ * 12. The shortest path of all pair (Using Floyd Warshall Algorithm)
+ * 13. Shortest Path in binary matrix (0 pass through) (BFS)
+ * 14. Path With Minimum Effort (Dijkstra)
+ * 15. Cheapest Flights Within K Stops (BFS)
+ * 16. Network Delay Time (BFS)
+ * 17. No of ways to arrive at a destination in minimum time (BFS)
+ * 18. Minimum Multiplications to reach End (BFS)
+ * 19. Find the City With the Smallest Number of Neighbors at a Threshold Distance (Floyd Warshall Algorithm)
  */
 public class Path {
     public static void main(String[] args) {
@@ -271,8 +274,8 @@ public class Path {
     }
 
     /**
-     * Shortest path in weighted graph - Bellman-ford Algorithm
-     * TC: Check E edges V-1 times, O(|V|(|E|-1)) = O(|V||E|)
+     * Shortest path in weighted graph - Bellman-ford Algorithm (BFS)
+     * TC: Check E edges V-1 times, O((V-1)E) = O(VE)
      * If V = n, total possible edge = n*(n-1)/2, O(n * n*(n-1)/2) = O(n^3)
      * SC: O(V)
      * It doesn't work if total weight of the circle is negative, it goes into infinite loop.
@@ -303,6 +306,41 @@ public class Path {
         for(int i=0; i< graph.vertex; i++) {
             System.out.println(i+" "+distance[i]+" "+path[i]);
         }
+    }
+
+    /**
+     * Shortest path in weighted graph - detect negative cycle - Bellman-ford Algorithm (Iteration approach)
+     *
+     * TC: Check E edges V-1 times, O((V-1)E) = O(VE)
+     * If V = n, total possible edge = n*(n-1)/2, O(n * n*(n-1)/2) = O(n^3)
+     * SC: O(V)
+     *
+     * It doesn't work if total weight of the circle is negative, it goes into infinite loop.
+     */
+    public static int[] bellmanFord(int V, ArrayList<ArrayList<Integer>> edges, int src) {
+        int[] distance = new int[V];
+        Arrays.fill(distance, 100000000);
+        distance[src]=0;
+        for(int i=0; i<V;i++) {
+            for(ArrayList<Integer> list : edges) {
+                int u = list.get(0);
+                int v = list.get(1);
+                int w = list.get(2);
+                if(distance[u] != 100000000 && distance[u] + w < distance[v]) {
+                    distance[v] = distance[u]+w;
+                }
+            }
+        }
+        for(ArrayList<Integer> list : edges) {
+            int u = list.get(0);
+            int v = list.get(1);
+            int w = list.get(2);
+            if(distance[u] != 100000000 && distance[u] + w < distance[v]) {
+                return new int[]{-1};
+            }
+        }
+        return distance;
+
     }
 
     /**
@@ -708,6 +746,111 @@ public class Path {
             }
         }
         return (int)(ways[n - 1] % mod);
+    }
+
+    /**
+     * Minimum Multiplications to reach End (BFS)
+     *
+     * Given start, end and an array arr of n numbers.
+     * At each step, start is multiplied with any number in the array and then mod operation with 100000 is done to get the new start.
+     * Your task is to find the minimum steps in which end can be achieved starting from start.
+     * If it is not possible to reach end, then return -1.
+     * arr[] = {2, 5, 7}
+     * start = 3, end = 30
+     * Output: 2
+     *
+     * TC:O(100000)
+     * SC:O(100000)
+     */
+    public static int minimumMultiplications(int[] arr, int start, int end) {
+        if(start==end) {
+            return 0;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int[] dist = new int[100000];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        queue.add(start);
+        dist[start]=0;
+        while(!queue.isEmpty()) {
+            int current = queue.remove();
+            for(int i=0;i<arr.length;i++) {
+                int nextData = (current*arr[i])%100000;
+                if(dist[nextData] > dist[current] + 1) {
+                    dist[nextData] = dist[current]+1;
+                    if(nextData == end) {
+                        return dist[nextData];
+                    }
+                    queue.add(nextData);
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Find the City With the Smallest Number of Neighbors at a Threshold Distance (Floyd Warshall Algorithm)
+     *
+     * There are n cities numbered from 0 to n-1.
+     * Given the array edges where edges[i] = [fromi, toi, weighti] represents a bidirectional and
+     * weighted edge between cities fromi and toi, and given the integer distanceThreshold.
+     *
+     * Return the city with the smallest number of cities that are reachable through some path
+     * and whose distance is at most distanceThreshold, If there are multiple such cities, return the city with the greatest number.
+     *
+     * TC: O(n^3)
+     * SC: O(n^2)
+     */
+    public static int findTheCity(int n, int[][] edges, int distanceThreshold) {
+        int[][] a = new int[n][n];
+        for(int i=0; i<edges.length; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int w = edges[i][2];
+            a[u][v] = w;
+            a[v][u] = w;
+        }
+        int[][] distance = new int[n][n];
+        for(int i=0; i<n; i++) {
+            Arrays.fill(distance[i], Integer.MAX_VALUE);
+        }
+        for(int i=0;i<n;i++) {
+            for(int j=0;j<n;j++) {
+                if(i==j){
+                    distance[i][j] = 0;
+                } else if(a[i][j] != 0) {
+                    distance[i][j] = a[i][j];
+                }
+            }
+        }
+        for(int k=0;k<n;k++) {
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    if(distance[i][k]<Integer.MAX_VALUE && distance[k][j] <Integer.MAX_VALUE){
+                        int d=distance[i][k] + distance[k][j];
+                        if(distance[i][j] > d) {
+                            distance[i][j] = d;
+                        }
+                    }
+                }
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        int index = -1;
+        for(int i=0;i<n;i++) {
+            int count = 0;
+            for(int j=0;j<n;j++) {
+                if(j!=i && distanceThreshold >= distance[i][j]) {
+                    count++;
+                }
+            }
+            if(count < min) {
+                min = count;
+                index = i;
+            } else if (count==min) {
+                index = Math.max(index, i);
+            }
+        }
+        return index;
     }
 }
 
