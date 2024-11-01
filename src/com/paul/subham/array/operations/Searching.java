@@ -81,6 +81,8 @@ import java.util.*;
  * 72. Find repeated and missing number (Array manipulation)
  * 73. Find repeated and missing number (Mathematics)
  * 74. Find repeated and missing number (Using XOR)
+ * 75. Find maximum consecutive 1's in an array
+ *
  */
 public class Searching {
     public static void main(String[] args) {
@@ -585,7 +587,9 @@ public class Searching {
 
     /**
      * Finding an element which appears odd no of times in an array (Nested loop)
-     * <p>
+     * [1,2,1,2,3]
+     * o/p 3
+     *
      * TC: O(n^2)
      * SC: O(1)
      */
@@ -1844,6 +1848,28 @@ public class Searching {
         if (cnt == 2) return new int[] {zero, one};
         return new int[] {one, zero};
     }
+
+    /**
+     * Find maximum consecutive 1's in an array
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int findMaxConsecutiveOnes(int[] nums) {
+        int maxCon = 0;
+        int count=0;
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i]==1) {
+                count++;
+            } else {
+                count=0;
+            }
+            maxCon = Math.max(count, maxCon);
+        }
+        return maxCon;
+    }
+
+
 }
 
 class BinarySearchFrequencyTree {
