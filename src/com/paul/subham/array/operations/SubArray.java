@@ -7,11 +7,16 @@ import java.util.Map;
  * 1. Length of longest sub-array with sum K (brute-force)
  * 2. Length of longest sub-array with sum K (Using Hashing - storing prefix sum)
  * 3. Length of longest sub-array with sum K (2 Pointer - No negative number)
+ * 4. Largest Sum Contiguous Sub array (Improved)
+ * 5. Largest Sum Contiguous Sub array (Dynamic Programming)
+ * 6. Largest Sum Contiguous Sub array (Dynamic Programming - Space optimized)
+ * 7. Largest Sum Contiguous Sub array (Kadane's algorithm)
+ * 8. Print Largest Sum Contiguous Sub array (Kadane's algorithm)
  */
 public class SubArray {
     public static void main(String[] args) {
-        int[] a = {1, -1, 5, -2, 3};
-        System.out.println(lenOfLongestSubarray2Pointer(a, 3));
+        int[] a = {-2,1,-3,4,-1,2,1,-5,4};
+        printMaxContiguousSum(a, a.length);
     }
 
     /**
@@ -91,5 +96,104 @@ public class SubArray {
             }
         }
         return max;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Improved)
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int maxContiguousSumImproved(int[] a, int n) {
+        int maxSum = Integer.MIN_VALUE;
+        for(int i=0; i<n; i++) {
+            int sum = 0;
+            for(int j=i; j<n; j++) {
+                sum += a[j];
+                maxSum = Math.max(maxSum, sum);
+            }
+        }
+        return maxSum;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Dynamic Programming)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int maxContiguousSumDP(int[] a, int n) {
+        int[] dp = new int[n];
+        dp[0] = a[0];
+        int maxSum = dp[0];
+        for(int i=1; i<n; i++) {
+            dp[i] = Math.max(dp[i-1] + a[i], a[i]);
+            maxSum = Math.max(maxSum, dp[i]);
+        }
+        return maxSum;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Dynamic Programming - Space optimized)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int maxContiguousSumDPSpaceOptimized(int[] a, int n) {
+        int sum = a[0];
+        int maxSum = sum;
+        for(int i=1; i<n; i++) {
+            sum = Math.max(sum + a[i], a[i]);
+            maxSum = Math.max(maxSum, sum);
+        }
+        return maxSum;
+    }
+
+    /**
+     * Largest Sum Contiguous Sub array (Kadane's algorithm)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int maxContiguousSumKadane(int[] a, int n) {
+        int maxSum = Integer.MIN_VALUE;
+        int sum = 0;
+        for(int i=0; i<n; i++) {
+            sum += a[i];
+            maxSum = Math.max(sum, maxSum);
+            if(sum < 0) {
+                sum = 0;
+            }
+        }
+        return maxSum;
+    }
+
+    /**
+     * Print Largest Sum Contiguous Sub array (Kadane's algorithm)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void printMaxContiguousSum(int[] a, int n) {
+        int maxSum = Integer.MIN_VALUE;
+        int sum = 0;
+        int start = 0;
+        int ansStart = 0;
+        int ansEnd = 0;
+        for(int i=0; i<n; i++) {
+            sum += a[i];
+            if(sum > maxSum) {
+                maxSum = sum;
+                ansStart = start;
+                ansEnd = i;
+            }
+            if(sum < 0) {
+                sum = 0;
+                start = i+1;
+            }
+        }
+        for(int i=ansStart; i<=ansEnd; i++) {
+            System.out.print(a[i] + " ");
+        }
     }
 }
