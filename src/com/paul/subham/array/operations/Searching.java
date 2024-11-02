@@ -88,6 +88,7 @@ public class Searching {
     public static void main(String[] args) {
         int[] a = {3,1,2,5,3};
         int[] b = {3, 7, 9, 11};
+
         int[] res = findMissingRepeatingNumbers(a, 5);
         System.out.println(res[0] + " " + res[1]);
     }
