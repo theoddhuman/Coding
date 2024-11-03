@@ -12,6 +12,7 @@ import java.util.Map;
  * 6. Largest Sum Contiguous Sub array (Dynamic Programming - Space optimized)
  * 7. Largest Sum Contiguous Sub array (Kadane's algorithm)
  * 8. Print Largest Sum Contiguous Sub array (Kadane's algorithm)
+ * 9. Find maximum consecutive 1's in an array
  */
 public class SubArray {
     public static void main(String[] args) {
@@ -195,5 +196,25 @@ public class SubArray {
         for(int i=ansStart; i<=ansEnd; i++) {
             System.out.print(a[i] + " ");
         }
+    }
+
+    /**
+     * Find maximum consecutive 1's in an array
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int findMaxConsecutiveOnes(int[] nums) {
+        int maxCon = 0;
+        int count=0;
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i]==1) {
+                count++;
+            } else {
+                count=0;
+            }
+            maxCon = Math.max(count, maxCon);
+        }
+        return maxCon;
     }
 }

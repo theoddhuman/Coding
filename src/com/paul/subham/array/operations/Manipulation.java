@@ -2,23 +2,12 @@ package com.paul.subham.array.operations;
 
 import com.paul.subham.mathematics.Basic;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * @author subham.paul
  * <p>
- * 1. Rotating array to left (one by one)
- * 2. Rotating array to left (Using temporary array)
- * 3. Rotating array to left (Juggling algorithm)
- * 4. Rotating array to left (Reversal algorithm)
- * 5. Rotating array to left (Block swap algorithm recursive)
- * 6. Rotating array to left (Block swap algorithm iterative)
+ *
  * 7. Reverse an array (Iterative)
  * 8. Reverse an array (Recursive)
  * 9. Merge k sorted arrays (By sorting)
@@ -32,161 +21,27 @@ import java.util.Stack;
  * 17. Merge two sorted arrays
  * 18. Move zeros to end of an array
  * 19. Move zeros to end of an array (Single traversal)
- * 23. Delete array elements which are smaller than next or become smaller
- * 24. Delete array elements which are smaller than next or become smaller (Using stack)
- * 25. Next greater element with same set of digits
- * 28. Union of two sorted arrays
+ * 20. Delete array elements which are smaller than next or become smaller
+ * 21. Delete array elements which are smaller than next or become smaller (Using stack)
+ * 22. Next greater element with same set of digits
+ * 23. Union of two sorted arrays
+ * 24. Rearrange Array Elements by Sign I (Using Temporary array)
+ * 25. Rearrange Array Elements by Sign I (Space optimized)
+ * 26. Rearrange Array Elements by Sign II (Using Temporary array)
  */
 public class Manipulation {
     public static void main(String[] args) {
-        int[] a = {0,1,2,1,0,2};
+        int[] a = {2,3,4,2,1};
 //        int[] b = {3,4,11,23};
 //        int[] res = merge(a, b);
 
-        System.out.println();
+        System.out.println(Arrays.toString(nextGreaterSameSetDigits(a)));
 //        int[][] a = {{1, 3, 45, 46},
 //                {21, 34, 35, 89},
 //                {1, 2, 3, 11},
 //                {4, 6, 7, 8}};
 //        int[] output = mergeKSortedArraysPQ(a);
 //        System.out.println(Arrays.toString(output));
-    }
-
-    /**
-     * Rotating array to left (one by one)
-     * TC: O(n*d), d is no of rotations
-     * SC: O(1)
-     */
-    public static void rotateOneByOne(int[] a, int d) {
-        for (int i = 0; i < d; i++) {
-            leftRotateByOne(a, a.length);
-        }
-    }
-
-    private static void leftRotateByOne(int[] a, int n) {
-        int temp = a[0];
-        for (int i = 0; i < n - 1; i++) {
-            a[i] = a[i + 1];
-        }
-        a[n - 1] = temp;
-    }
-
-
-    /**
-     * Rotating array to left (Using temporary array)
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void rotateUsingTempArray(int a[], int d) {
-        int[] temp = new int[a.length];
-        int j = 0;
-        for (int i = d; i < a.length; i++) {
-            temp[j] = a[i];
-            j++;
-        }
-        for (int i = 0; i < d; i++) {
-            temp[j] = a[i];
-            j++;
-        }
-        for (int i = 0; i < a.length; i++) {
-            a[i] = temp[i];
-        }
-    }
-
-    /**
-     * Rotating array to left (Juggling algorithm)
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static void rotateJuggling(int[] a, int d) {
-        int n = a.length;
-        //to handle if d >= n
-        d = d % n;
-        int gcd = Basic.gcdUsingDivision(n, d);
-        int j, k;
-        for (int i = 0; i < gcd; i++) {
-            j = i;
-            int temp = a[i];
-            while (true) {
-                k = j + d;
-                if (k >= n) {
-                    k -= n;
-                }
-                if (k == i) {
-                    break;
-                }
-                a[j] = a[k];
-                j = k;
-            }
-            a[j] = temp;
-        }
-    }
-
-    /**
-     * Rotating array to left (Reversal algorithm)
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static void rotateReversal(int[] a, int d) {
-        reverseIterative(a, 0, d - 1);
-        reverseIterative(a, d, a.length - 1);
-        reverseIterative(a, 0, a.length - 1);
-    }
-
-    /**
-     * Rotating array to left (Block swap algorithm recursive)
-     * TC: O(n)
-     * SC: O(logn)
-     */
-    public static void rotateBlockSwapRecursive(int[] a, int d) {
-        rotateUtil(a, 0, a.length, d);
-    }
-
-    private static void rotateUtil(int[] a, int start, int size, int d) {
-        if(d==0 || d==size) {
-            return;
-        }
-        if(d == size - d) {
-            blockSwap(a, start, size-d+start, d);
-        } else if (d < size-d) {
-            blockSwap(a, start, size-d+start, d);
-            rotateUtil(a, start, size-d, d);
-        } else {
-            blockSwap(a, start, d+start, size-d);
-            //size - (size -d) = d, d - (size-d) = 2*d- size
-            rotateUtil(a, size-d+start, d, 2*d-size);
-        }
-    }
-
-    /**
-     * Rotating array to left (Block swap algorithm iterative)
-     * TC: O(n)
-     * SC: O(logn)
-     */
-    public static void rotateBlockSwapIterative(int[] a, int d) {
-        if(d==0 || d==a.length) {
-            return;
-        }
-        int i = d;
-        int j = a.length -d;
-        while(i != j) {
-            if(i < j) {
-                blockSwap(a, d-i, d+j-i, i);
-                j-=i;
-            } else {
-                blockSwap(a, d-i, d, j);
-                i-=j;
-            }
-        }
-        blockSwap(a, d-i, d, i);
-    }
-
-    private static void blockSwap(int[] a, int startL, int startR, int d) {
-        for(int i=0; i<d; i++) {
-            int temp = a[startL + i];
-            a[startL + i] = a[startR + i];
-            a[startR + i] = temp;
-        }
     }
 
     /**
@@ -551,8 +406,8 @@ public class Manipulation {
     }
 
     /**
-     * Next greater element with same set of digits
-     * 2,3,4,2,1 -> 4,1,2,2,3
+     * Next greater element with same set of digits (Next permutation)
+     * 2,3,4,2,1 -> 2,4,1,2,3
      *
      * TC: O(n)
      * SC: O(1)
@@ -560,12 +415,14 @@ public class Manipulation {
     public static int[] nextGreaterSameSetDigits(int[] a) {
         int x = -1;
         int n = a.length;
+        //find digit which is smaller than the next digit
         for (int i = n - 1; i > 0; i--) {
             if (a[i] > a[i - 1]) {
                 x = i - 1;
                 break;
             }
         }
+        //swap a[x] till it is greater than next
         for (int i = n - 1; i > x && x != -1; i--) {
             if (a[i] > a[x]) {
                 int temp = a[x];
@@ -574,6 +431,7 @@ public class Manipulation {
                 break;
             }
         }
+        //reverse later part of the x as it can be ascending
         int low = x + 1;
         int high = n - 1;
         while (low < high) {
@@ -625,5 +483,96 @@ public class Manipulation {
 
         }
         return list;
+    }
+
+    /**
+     * Rearrange Array Elements by Sign I (Using Temporary array)
+     *
+     * There’s an array ‘A’ of size ‘N’ with an equal number of positive and negative elements.
+     * Without altering the relative order of positive and negative elements,
+     * you must return an array of alternately positive and negative values.
+     *
+     * Note: Start the array with positive elements.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int[] rearrangeArray(int[] nums) {
+        List<Integer> pList = new ArrayList<>();
+        List<Integer> nList = new ArrayList<>();
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] < 0) {
+                nList.add(nums[i]);
+            } else {
+                pList.add(nums[i]);
+            }
+        }
+        for(int i=0; i<nums.length/2; i++) {
+            nums[2*i] = pList.get(i);
+            nums[2*i+1] = nList.get(i);
+        }
+        return nums;
+    }
+
+    /**
+     * Rearrange Array Elements by Sign I (Space optimized)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int[] rearrangeArrayOpt(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        int pIndex = 0;
+        int nIndex = 1;
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] < 0) {
+                ans[nIndex] = nums[i];
+                nIndex += 2;
+            } else {
+                ans[pIndex] = nums[i];
+                pIndex += 2;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * Rearrange Array Elements by Sign II (Using Temporary array)
+     *
+     * There’s an array ‘A’ of size ‘N’ with positive and negative elements (not necessarily equal).
+     * Without altering the relative order of positive and negative elements,
+     * you must return an array of alternately positive and negative values.
+     * The leftover elements should be placed at the very end in the same order as in array A.
+     *
+     * Note: Start the array with positive elements.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int[] alternateNumbers(int []nums) {
+        List<Integer> pList = new ArrayList<>();
+        List<Integer> nList = new ArrayList<>();
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] < 0) {
+                nList.add(nums[i]);
+            } else {
+                pList.add(nums[i]);
+            }
+        }
+        int pIndex = 0;
+        int nIndex = 0;
+        int i = 0;
+        while(pIndex < pList.size() && nIndex < nList.size()) {
+            nums[i++] = pList.get(pIndex++);
+            nums[i++] = nList.get(nIndex++);
+        }
+        while(pIndex < pList.size()) {
+            nums[i++] = pList.get(pIndex++);
+        }
+        while(nIndex < nList.size()) {
+            nums[i++] = nList.get(nIndex++);
+        }
+        return nums;
     }
 }

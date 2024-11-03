@@ -81,7 +81,9 @@ import java.util.*;
  * 72. Find repeated and missing number (Array manipulation)
  * 73. Find repeated and missing number (Mathematics)
  * 74. Find repeated and missing number (Using XOR)
- * 75. Find maximum consecutive 1's in an array
+ * 75. Print all elements greater than or equal to right side elements
+ * 76. Print all elements greater than or equal to right side elements (Using extra space)
+ *
  *
  */
 public class Searching {
@@ -1851,23 +1853,52 @@ public class Searching {
     }
 
     /**
-     * Find maximum consecutive 1's in an array
+     * Print all elements greater than or equal to right side elements
      *
-     * TC: O(n)
+     * TC: O(n^2)
      * SC: O(1)
      */
-    public static int findMaxConsecutiveOnes(int[] nums) {
-        int maxCon = 0;
-        int count=0;
-        for(int i=0; i<nums.length; i++) {
-            if(nums[i]==1) {
-                count++;
-            } else {
-                count=0;
+    public static ArrayList<Integer> leaders(int[] a) {
+        int n = a.length;
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i=0; i<n; i++) {
+            boolean leader = true;
+            for(int j=i+1; j<n; j++) {
+                if(a[j] > a[i]) {
+                    leader = false;
+                    break;
+                }
             }
-            maxCon = Math.max(count, maxCon);
+            if(leader) {
+                list.add(a[i]);
+            }
         }
-        return maxCon;
+        return list;
+    }
+
+    /**
+     * Print all elements greater than or equal to right side elements (Using extra space)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static ArrayList<Integer> leadersSpace(int a[]) {
+        // code here
+        int n = a.length;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(a[n-1]);
+        int max = a[n-1];
+        for(int i=n-2; i>=0; i--) {
+            if(a[i] >= max) {
+                stack.push(a[i]);
+                max = a[i];
+            }
+        }
+        ArrayList<Integer> list = new ArrayList<>();
+        while(!stack.isEmpty()) {
+            list.add(stack.pop());
+        }
+        return list;
     }
 
 
