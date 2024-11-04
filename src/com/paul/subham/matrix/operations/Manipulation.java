@@ -107,7 +107,7 @@ public class Manipulation {
      * take a variable c0.
      *
      * TC: O(n^2)
-     * SC: O(n)
+     * SC: O(1)
      */
     public void setZeroes(int[][] a) {
         int m = a.length;
@@ -122,7 +122,6 @@ public class Manipulation {
                     } else {
                         a[0][j] = 0;
                     }
-
                 }
             }
         }
