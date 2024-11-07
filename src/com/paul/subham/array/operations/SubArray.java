@@ -13,6 +13,8 @@ import java.util.Map;
  * 7. Largest Sum Contiguous Sub array (Kadane's algorithm)
  * 8. Print Largest Sum Contiguous Sub array (Kadane's algorithm)
  * 9. Find maximum consecutive 1's in an array
+ * 10. Count sub arrays sum equal to k
+ * 11. Count sub arrays sum equal to k (Using Hashing - storing prefix sum)
  */
 public class SubArray {
     public static void main(String[] args) {
@@ -216,5 +218,50 @@ public class SubArray {
             maxCon = Math.max(count, maxCon);
         }
         return maxCon;
+    }
+
+    /**
+     * Count sub arrays sum equal to k
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int countSubArraySum(int[] a, int k) {
+        int n = a.length;
+        int count = 0;
+        for(int i=0; i<n; i++) {
+            int sum = 0;
+            for(int j=i;j<n;j++) {
+                sum += a[j];
+                if(sum == k) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Count sub arrays sum equal to k (Using Hashing - storing prefix sum)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int countSubArraySumPrefixSum(int[] a, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int sum = 0;
+        int count = 0;
+        for(int i=0; i<a.length; i++) {
+            sum += a[i];
+            if(sum == k) {
+                count++;
+            }
+            int rem = sum - k;
+            if(map.containsKey(rem)) {
+                count += map.get(rem);
+            }
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return count;
     }
 }
