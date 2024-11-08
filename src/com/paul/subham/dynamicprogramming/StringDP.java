@@ -1,6 +1,8 @@
 package com.paul.subham.dynamicprogramming;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 1. Longest common subsequence (Memoization)
@@ -23,6 +25,8 @@ import java.util.Arrays;
  * 18. Wildcard matching (Memoization)
  * 19. Wildcard matching (Tabulation)
  * 20. Wildcard matching (Tabulation - Space optimized)
+ * 21. Palindrome Partitioning - list of all partitions (Recursion)
+ * 22. Palindrome Partitioning - list of all partitions (Memoization)
  */
 public class StringDP {
     public static void main(String[] args) {
@@ -586,5 +590,85 @@ public class StringDP {
             System.arraycopy(cur,0,pre,0,n+1);
         }
         return pre[n];
+    }
+
+    /**
+     * Palindrome Partitioning - list of all partitions (Recursion)
+     *
+     * You are given a string s, partition it in such a way that every substring is a palindrome.
+     * Return all such palindromic partitions of s.
+     *
+     * TC: O(2^n)(k)(n/2) = O(nkn^2) n/2 -> palindrome checking, 2^n -> total no of possible strings, k-> avg count of sub strings in a list
+     * SC: O(n)
+     */
+    public static List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        partition(s,0,new ArrayList<>(),res);
+        return res;
+    }
+
+    private static void partition(String s, int i, List<String> list, List<List<String>> res) {
+        if(i==s.length()) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        for(int k=i; k<s.length(); k++) {
+            String sub = s.substring(i,k+1);
+            if(isPalindrome(sub)) {
+                list.add(sub);
+                partition(s,k+1,list,res);
+                list.remove(list.size()-1);
+            }
+        }
+    }
+
+    private static boolean isPalindrome(String s ) {
+        int n = s.length();
+        for(int i=0; i<n/2;i++) {
+            if(s.charAt(i) != s.charAt(n-1-i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Palindrome Partitioning - list of all partitions (Memoization)
+     *
+     * TC: O(n^2)(k)(n/2) = O(n^3)
+     * SC: O(n^2)
+     */
+    public static List<List<String>> partitionMem(String s) {
+        List<List<String>> res = new ArrayList<>();
+        Boolean[][] dp = new Boolean[s.length()][s.length()];
+        partition(s,0,new ArrayList<>(),res,dp);
+        return res;
+    }
+
+    private static void partition(String s, int i, List<String> list, List<List<String>> res, Boolean[][] dp) {
+        if(i==s.length()) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        for(int k=i; k<s.length(); k++) {
+            if(isPalindrome(s, i, k, dp)) {
+                list.add(s.substring(i,k+1));
+                partition(s,k+1,list,res,dp);
+                list.remove(list.size()-1);
+            }
+        }
+    }
+
+    private static boolean isPalindrome(String s, int i, int j, Boolean[][] dp) {
+        if(dp[i][j] != null) {
+            return dp[i][j];
+        }
+        int n = s.length();
+        for(int k=i; k<=(i+j)/2;k++) {
+            if(s.charAt(k) != s.charAt((i+j-k))) {
+                return dp[i][j] = false;
+            }
+        }
+        return dp[i][j] = true;
     }
 }
