@@ -10,6 +10,7 @@ import java.util.*;
  * 5. Word break (Backtracking, hashing, Memoization)
  * 6. Word break (Backtracking, hashing, Tabulation)
  * 7. M-coloring graph
+ * 8. Sudoku solver
  */
 public class Backtracking {
     public static void main(String[] args) {
@@ -311,6 +312,47 @@ public class Backtracking {
     private static boolean isSafe(List<List<Integer>> adj, int c, int s, int[] color) {
         for(Integer i : adj.get(s)) {
             if(color[i] == c) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Sudoku solver
+     *
+     * TC: O(9^(n^2))
+     * SC: O(1)
+     */
+    private static boolean solve(char[][] board) {
+        for(int i=0; i<9; i++) {
+            for(int j=0; j<9; j++) {
+                if(board[i][j] == '.') {
+                    for(char k = '1'; k<='9'; k++) {
+                        if(isValid(board,i,j,k)) {
+                            board[i][j] = k;
+                            if(solve(board)) {
+                                return true;
+                            }
+                            board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean isValid(char[][] board, int row, int col, char c) {
+        for(int i=0; i<9; i++) {
+            if(board[row][i] == c) {
+                return false;
+            }
+            if(board[i][col] == c) {
+                return false;
+            }
+            if(board[3*(row/3) + i/3][3*(col/3) + i%3]==c) {
                 return false;
             }
         }
