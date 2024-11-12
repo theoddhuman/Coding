@@ -38,61 +38,47 @@ import java.util.*;
  * 29. Finding an element which appears odd no of times in an array (Binary search)
  * 30. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Recursive)
  * 31. Finding maximum in an array which is increasing then decreasing (Bitonic Search - Iterative)
- * 32. Searching an element in sorted and rotated array (Using pivot)
- * 33. Maximum in sorted and rotated array (Binary Search)
- * 34. Searching an element in sorted and rotated array (Binary Search - Recursive)
- * 35. Searching an element in sorted and rotated array (Binary Search - Iterative)
- * 36. Median of sequence of elements
- * 37. First occurrence of an element in an array (Binary Search - Recursive)
- * 38. First occurrence of an element in an array (Binary Search - Iterative)
- * 39. Last occurrence of an element in an array (Binary Search - Recursive)
- * 40. Last occurrence of an element in an array (Binary Search - Iterative)
- * 41. Count no of occurrences of an element in an array (Linear search)
- * 42. Count no of occurrences of an element in an array (Binary Search)
- * 43. Count no of occurrences of an element in an array (Binary Search - improved)
- * 44. Find smallest and second-smallest elements in an array (Sorting)
- * 45. Find smallest and second-smallest elements in an array (Scanning twice)
- * 46. Find smallest and second-smallest elements in an array (Scanning once)
- * 47. Find smallest and second-smallest elements in an array (Using priority queue)
- * 48. Find the smallest element in sorted and rotated array (Binary search - iterative)
- * 49. Find the smallest element in sorted and rotated array (Binary search - recursive)
- * 50. Majority element of an array
- * 51. Majority element of an array (Using binary search tree)
- * 52. Majority element of an array (Using sorting)
- * 53. Majority element of an array (Moore's Voting algorithm)
- * 54. Majority element of an array (Using hashing)
- * 55. Majority element of an array (Using bit manipulation)
- * 56. The second-largest element of an array (Using tournament tree)
- * 57. Print all pairs with given sum in an array (Hashing)
- * 58. Print all pairs with given sum in an array (Two Pointer)
- * 59. Median of two sorted arrays (Merging)
- * 60. Median of two sorted arrays of same size (Count while merging)
- * 61. Median of two sorted arrays of same size (Binary search)
- * 62. Median of two sorted arrays of different size (Count while merging)
- * 63. Median of two sorted arrays of different size (Binary search)
- * 64. Local minima of an array (Binary search - recursive)
- * 65. Local minima of an array (Binary search - iterative)
- * 66. Pairs with given sum in a sorted and rotated array
- * 67. Pairs with given sum in a sorted and rotated array (Max using Binary Search)
- * 68. Count pairs with given sum in a sorted and rotated array (Max using Binary Search)
- * 69. Search an element in infinite array
- * 70. Find repeated and missing number (Brute force)
- * 71. Find repeated and missing number (Hashing)
- * 72. Find repeated and missing number (Array manipulation)
- * 73. Find repeated and missing number (Mathematics)
- * 74. Find repeated and missing number (Using XOR)
- * 75. Print all elements greater than or equal to right side elements
- * 76. Print all elements greater than or equal to right side elements (Using extra space)
+ * 32. Median of sequence of elements
+ * 33. Find smallest and second-smallest elements in an array (Sorting)
+ * 34. Find smallest and second-smallest elements in an array (Scanning twice)
+ * 35. Find smallest and second-smallest elements in an array (Scanning once)
+ * 36. Find smallest and second-smallest elements in an array (Using priority queue)
+ * 37. Find the smallest element in sorted and rotated array (Binary search - iterative)
+ * 38. Find the smallest element in sorted and rotated array (Binary search - recursive)
+ * 39. Majority element of an array
+ * 40. Majority element of an array (Using binary search tree)
+ * 41. Majority element of an array (Using sorting)
+ * 42. Majority element of an array (Moore's Voting algorithm)
+ * 43. Majority element of an array (Using hashing)
+ * 44. Majority element of an array (Using bit manipulation)
+ * 45. The second-largest element of an array (Using tournament tree)
+ * 46. Print all pairs with given sum in an array (Hashing)
+ * 47. Print all pairs with given sum in an array (Two Pointer)
+ * 48. Median of two sorted arrays (Merging)
+ * 49. Median of two sorted arrays of same size (Count while merging)
+ * 50. Median of two sorted arrays of same size (Binary search)
+ * 51. Median of two sorted arrays of different size (Count while merging)
+ * 52. Median of two sorted arrays of different size (Binary search)
+ * 53. Pairs with given sum in a sorted and rotated array
+ * 54. Pairs with given sum in a sorted and rotated array (Max using Binary Search)
+ * 55. Count pairs with given sum in a sorted and rotated array (Max using Binary Search)
+ * 56. Search an element in infinite array
+ * 57. Find repeated and missing number (Brute force)
+ * 58. Find repeated and missing number (Hashing)
+ * 59. Find repeated and missing number (Array manipulation)
+ * 60. Find repeated and missing number (Mathematics)
+ * 61. Find repeated and missing number (Using XOR)
+ * 62. Print all elements greater than or equal to right side elements
+ * 63. Print all elements greater than or equal to right side elements (Using extra space)
  *
  *
  */
 public class Searching {
     public static void main(String[] args) {
-        int[] a = {3,1,2,5,3};
+        int[] a = {1,2,2,3,4,4,5};
         int[] b = {3, 7, 9, 11};
 
         int[] res = findMissingRepeatingNumbers(a, 5);
-        System.out.println(res[0] + " " + res[1]);
     }
 
     /**
@@ -732,112 +718,6 @@ public class Searching {
     }
 
     /**
-     * Searching an element in sorted and rotated array (Using pivot)
-     * <p>
-     * TC: O(logn)
-     * SC: O(logn)
-     */
-    public static int searchSortedAndRotatedPivot(int[] a, int data) {
-        int pivot = findPivot(a, 0, a.length - 1);
-        if (pivot == -1) {
-            return BinarySearch.searchRecursive(a, 0, a.length - 1, data);
-        }
-        if (a[pivot] == data) {
-            return pivot;
-        }
-        if (a[0] <= data) {
-            return BinarySearch.searchRecursive(a, 0, pivot - 1, data);
-        } else {
-            return BinarySearch.searchRecursive(a, pivot + 1, a.length - 1, data);
-        }
-    }
-
-    /**
-     * Maximum in sorted and rotated array (Binary Search)
-     * <p>
-     * TC: O(logn)
-     * SC: O(logn)
-     */
-    private static int findPivot(int[] a, int low, int high) {
-        if (low > high) {
-            return -1;
-        }
-        if (low == high) {
-            return low;
-        }
-        int mid = low + (high - low) / 2;
-        if (mid < high && a[mid] > a[mid + 1]) {
-            return mid;
-        }
-        if (mid > low && a[mid] < a[mid - 1]) {
-            return mid - 1;
-        }
-        if (a[low] >= a[mid]) {
-            return findPivot(a, low, mid - 1);
-        } else {
-            return findPivot(a, mid + 1, high);
-        }
-    }
-
-    /**
-     * Searching an element in sorted and rotated array (Binary Search - Recursive)
-     * <p>
-     * TC: O(logn)
-     * SC: O(logn)
-     */
-    public static int searchSortedAndRotatedBinaryRecursive(int[] a, int data, int low, int high) {
-        if (low > high) {
-            return -1;
-        }
-        int mid = low + (high - low) / 2;
-        if (a[mid] == data) {
-            return mid;
-        }
-        if (a[low] <= a[mid]) {
-            if (a[low] <= data && data < a[mid]) {
-                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid - 1);
-            } else {
-                return searchSortedAndRotatedBinaryRecursive(a, data, mid + 1, high);
-            }
-        } else {
-            if (a[mid] < data && data <= a[high]) {
-                return searchSortedAndRotatedBinaryRecursive(a, data, mid + 1, high);
-            } else {
-                return searchSortedAndRotatedBinaryRecursive(a, data, low, mid - 1);
-            }
-        }
-    }
-
-    /**
-     * Searching an element in sorted and rotated array (Binary Search - Iterative)
-     * <p>
-     * TC: O(logn)
-     * SC: O(1)
-     */
-    public static int searchSortedAndRotatedBinaryIterative(int[] a, int data, int low, int high) {
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if (a[mid] == data) {
-                return mid;
-            }
-            if (a[low] <= a[mid]) {
-                if (a[low] <= data && data < a[mid]) {
-                    high = mid - 1;
-                } else {
-                    low = mid + 1;
-                }
-            } else {
-                if (a[mid] < data && data <= a[high]) {
-                    low = mid + 1;
-                } else {
-                    high = mid - 1;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
      * Median of sequence of elements
      * <p>
      * TC: O(1)
@@ -850,90 +730,6 @@ public class Searching {
         } else {
             return (double) (a[(n - 1) / 2] + a[n / 2]) / 2.0;
         }
-    }
-
-    /**
-     * First occurrence of an element in an array (Binary Search - Recursive)
-     * <p>
-     * TC: O(logn)
-     * SC: O(logn)
-     */
-    public static int firstOccurrenceRecursive(int[] a, int low, int high, int data) {
-        if (low > high) {
-            return -1;
-        }
-        int mid = low + (high - low) / 2;
-        if ((mid == low && a[mid] == data) || (a[mid] == data && a[mid - 1] < data)) {
-            return mid;
-        } else if (a[mid] >= data) {
-            return firstOccurrenceRecursive(a, low, mid - 1, data);
-        } else {
-            return firstOccurrenceRecursive(a, mid + 1, high, data);
-        }
-    }
-
-    /**
-     * First occurrence of an element in an array (Binary Search - Iterative)
-     * <p>
-     * TC: O(logn)
-     * SC: O(1)
-     */
-    public static int firstOccurrenceIterative(int[] a, int data) {
-        int low = 0;
-        int high = a.length - 1;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if ((mid == low && a[mid] == data) || (a[mid] == data && a[mid - 1] < data)) {
-                return mid;
-            } else if (a[mid] >= data) {
-                high = mid - 1;
-            } else {
-                low = mid + 1;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Last occurrence of an element in an array (Binary Search - Recursive)
-     * <p>
-     * TC: O(logn)
-     * SC: O(logn)
-     */
-    public static int lastOccurrenceRecursive(int[] a, int low, int high, int data) {
-        if (low > high) {
-            return -1;
-        }
-        int mid = low + (high - low) / 2;
-        if ((mid == high && a[mid] == data) || (a[mid] == data && a[mid + 1] > data)) {
-            return mid;
-        } else if (a[mid] >= data) {
-            return lastOccurrenceRecursive(a, low, mid - 1, data);
-        } else {
-            return lastOccurrenceRecursive(a, mid + 1, high, data);
-        }
-    }
-
-    /**
-     * Last occurrence of an element in an array (Binary Search - Iterative)
-     * <p>
-     * TC: O(logn)
-     * SC: O(1)
-     */
-    public static int lastOccurrenceIterative(int[] a, int data) {
-        int low = 0;
-        int high = a.length - 1;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if ((mid == high && a[mid] == data) || (a[mid] == data && a[mid + 1] > data)) {
-                return mid;
-            } else if (a[mid] >= data) {
-                high = mid - 1;
-            } else {
-                low = mid + 1;
-            }
-        }
-        return -1;
     }
 
     /**
@@ -981,11 +777,11 @@ public class Searching {
      * SC: O(1)
      */
     public static int countOccurrencesBinarySearchImproved(int[] a, int data) {
-        int firstIndex = firstOccurrenceIterative(a, data);
+        int firstIndex = BinarySearch.firstOccurrenceIterative(a, data);
         if (firstIndex == -1) {
             return 0;
         }
-        int lastIndex = lastOccurrenceIterative(a, data);
+        int lastIndex = BinarySearch.lastOccurrenceIterative(a, data);
         return lastIndex - firstIndex + 1;
     }
 
@@ -1549,52 +1345,6 @@ public class Searching {
         return Integer.MIN_VALUE;
     }
 
-    /**
-     * Local minima of an array (Binary search - recursive)
-     *
-     * TC: O(logn)
-     * SC: O(logn)
-     */
-    public static int localMinima(int[] a) {
-        return localMinimaUtil(a, 0, a.length-1, a.length);
-    }
-
-    private static int localMinimaUtil(int[] a, int low, int high, int n) {
-        if(low > high) {
-            return Integer.MIN_VALUE;
-        }
-        int mid = (low + high)/2;
-        if((mid == 0 || a[mid-1] > a[mid]) && (mid == n-1 || a[mid] < a[mid+1])) {
-            return a[mid];
-        }
-        if(mid > 0 && a[mid-1] < a[mid]) {
-            return localMinimaUtil(a, low, mid-1, n);
-        }
-        return localMinimaUtil(a, mid+1, high, n);
-    }
-
-    /**
-     * Local minima of an array (Binary search - iterative)
-     *
-     * TC: O(logn)
-     * SC: O(1)
-     */
-    public static int localMinimaIterative(int[] a) {
-        int low = 0;
-        int high = a.length-1;
-        while(low <= high) {
-            int mid = (low + high)/2;
-            if((mid == 0 || a[mid-1] > a[mid]) && (mid == a.length-1 || a[mid] < a[mid+1])) {
-                return a[mid];
-            }
-            if(mid > 0 && a[mid-1] < a[mid]) {
-                high = mid-1;
-            } else {
-                low = mid+1;
-            }
-        }
-        return Integer.MIN_VALUE;
-    }
 
     /**
      * Pairs with given sum in a sorted and rotated array
@@ -1635,7 +1385,7 @@ public class Searching {
      * SC: O(logn)
      */
     public static void pairSumSortedRotatedBinary(int[] a, int sum, int n) {
-        int i = findPivot(a, 0, n-1);
+        int i = BinarySearch.findPivot(a, 0, n-1);
         int left = (i + 1) % n;
         int right = i;
         while (left != right) {
@@ -1662,7 +1412,7 @@ public class Searching {
      * SC: O(logn)
      */
     public static int countPairSumSortedRotatedBinary(int[] a, int sum, int n) {
-        int i = findPivot(a, 0, n-1);
+        int i = BinarySearch.findPivot(a, 0, n-1);
         int left = (i + 1) % n;
         int right = i;
         int count = 0;
