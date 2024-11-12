@@ -1,6 +1,6 @@
 package com.paul.subham.array.operations;
 
-import com.paul.subham.searching.BinarySearch;
+import com.paul.subham.searching.binarysearch.OneD;
 import com.paul.subham.tree.implementation.tournament.TNode;
 import com.paul.subham.tree.implementation.tournament.TournamentTree;
 
@@ -216,7 +216,7 @@ public class Searching {
     public static int getMissingNumberSorting(int[] a) {
         Arrays.sort(a);
         for (int i = 1; i <= a.length + 1; i++) {
-            int index = BinarySearch.search(a, a.length, i);
+            int index = OneD.search(a, a.length, i);
             if (index == -1) {
                 return i;
             }
@@ -457,7 +457,7 @@ public class Searching {
         Arrays.sort(a);
         for (int i = 0; i < a.length; i++) {
             int searchKey = k - a[i];
-            int searchIndex = BinarySearch.searchRecursive(a, i + 1, a.length - 1, searchKey);
+            int searchIndex = OneD.searchRecursive(a, i + 1, a.length - 1, searchKey);
             if (searchIndex != -1) {
                 System.out.println(a[i] + " " + a[searchIndex]);
                 return;
@@ -755,7 +755,7 @@ public class Searching {
      * SC: O(1)
      */
     public static int countOccurrencesBinarySearch(int[] a, int data) {
-        int index = BinarySearch.search(a, a.length, data);
+        int index = OneD.search(a, a.length, data);
         int count = 1;
         int left = index - 1;
         while (left >= 0 && a[left] == data) {
@@ -777,11 +777,11 @@ public class Searching {
      * SC: O(1)
      */
     public static int countOccurrencesBinarySearchImproved(int[] a, int data) {
-        int firstIndex = BinarySearch.firstOccurrenceIterative(a, data);
+        int firstIndex = OneD.firstOccurrenceIterative(a, data);
         if (firstIndex == -1) {
             return 0;
         }
-        int lastIndex = BinarySearch.lastOccurrenceIterative(a, data);
+        int lastIndex = OneD.lastOccurrenceIterative(a, data);
         return lastIndex - firstIndex + 1;
     }
 
@@ -1385,7 +1385,7 @@ public class Searching {
      * SC: O(logn)
      */
     public static void pairSumSortedRotatedBinary(int[] a, int sum, int n) {
-        int i = BinarySearch.findPivot(a, 0, n-1);
+        int i = OneD.findPivot(a, 0, n-1);
         int left = (i + 1) % n;
         int right = i;
         while (left != right) {
@@ -1412,7 +1412,7 @@ public class Searching {
      * SC: O(logn)
      */
     public static int countPairSumSortedRotatedBinary(int[] a, int sum, int n) {
-        int i = BinarySearch.findPivot(a, 0, n-1);
+        int i = OneD.findPivot(a, 0, n-1);
         int left = (i + 1) % n;
         int right = i;
         int count = 0;
@@ -1449,7 +1449,7 @@ public class Searching {
             high *=2;
             val = a[high];
         }
-        return BinarySearch.searchRecursive(a, low, high, data);
+        return OneD.searchRecursive(a, low, high, data);
     }
 
     /**

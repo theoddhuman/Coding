@@ -1,4 +1,4 @@
-package com.paul.subham.searching;
+package com.paul.subham.searching.binarysearch;
 
 /**
  * 1. binary search iterative
@@ -31,7 +31,7 @@ package com.paul.subham.searching;
  * 25. Local minima of an array (Binary search - recursive)
  * 26. Local minima of an array (Binary search - iterative)
  */
-public class BinarySearch {
+public class OneD {
     public static void main(String[] args) {
         int[] a = {1,2,3,4,5,6};
         System.out.println(searchRecursive(a, 0, a.length-1, 5));
@@ -319,7 +319,7 @@ public class BinarySearch {
      * SC: O(1)
      */
     public static int countOccurrencesBinarySearch(int[] a, int data) {
-        int index = BinarySearch.search(a, a.length, data);
+        int index = OneD.search(a, a.length, data);
         int count = 1;
         int left = index - 1;
         while (left >= 0 && a[left] == data) {
@@ -358,15 +358,15 @@ public class BinarySearch {
     public static int searchSortedAndRotatedPivot(int[] a, int data) {
         int pivot = findPivot(a, 0, a.length - 1);
         if (pivot == -1) {
-            return BinarySearch.searchRecursive(a, 0, a.length - 1, data);
+            return OneD.searchRecursive(a, 0, a.length - 1, data);
         }
         if (a[pivot] == data) {
             return pivot;
         }
         if (a[0] <= data) {
-            return BinarySearch.searchRecursive(a, 0, pivot - 1, data);
+            return OneD.searchRecursive(a, 0, pivot - 1, data);
         } else {
-            return BinarySearch.searchRecursive(a, pivot + 1, a.length - 1, data);
+            return OneD.searchRecursive(a, pivot + 1, a.length - 1, data);
         }
     }
 
