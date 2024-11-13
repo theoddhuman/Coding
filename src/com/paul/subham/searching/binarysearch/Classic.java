@@ -7,6 +7,8 @@ package com.paul.subham.searching.binarysearch;
  * 4. Minimum days to make M bouquets
  * 5. Smallest Divisor Given a Threshold
  * 6. Capacity to Ship Packages within D Days
+ * 7. Find kth missing positive number
+ * 8. Find kth missing positive number (Binary Search)
  */
 public class Classic {
     public static void main(String[] args) {
@@ -253,5 +255,49 @@ public class Classic {
             }
         }
         return days;
+    }
+
+    /**
+     * Find kth missing positive number
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public int findKthPositive(int[] a, int k) {
+        for(int i=0; i<a.length; i++) {
+            if(a[i] <= k) {
+                k++;
+            } else {
+                break;
+            }
+        }
+        return k;
+    }
+
+    /**
+     * Find kth missing positive number (Binary Search)
+     *
+     * high < low changes polarity
+     * ans = a[high] + (k-missing till high)
+     *     = a[high] + (k- (a[high] - (high+1))
+     *     = high + k + 1
+     *     = k + low
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public int findKthPositiveBinarySearch(int[] a, int k) {
+        int low = 0;
+        int high = a.length-1;
+        while(low <= high) {
+            int mid = (low+high)/2;
+            int missing = a[mid] - (mid+1);
+            if(missing < k) {
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return k+low;
     }
 }

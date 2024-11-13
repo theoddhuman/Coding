@@ -15,6 +15,7 @@ import java.util.Set;
  * 2. nth node from end (recursive)
  * 3. Middle of a linked list using hashing
  * 4. Middle of a linked list (efficient approach)
+ * 5. Middle of a linked list (Tortoise hare method)
  * 5. Search an element in a linked list (extra space)
  * 6. Search an element in a linked list (Iterative)
  * 7. Search an element in a linked list (Recursive)
@@ -147,6 +148,27 @@ public class Search {
             }
         }
         return ptr2.data;
+    }
+
+    /**
+     * Middle of a linked list (Tortoise hare method)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public Node middleNode(Node head) {
+        Node fast = head;
+        Node slow = head;
+
+        while(fast.next != null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        if(fast.next!=null)
+            return slow.next;
+
+        return slow;
     }
 
     /**
