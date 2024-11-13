@@ -1,5 +1,7 @@
 package com.paul.subham.searching.binarysearch;
 
+import java.util.Arrays;
+
 /**
  * 1. Square root of a number
  * 2. Nth root of a number using binary search
@@ -9,6 +11,9 @@ package com.paul.subham.searching.binarysearch;
  * 6. Capacity to Ship Packages within D Days
  * 7. Find kth missing positive number
  * 8. Find kth missing positive number (Binary Search)
+ * 9. Aggressive Cows
+ * 10. Allocate Minimum Number of Pages
+ * 11. Split array - largest sum
  */
 public class Classic {
     public static void main(String[] args) {
@@ -299,5 +304,148 @@ public class Classic {
             }
         }
         return k+low;
+    }
+
+    /**
+     * Aggressive Cows
+     *
+     * You are given an array 'arr' of size 'n' which denotes the position of stalls.
+     * You are also given an integer 'k' which denotes the number of aggressive cows.
+     * You are given the task of assigning stalls to 'k' cows such that the minimum distance between any two of them is the maximum possible.
+     * Find the maximum possible minimum distance.
+     *
+     * Input: N = 6, k = 4, arr[] = {0,3,4,7,10,9}
+     * Output: 3
+     *
+     * TC: O(nlogn + nlog(max-min))
+     * SC: O(1)
+     */
+    public static int aggressiveCows(int[] stalls, int k) {
+        Arrays.sort(stalls);
+        int low = 1;
+        int high = stalls[stalls.length-1] - stalls[0];
+        int ans = 1;
+        while(low <= high) {
+            int mid = (low+high)/2;
+            if(isPossible(stalls, k, mid)) {
+                ans = mid;
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return ans;
+    }
+
+    private static boolean isPossible(int[] stalls, int cows, int minDist) {
+        int cowCount = 1;
+        int last = stalls[0];
+        for(int i=1; i<stalls.length; i++) {
+            if(stalls[i] - last >= minDist) {
+                cowCount++;
+                last = stalls[i];
+            }
+        }
+        return cowCount >= cows;
+    }
+
+    /**
+     * Allocate Minimum Number of Pages
+     *
+     * Given an array ‘arr of integer numbers, ‘ar[i]’ represents the number of pages in the ‘i-th’ book.
+     * There are a ‘m’ number of students, and the task is to allocate all the books to the students.
+     *
+     * Allocate books in such a way that:
+     * a. Each student gets at least one book.
+     * b. Each book should be allocated to only one student.
+     * c. Book allocation should be in a contiguous manner.
+     *
+     * You have to allocate the book to ‘m’ students such that the maximum number of pages assigned to a student is minimum.
+     * If the allocation of books is not possible. return -1
+     *
+     * TC: O(nlog(total-max))
+     * SC: O(1)
+     */
+    public static int findPages(int[] books, int n, int m) {
+        if(m > n) {
+            return -1;
+        }
+        int low = books[0];
+        int high = books[0];
+        for(int i=1; i<n; i++) {
+            high += books[i];
+            low = Math.max(low, books[i]);
+        }
+        while(low <= high) {
+            int mid = (low+high)/2;
+            int studentCount = studentCount(books, n, mid);
+            if(studentCount > m) {
+                low = mid +1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return low;
+    }
+
+    private static int studentCount(int[] books, int n, int pages) {
+        int student = 1;
+        int totalPage = 0;
+        for(int i=0; i<n; i++) {
+            if(books[i] + totalPage <= pages) {
+                totalPage += books[i];
+            } else {
+                student++;
+                totalPage = books[i];
+            }
+        }
+        return student;
+    }
+
+    /**
+     * Split array - largest sum
+     *
+     * Given an integer array ‘A’ of size ‘N’ and an integer ‘K'.
+     * Split the array ‘A’ into ‘K’ non-empty subarrays such that the largest sum of any subarray is minimized.
+     * Your task is to return the minimized largest sum of the split.
+     * A subarray is a contiguous part of the array.
+     *
+     * Input: nums = [7,2,5,10,8], k = 2
+     * Output: 18
+     *
+     * TC: O(nlog(total-max))
+     * SC: O(1)
+     */
+    public static int splitArray(int[] a, int k) {
+        int low = a[0];
+        int high = a[0];
+        for(int i=1; i<a.length; i++) {
+            low = Math.max(low, a[i]);
+            high += a[i];
+        }
+        while(low <= high) {
+            int mid = (low+high)/2;
+            int split = splitCount(a, mid);
+            if(split > k) {
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return low;
+    }
+
+    private static int splitCount(int[] a, int sum) {
+        int split = 1;
+        int total = 0;
+        for(int i=0; i<a.length; i++) {
+            if(total + a[i] <= sum) {
+                total += a[i];
+            } else {
+                split++;
+                total = a[i];
+            }
+        }
+        return split;
     }
 }
