@@ -1,5 +1,8 @@
 package com.paul.subham.mathematics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author subham.paul
  *
@@ -7,6 +10,7 @@ package com.paul.subham.mathematics;
  * 2. Binomial Coefficient (Dynamic Programming)
  * 3. Binomial Coefficient (Space optimized)
  * 4. Binomial Coefficient (Memoization)
+ * 5. Generate pascal's triangle
  */
 public class Combination {
     public static void main(String[] args) {
@@ -97,5 +101,30 @@ public class Combination {
             return dp[n][k] = 1;
         }
         return dp[n][k] = bc(n-1, k) + bc(n-1,k-1);
+    }
+
+    /**
+     * Generate pascal's triangle
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> result = new ArrayList<>();
+        int[] c = new int[numRows];
+
+        for(int i=0; i<numRows;i++) {
+            List<Integer> list = new ArrayList<>();
+            for(int j=i; j>=0; j--) {
+                if(j==0) {
+                    c[j] = 1;
+                } else {
+                    c[j] += c[j-1];
+                }
+                list.add(c[j]);
+            }
+            result.add(list);
+        }
+        return result;
     }
 }
