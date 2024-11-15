@@ -15,6 +15,9 @@ import java.util.Map;
  * 9. Find maximum consecutive 1's in an array
  * 10. Count sub arrays sum equal to k
  * 11. Count sub arrays sum equal to k (Using Hashing - storing prefix sum)
+ * 12. Maximum length of sub array with sum 0 (Prefix sum)
+ * 13. Count of sub arrays with xor K
+ * 14. Count of sub arrays with xor K (Prefix xor)
  */
 public class SubArray {
     public static void main(String[] args) {
@@ -261,6 +264,77 @@ public class SubArray {
                 count += map.get(rem);
             }
             map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return count;
+    }
+
+    /**
+     * Maximum length of sub array with sum 0 (Prefix sum)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int getLongestZeroSumSubarrayLength(int[] a){
+        Map<Integer, Integer> prefixSum = new HashMap<>();
+        int sum = 0;
+        int max = 0;
+        for(int i=0; i<a.length; i++) {
+            sum += a[i];
+            if(sum == 0) {
+                max = i+1;
+            } else {
+                if(prefixSum.containsKey(sum)) {
+                    max = Math.max(max, i-prefixSum.get(sum));
+                } else {
+                    prefixSum.put(sum, i);
+                }
+            }
+        }
+        return max;
+    }
+
+    /**
+     * Count of sub arrays with xor K
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public static int subarraysWithSumK(int []a, int k) {
+        int n = a.length;
+        int count = 0;
+        for(int i=0; i<n; i++) {
+            int xor = 0;
+            for(int j=i; j<n; j++) {
+                xor ^= a[j];
+                if(xor == k) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Count of sub arrays with xor K (Prefix xor)
+     *
+     * x ^ k = xor => x^k^k = xor ^ k => x = xor ^ k
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int subarraysWithSumKPrefix(int []a, int k) {
+        int n = a.length;
+        int count = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0,1);
+        int xor = 0;
+        for(int i=0; i<n; i++) {
+            xor ^= a[i];
+            int x = xor ^ k;
+            if(map.containsKey(x)) {
+                count += map.get(x);
+            }
+            map.put(xor, map.getOrDefault(xor, 0)+1);
         }
         return count;
     }

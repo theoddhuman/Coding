@@ -16,14 +16,11 @@ import java.util.Stack;
  * 4. Sliding window maximum (Using priority queue)
  * 5. Sliding window maximum (Using priority dequeue)
  * 6. Sliding window maximum (Using stack)
- * 12. Sub array with the largest Sum Contiguous
- * 13. Sub array with the largest Sum Contiguous (Dynamic programming)
- * 14. Sub array with the largest Sum Contiguous (Kadane's algorithm)
  */
 public class SubArray {
     public static void main(String[] args) {
         int[] a = { -2, -3, 4, -1, -2, 1, 5, -3 };
-        System.out.println(getMaxContiguousSumKadane(a, a.length));
+        //System.out.println(getMaxContiguousSumKadane(a, a.length));
     }
 
     /**
@@ -170,92 +167,5 @@ public class SubArray {
         return result;
     }
 
-    /**
-     * Sub array with the largest Sum Contiguous
-     *
-     * TC: O(n^2)
-     * SC: O(1)
-     */
-    public static List<Integer> getMaxContiguousSumSubArray(int[] a, int n) {
-        List<Integer> subArray = new ArrayList<>();
-        int maxSum = Integer.MIN_VALUE;
-        int start = 0;
-        int end = 0;
-        for(int i=0; i<n; i++) {
-            int sum = 0;
-            for(int j=i; j<n; j++) {
-                sum += a[j];
-                if(sum > maxSum) {
-                    maxSum = sum;
-                    start = i;
-                    end = j;
-                }
-            }
-        }
-        for(int i=start; i<=end; i++) {
-            subArray.add(a[i]);
-        }
-        return subArray;
-    }
 
-    /**
-     * Sub array with the largest Sum Contiguous (Dynamic programming)
-     *
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static List<Integer> getMaxContiguousSumDP(int[] a, int n) {
-        List<Integer> subArray = new ArrayList<>();
-        int sum = a[0];
-        int maxSum = sum;
-        int end = 0;
-        for(int i=1; i<n; i++) {
-            sum = Math.max(sum + a[i], a[i]);
-            if(sum > maxSum) {
-                maxSum = sum;
-                end = i;
-            }
-        }
-        int start = end;
-        while(start >= 0) {
-            maxSum -= a[start];
-            if(maxSum == 0) {
-                break;
-            }
-            start--;
-        }
-        for(int i=start; i<=end; i++) {
-            subArray.add(a[i]);
-        }
-        return subArray;
-    }
-
-    /**
-     * Sub array with the largest Sum Contiguous (Kadane's algorithm)
-     *
-     * TC: O(n)
-     * SC: O(1)
-     */
-    public static List<Integer> getMaxContiguousSumKadane(int[] a, int n) {
-        List<Integer> subArray = new ArrayList<>();
-        int maxSum = Integer.MIN_VALUE;
-        int sum = 0;
-        int start = 0, end = 0, s = 0;
-        for(int i=0; i<n; i++) {
-            sum += a[i];
-            if(sum > maxSum) {
-                maxSum = sum;
-                start = s;
-                end = i;
-            }
-            if(sum < 0) {
-                sum = 0;
-                s = i+1;
-            }
-        }
-        for(int i=start; i<=end; i++) {
-            subArray.add(a[i]);
-        }
-        return subArray;
-    }
 }

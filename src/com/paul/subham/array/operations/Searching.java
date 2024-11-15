@@ -25,11 +25,6 @@ import java.util.*;
  * 16. Finding two repeating elements in an array (Using XOR)
  * 17. Finding two repeating elements in an array (Using Index)
  * 18. Finding two repeating elements in an array (By modifying array)
- * 19. Finding pair with given sum in array
- * 20. Finding pair with given sum in array (Using sorting and two pointer)
- * 21. Finding pair with given sum in array (Using binary search)
- * 22. Finding pair with given sum in array (Using hashing)
- * 23. Finding pair with given sum in array (Using Remainder)
  * 24. Finding two elements with sum closest to zero
  * 25. Finding two elements with sum closest to zero (By sorting and two pointer)
  * 26. Finding an element which appears odd no of times in an array (Nested loop)
@@ -398,111 +393,6 @@ public class Searching {
             a[a[i] % divider - 1] += divider;
             if (a[a[i] % divider - 1] / divider == 2) {
                 System.out.print(a[i] + " ");
-            }
-        }
-    }
-
-    /**
-     * Finding pair with given sum in array
-     * TC: O(n^2)
-     * SC: O(1)
-     */
-    public static void twoSum(int[] a, int k) {
-        for (int i = 0; i < a.length - 1; i++) {
-            for (int j = i + 1; j < a.length; j++) {
-                if (a[i] + a[j] == k) {
-                    System.out.println(a[i] + " " + a[j]);
-                    return;
-                }
-            }
-        }
-    }
-
-    /**
-     * Finding pair with given sum in array (Using sorting and two pointer)
-     * TC: O(nlogn)
-     * SC: O(1)
-     */
-    public static void twoSumBySorting(int[] a, int k) {
-        Arrays.sort(a);
-        int left = 0;
-        int right = a.length - 1;
-        while (left < right) {
-            int sum = a[left] + a[right];
-            if (sum == k) {
-                System.out.println(a[left] + " " + a[right]);
-                return;
-            } else if (sum > k) {
-                right--;
-            } else {
-                left++;
-            }
-        }
-    }
-
-    /**
-     * Finding pair with given sum in array (Using binary search)
-     * TC: O(nlogn)
-     * SC: O(1)
-     */
-    public static void twoSumByBinarySearch(int[] a, int k) {
-        Arrays.sort(a);
-        for (int i = 0; i < a.length; i++) {
-            int searchKey = k - a[i];
-            int searchIndex = OneD.searchRecursive(a, i + 1, a.length - 1, searchKey);
-            if (searchIndex != -1) {
-                System.out.println(a[i] + " " + a[searchIndex]);
-                return;
-            }
-        }
-    }
-
-    /**
-     * Finding pair with given sum in array (Using hashing)
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static void twoSumByHashing(int[] a, int k) {
-        Set<Integer> set = new HashSet<>();
-        for (int j : a) {
-            int searchKey = k - j;
-            if (set.contains(searchKey)) {
-                System.out.println(searchKey + " " + j);
-                return;
-            }
-            set.add(j);
-        }
-    }
-
-    /**
-     * Finding pair with given sum in array (Using Remainder)
-     * TC: O(n)
-     * SC: O(k)
-     */
-    public static void twoSumByRemainder(int[] a, int k) {
-        int[] rem = new int[k];
-        for (int i = 0; i < a.length; i++) {
-            if (a[i] < k) {
-                rem[a[i] % k]++;
-            }
-        }
-        int i;
-        for (i = 1; i < k / 2; i++) {
-            if (rem[i] > 0 && rem[k - i] > 0) {
-                System.out.println(i + " " + (k - i));
-                return;
-            }
-        }
-
-        if (i >= k / 2) {
-            if (k % 2 == 0) {
-                if (rem[k / 2] > 1) {
-                    System.out.println(k / 2 + " " + k / 2);
-                }
-            } else {
-                if (rem[k / 2] > 0 && rem[k - k / 2] > 0) {
-                    System.out.println(k / 2 + " " + (k - k / 2));
-                }
             }
         }
     }
