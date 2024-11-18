@@ -86,7 +86,6 @@ public class LinkedList {
             deleteAtStart();
             return;
         }
-
         Node temp = head;
         Node pre = null;
         for(int i=0; i< position - 1; i++) {

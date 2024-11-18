@@ -14,6 +14,9 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 4. Sort bitonic doubly linked list
  * 5. Sort bitonic doubly linked list (Efficient)
  * 6. Quick sort of singly linked list
+ * 7. Merge sort of a linked list
+ * 8. Sort a linked list of 0s, 1s and 2s (Dummy Node)
+ * 9. Sort a linked list of 0s, 1s and 2s (Counting)
  */
 public class Sort {
     public static void main(String[] args) {
@@ -56,7 +59,7 @@ public class Sort {
         }
         Node current = head;
         Node temp = null;
-        while(current != null && current.data < newNode.data) {
+        while(current != null && current.data <= newNode.data) {
             temp = current;
             current = current.next;
         }
@@ -282,5 +285,97 @@ public class Sort {
         end.data = pIndex.data;
         pIndex.data = temp;
         return prePivot;
+    }
+
+    /**
+     * Merge sort of a linked list
+     *
+     * TC: O(n^2)
+     * SC: O(logn)
+     */
+    public Node mergeSort(Node head) {
+        if(head == null || head.next == null) {
+            return head;
+        }
+        Node middle = Search.middleNode(head);
+        Node right = middle.next;
+        middle.next=null;
+        Node left = head;
+        left = mergeSort(left);
+        right = mergeSort(right);
+        return Manipulation.mergeListsUtil(left,right);
+    }
+
+    /**
+     * Sort a linked list of 0s, 1s and 2s (Dummy Node)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node segregate(Node head) {
+        if(head== null || head.next == null) {
+            return head;
+        }
+        Node one = new Node(0);
+        Node two = new Node(0);
+        Node zero = new Node(0);
+        Node oneC = one;
+        Node twoC = two;
+        Node zeroC = zero;
+        Node current = head;
+        while(current != null) {
+            if(current.data == 1) {
+                oneC.next = current;
+                oneC = oneC.next;
+            } else if(current.data == 0) {
+                zeroC.next = current;
+                zeroC = zeroC.next;
+            } else {
+                twoC.next = current;
+                twoC = twoC.next;
+            }
+            current = current.next;
+        }
+        if(one.next != null) {
+            zeroC.next = one.next;
+            oneC.next = two.next;
+        } else {
+            zeroC.next = two.next;
+        }
+        twoC.next = null;
+        return zero.next;
+    }
+
+    /**
+     * Sort a linked list of 0s, 1s and 2s (Counting)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node segregateCount(Node head) {
+        if(head== null || head.next == null) {
+            return head;
+        }
+        int[] count = new int[3];
+        Node current = head;
+        while(current != null) {
+            if(current.data == 1) {
+                count[1]++;
+            } else if(current.data == 0) {
+                count[0]++;
+            } else {
+                count[2]++;
+            }
+            current = current.next;
+        }
+        current = head;
+        for(int i=0; i<3; i++) {
+            while(current != null && count[i] > 0) {
+                current.data = i;
+                count[i]--;
+                current = current.next;
+            }
+        }
+        return head;
     }
 }

@@ -39,6 +39,10 @@ import java.util.Set;
  * 25. Remove duplicates from a doubly linked list (Hashing)
  * 26. Rotate doubly linked list by k positions
  * 27. Swap kth node from start and end in doubly linked list
+ * 28. Remove nth node from end (2 traversal)
+ * 29. Remove nth node from end (1 traversal)
+ * 30. Delete middle of a linked list(2 traversal)
+ * 31. Delete middle of a linked list(slow-fast pointer)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -827,6 +831,112 @@ public class Manipulation {
         if(k==count) {
             linkedList.head = x;
         }
+    }
+
+    /**
+     * Remove nth node from end (2 traversal)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void removeNthFromEnd(LinkedList linkedList, int n) {
+        Node current = linkedList.head;
+        int count = 0;
+        while(current != null) {
+            count++;
+            current = current.next;
+        }
+        current = linkedList.head;
+        Node temp = null;
+        for(int i=0; i<count-n; i++) {
+            temp = current;
+            current = current.next;
+        }
+        if(current == linkedList.head) {
+            linkedList.head =  linkedList.head.next;
+            return;
+        }
+        temp.next = current.next;
+    }
+
+    /**
+     * Remove nth node from end (1 traversal)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public void removeNthFromEndOptimized(LinkedList linkedList, int n) {
+        if(linkedList.head == null) {
+            return;
+        }
+        Node fast = linkedList.head;
+        for(int i=0; i<n && fast != null; i++) {
+            fast = fast.next;
+        }
+        if(fast == null) {
+            linkedList.head = linkedList.head.next;
+            return;
+        }
+        Node slow = linkedList.head;
+        while(fast.next != null) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        slow.next = slow.next.next;
+    }
+
+    /**
+     * Delete middle of a linked list(2 traversal)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public Node deleteMiddle(Node head) {
+        if(head == null) {
+            return head;
+        }
+        if(head.next == null) {
+            return null;
+        }
+        int count = 0;
+        Node current = head;
+        while(current != null) {
+            current = current.next;
+            count++;
+        }
+        current = head;
+        for(int i=0; i<count/2-1; i++) {
+            current = current.next;
+        }
+        if(current.next != null) {
+            current.next = current.next.next;
+        }
+        return head;
+    }
+
+    /**
+     * Delete middle of a linked list(slow-fast pointer)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public Node deleteMiddleOptimized(Node head) {
+        if(head == null) {
+            return head;
+        }
+        if(head.next == null) {
+            return null;
+        }
+        Node slow = head;
+        Node fast = head.next.next;
+        while(fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if(slow.next != null) {
+            slow.next = slow.next.next;
+        }
+        return head;
     }
 
 }

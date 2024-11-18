@@ -156,7 +156,7 @@ public class Search {
      * TC: O(n)
      * SC: O(1)
      */
-    public Node middleNode(Node head) {
+    public static Node middleNode(Node head) {
         Node fast = head;
         Node slow = head;
 
@@ -164,7 +164,6 @@ public class Search {
             slow = slow.next;
             fast = fast.next.next;
         }
-
         if(fast.next!=null)
             return slow.next;
 
