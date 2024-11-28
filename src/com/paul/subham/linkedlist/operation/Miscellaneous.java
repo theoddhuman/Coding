@@ -9,6 +9,7 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  *
  * 1. Multiply two numbers using doubly linked list
  * 2. Add two numbers using linked list
+ * 3. Add 1 to a linked list number (Reversing list)
  */
 public class Miscellaneous {
     public static void main(String[] args) {
@@ -79,5 +80,45 @@ public class Miscellaneous {
             current = current.next;
         }
         return head.next;
+    }
+
+    /**
+     * Add 1 to a linked list number (Reversing list)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node addOne(Node head) {
+        head = reverse(head);
+        Node current = head;
+        int carry = 1;
+        while(carry != 0) {
+            current.data += 1;
+            if(current.data < 10) {
+                return reverse(head);
+            } else {
+                current.data = 0;
+            }
+            if(current.next == null) {
+                break;
+            } else {
+                current = current.next;
+            }
+        }
+        current.next = new Node(1);
+        return reverse(head);
+    }
+
+    private static Node reverse(Node head) {
+        Node prev = null;
+        Node current = head;
+        Node next = null;
+        while(current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
     }
 }

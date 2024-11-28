@@ -298,24 +298,20 @@ public class OneD {
         int[] dp2 = new int[a.length];
         Arrays.fill(dp2, -1);
 
-        int x = Math.max(rob(a, a.length - 1, dp1, true), rob(a, a.length - 2, dp2, false));
-        for (int i : dp1) {
-            System.out.print(i + " ");
-        }
-        return x;
+        return Math.max(rob(a, a.length - 1, dp1, false), rob(a, a.length - 2, dp2, true));
     }
 
-    private static int rob(int[] a, int i, int[] dp, boolean flag) {
+    private static int rob(int[] a, int i, int[] dp, boolean considerLast) {
         if (i == 0) {
-            return flag ? 0 : a[i];
+            return considerLast ? a[i] : 0;
         }
         if (dp[i] != -1) {
             return dp[i];
         }
         if (i == 1) {
-            return dp[i] = Math.max(rob(a, 0, dp, flag), a[i]);
+            return dp[i] = Math.max(rob(a, 0, dp, considerLast), a[i]);
         }
-        return dp[i] = Math.max(rob(a, i - 1, dp, flag), a[i] + rob(a, i - 2, dp, flag));
+        return dp[i] = Math.max(rob(a, i - 1, dp, considerLast), a[i] + rob(a, i - 2, dp, considerLast));
     }
 
     /**

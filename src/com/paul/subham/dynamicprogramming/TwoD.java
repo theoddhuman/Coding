@@ -6,19 +6,19 @@ import java.util.List;
 /**
  * @author subham.paul
  *
- * 1. Ninja's Training (Memoization)
+ * 1.*Ninja's Training (Memoization)
  * 2. Ninja's Training (Tabulation)
  * 3. Ninja's Training (Tabulation - Space optimized)
- * 4. Count all possible paths from top left to bottom right of a matrix (Dynamic programming - memoization)
+ * 4.*Count all possible paths from top left to bottom right of a matrix (Dynamic programming - memoization)
  * 5. Count all possible paths from top left to bottom right of a matrix (Dynamic programming - tabulation)
  * 6. Count all possible paths from top left to bottom right of a matrix (Dynamic programming - tabulation - space optimized)
  * 7. Count all possible paths from top left to bottom right of a matrix (Combinations)
- * 8. Count all possible paths from top left to bottom right of a matrix of 0's and 1's (0 pass through)(dynamic Programming - Memoization)
+ * 8.*Count all possible paths from top left to bottom right of a matrix of 0's and 1's (0 pass through)(dynamic Programming - Memoization)
  * 9. Count all possible paths from top left to bottom right of a matrix of 0's and 1's (1 pass through)(dynamic Programming - Tabulation)
  * 10. Minimum path sum in a grid (Memoization)
  * 11. Minimum path sum in a grid (Tabulation)
  * 12. Minimum path sum in a grid (Tabulation - Space optimized)
- * 13. Minimum path sum in Triangular Grid (Memoization)
+ * 13.*Minimum path sum in Triangular Grid (Memoization)
  * 14. Minimum path sum in Triangular Grid (Tabulation)
  * 15. Minimum path sum in Triangular Grid (Tabulation - Space optimized)
  * 16. Minimum falling path sum (Memoization)
@@ -237,7 +237,7 @@ public class TwoD {
     }
 
     /**
-     * Count all possible paths from top left to bottom right of a matrix of 0's and 1's (1 pass through)(dynamic Programming - Tabulation)
+     * Count all possible paths from top left to bottom right of a matrix of 0's and 1's (0 pass through)(dynamic Programming - Tabulation)
      *
      * TC: O(mn)
      * SC: O(mn)
@@ -259,7 +259,7 @@ public class TwoD {
         }
         for(int i=1; i<m; i++) {
             for(int j=1; j<n; j++) {
-                if(a[i][j] != 1) {
+                if(a[i][j] == 0) {
                     dp[i][j] = dp[i-1][j] + dp[i][j-1];
                 }
             }
