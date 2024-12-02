@@ -103,9 +103,9 @@ public class Expression {
                 i++;
                 continue;
             }
-            if(c >= '0' && c <= '9') {
+            if(Character.isDigit(c)) {
                 StringBuffer stringBuffer = new StringBuffer();
-                while(i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {
+                while(i < s.length() && Character.isDigit(s.charAt(i))) {
                     stringBuffer.append(s.charAt(i));
                     i++;
                 }

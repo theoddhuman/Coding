@@ -3,7 +3,7 @@ package com.paul.subham.dynamicprogramming;
 import java.util.Arrays;
 
 /**
- * 1. Subset sum equal to k (Memoization)
+ * 1.*Subset sum equal to k (Memoization)
  * 2. Subset sum equal to k (Tabulation)
  * 3. Subset sum equal to k (Tabulation - Space Optimized)
  * 4. Partition equal subset sum (Tabulation - Space Optimized)
@@ -11,11 +11,11 @@ import java.util.Arrays;
  * 6. Count subsets with sum k (Memoization)
  * 7. Count subsets with sum k (Tabulation)
  * 8. Count subsets with sum k (Tabulation - Space optimized)
- * 9. Count partitions with given difference (Tabulation - Space optimized)
- * 10. 0/1 Knapsack Problem (Memoization)
+ * 9.*Count partitions with given difference (Tabulation - Space optimized)
+ * 10.*0/1 Knapsack Problem (Memoization)
  * 11. 0/1 Knapsack Problem (Tabulation)
  * 12. 0/1 Knapsack Problem (Tabulation - Space optimization)
- * 13. Coin change - Minimum coins (Memoization - take/not-take approach)
+ * 13.*Coin change - Minimum coins (Memoization - take/not-take approach)
  * 14. Coin change - Minimum coins (Tabulation - take/not-take approach)
  * 15. Coin change - Minimum coins (Tabulation - take/not-take approach)(Striver's)
  * 16. Coin change - Minimum coins (Tabulation - space optimized - take/not-take approach)

@@ -406,7 +406,7 @@ public class StringDP {
      * Replace s1[m-1] with s2[n-1] : editDist(m-1, n-1)
      * Remove s1[m-1] : editDist(m-1, n)
      *
-     * TC: O(3^n)
+     * TC: O(mn)
      * SC: O(n)
      */
     private static int editDistanceMemoization(String s1, String s2) {
