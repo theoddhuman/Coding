@@ -10,6 +10,7 @@ import java.util.Stack;
  * 4. Sum of sub array ranges
  * 5. Largest Rectangle in Histogram
  * 6. Largest Rectangle in Histogram (Single iteration)
+ * 7. Maximal rectangle
  */
 public class SubArray {
     public static void main(String[] args) {
@@ -186,6 +187,36 @@ public class SubArray {
                 max = Math.max(max, heights[x]*(nse-pse-1));
             }
             stack.push(i);
+        }
+        return max;
+    }
+
+
+    /**
+     * Maximal rectangle
+     *
+     * Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public int maximalRectangle(char[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] prefixSum = new int[m][n];
+        for(int j=0; j<n; j++) {
+            int sum = 0;
+            for(int i=0; i<m; i++) {
+                sum += Character.getNumericValue(matrix[i][j]);
+                if(matrix[i][j] == '0') {
+                    sum = 0;
+                }
+                prefixSum[i][j] = sum;
+            }
+        }
+        int max = 0;
+        for(int i=0; i<m; i++) {
+            max = Math.max(max, largestRectangleAreaOptimized(prefixSum[i]));
         }
         return max;
     }
