@@ -1,4 +1,4 @@
-package com.paul.subham.classic;
+package com.paul.subham.slidingwindow;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -19,8 +19,9 @@ import java.util.Stack;
  */
 public class SubArray {
     public static void main(String[] args) {
-        int[] a = { -2, -3, 4, -1, -2, 1, 5, -3 };
-        //System.out.println(getMaxContiguousSumKadane(a, a.length));
+        int[] a = { 1,4,6,7,3,7,8,1};
+        List<Integer> r = slidingWindowMaxUsingStack(a, a.length, 3);
+        System.out.println(r);
     }
 
     /**
@@ -90,21 +91,24 @@ public class SubArray {
      * TC: O(nlogn)
      * SC: O(n)
      */
-    public static List<Integer> slidingWindowMaxUsingPQ(int[] a, int n, int k) {
-        List<Integer> result = new ArrayList<>();
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((o1, o2) -> a[o2] - a[o1]);
-        for(int i = 0; i<k; i++) {
-            priorityQueue.add(i);
+    public static int[] maxSlidingWindowPQ(int[] a, int k) {
+        int n = a.length;
+        int[] res = new int[n-k+1];
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>((i,j)->a[j]-a[i]);
+        int i=0;
+        for(;i<k;i++) {
+            pq.add(i);
         }
-        result.add(a[priorityQueue.peek()]);
-        for(int i=k; i<n; i++) {
-            priorityQueue.add(i);
-            while(priorityQueue.peek() <= i-k) {
-                priorityQueue.poll();
+        int j=0;
+        res[j++] = a[pq.peek()];
+        for(i=k;i<n;i++) {
+            pq.add(i);
+            while(pq.peek() <= i-k) {
+                pq.remove();
             }
-            result.add(a[priorityQueue.peek()]);
+            res[j++] = a[pq.peek()];
         }
-        return result;
+        return res;
     }
 
     /**

@@ -2,13 +2,18 @@ package com.paul.subham.linkedlist.operation;
 
 import com.paul.subham.linkedlist.implementation.doubly.DLNode;
 import com.paul.subham.linkedlist.implementation.doubly.DoublyLinkedList;
+import com.paul.subham.linkedlist.implementation.single.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author subham.paul
  *
  * 1. Print pairs with given sum in doubly linked list
+ * 2. Get pairs with given sum in a linked list
  * 2. Count triplets in a sorted doubly linked list whose sum is equal to k
  * 3. Count triplets in a sorted doubly linked list whose sum is equal to k (using hashing)
  * 4. Count triplets in a sorted doubly linked list whose sum is equal to k (Two pointer)
@@ -51,6 +56,35 @@ public class Sum {
                 start = start.next;
             }
         }
+    }
+
+    /**
+     * Get pairs with given sum in a linked list
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static ArrayList<ArrayList<Integer>> findPairsWithGivenSum(int target, Node head) {
+        Set<Integer> set = new HashSet<>();
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        Node current = head;
+        while(current != null) {
+            set.add(current.data);
+            current = current.next;
+        }
+        current = head;
+        while(current != null) {
+            if(set.contains(target-current.data) && current.data != target/2.0) {
+                ArrayList<Integer> list = new ArrayList<>();
+                list.add(current.data);
+                list.add(target-current.data);
+                res.add(list);
+                set.remove(current.data);
+                set.remove(target-current.data);
+            }
+            current = current.next;
+        }
+        return res;
     }
 
     /**

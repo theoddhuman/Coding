@@ -10,6 +10,7 @@ import com.paul.subham.linkedlist.implementation.single.Node;
  * 1. Multiply two numbers using doubly linked list
  * 2. Add two numbers using linked list
  * 3. Add 1 to a linked list number (Reversing list)
+ * 4. Add 1 to a linked list number (One run)
  */
 public class Miscellaneous {
     public static void main(String[] args) {
@@ -120,5 +121,35 @@ public class Miscellaneous {
             current = next;
         }
         return prev;
+    }
+
+    /**
+     * Add 1 to a linked list number (One run)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node addOneOpt(Node head) {
+        int carry = addCarry(head);
+
+        if(carry == 1) {
+            Node newNode = new Node(1);
+            newNode.next = head;
+            head = newNode;
+        }
+        return head;
+    }
+
+    public static int addCarry(Node node) {
+        if(node == null) {
+            return 1;
+        }
+        int carry = addCarry(node.next);
+        if(carry == 1) {
+            int x = node.data + carry;
+            node.data = x%10;
+            return x/10;
+        }
+        return 0;
     }
 }

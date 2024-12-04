@@ -43,6 +43,7 @@ import java.util.Set;
  * 29. Remove nth node from end (1 traversal)
  * 30. Delete middle of a linked list(2 traversal)
  * 31. Delete middle of a linked list(slow-fast pointer)
+ * 32. Delete all occurrences of a number in doubly linked list
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -935,6 +936,30 @@ public class Manipulation {
         }
         if(slow.next != null) {
             slow.next = slow.next.next;
+        }
+        return head;
+    }
+
+    /**
+     * Delete all occurrences of a number in doubly linked list
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    static DLNode deleteAllOccurOfX(DLNode head, int x) {
+        DLNode current = head;
+        while(current != null) {
+            if(current.data == x) {
+                if(current != head) {
+                    current.pre.next = current.next;
+                } else {
+                    head = current.next;
+                }
+                if(current.next != null) {
+                    current.next.pre = current.pre;
+                }
+            }
+            current = current.next;
         }
         return head;
     }
