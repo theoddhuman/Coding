@@ -28,7 +28,7 @@ import java.util.Queue;
  * 13. No of half nodes in a binary tree (Iterative)
  * 14. No of non-leaf nodes in a binary tree (Recursive)
  * 15. No of non-leaf nodes in a binary tree (Iterative)
- * 16. Diameter of a binary tree (Recursive optimized approach)
+ * 16. Diameter of a binary tree
  * 17. Diameter of a binary tree (Recursive optimized approach)
  * 18. Diameter of a binary tree (Recursive optimized approach - using static variable)
  * 19. Width of a level in a binary tree (Recursive)
@@ -54,7 +54,7 @@ import java.util.Queue;
  * 39. Inorder successor of a binary tree (Using reverse inorder)
  * 40. Preorder successor of a binary tree (Using parent pointer)
  * 41. Postorder successor of a binary tree (Using parent pointer)
- * 42. Is a binary tree height balanced (Space optimized)
+ * 42. Is a binary tree height balanced
  * 43. Is a binary tree height balanced (Space optimized)
  */
 

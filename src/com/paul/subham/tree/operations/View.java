@@ -157,7 +157,7 @@ public class View {
      * TC: O(nlogn)
      * SC: O(n)
      */
-    public static void bottomViewPostorder(BinaryTree binaryTree) {
+    public static void bottomViewPreorder(BinaryTree binaryTree) {
         Map<Integer, List<Integer>> map = new TreeMap<>();
         bottomView(binaryTree.root, 0, 0, map);
         for(List<Integer> list : map.values()) {
@@ -193,7 +193,7 @@ public class View {
      */
     static void topView(BinaryTree binaryTree) {
         Map<Integer, List<Integer>> map = new TreeMap<>();
-        bottomView(binaryTree.root, 0, 0, map);
+        topView(binaryTree.root, 0, 0, map);
         for(List<Integer> list : map.values()) {
             System.out.print(list.get(0) + " ");
         }

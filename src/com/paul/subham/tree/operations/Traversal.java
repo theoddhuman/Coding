@@ -3,9 +3,7 @@ package com.paul.subham.tree.operations;
 import com.paul.subham.tree.implementation.binary.BinaryTree;
 import com.paul.subham.tree.implementation.binary.Node;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author subham.paul
@@ -16,6 +14,7 @@ import java.util.Map;
  * 4. Print postorder traversal from preorder
  * 5. kth node of postorder traversal of binary tree
  * 6. kth node of inorder traversal of binary tree
+ * 7. Vertical order traversal
  */
 public class Traversal {
     public static void main(String[] args) {
@@ -169,5 +168,58 @@ public class Traversal {
             }
             kthInorder(node.right, k);
         }
+    }
+
+    /**
+     * Vertical order traversal
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static List<List<Integer>> verticalTraversal(Node node) {
+        Queue<Tuple> queue = new LinkedList<>();
+        Map<Integer, Map<Integer, PriorityQueue<Integer>>> map = new TreeMap<>();
+        queue.add(new Tuple(node, 0, 0));
+        while(!queue.isEmpty()) {
+            Tuple current = queue.remove();
+            Node cNode = current.node;
+            int h = current.hLevel;
+            int v = current.vLevel;
+            if(!map.containsKey(v)) {
+                map.put(v, new TreeMap<>());
+            }
+            if(!map.get(v).containsKey(h)) {
+                map.get(v).put(h, new PriorityQueue<>());
+            }
+            map.get(v).get(h).add(cNode.data);
+            if(cNode.left != null) {
+                queue.add(new Tuple(cNode.left, v-1, h+1));
+            }
+            if(cNode.right != null) {
+                queue.add(new Tuple(cNode.right, v+1, h+1));
+            }
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        for(Map<Integer, PriorityQueue<Integer>> hMap : map.values()) {
+            List<Integer> list = new ArrayList<>();
+            for(PriorityQueue<Integer> pq : hMap.values()) {
+                while(!pq.isEmpty()) {
+                    list.add(pq.remove());
+                }
+            }
+            res.add(list);
+        }
+        return res;
+    }
+}
+
+class Tuple {
+    Node node;
+    int vLevel;
+    int hLevel;
+    Tuple(Node node, int vLevel, int hLevel) {
+        this.node = node;
+        this.vLevel = vLevel;
+        this.hLevel = hLevel;
     }
 }

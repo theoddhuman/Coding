@@ -30,6 +30,7 @@ import java.util.Stack;
  * 12. Distance between two nodes of a binary tree (Using the lowest common ancestor - efficient)
  * 13. Distance between two nodes of a binary tree (Single traversal)
  * 14. Check existence of a path with given sum in binary tree
+ * 15. Maximum path sum in binary tree
  */
 public class Path {
     /**
@@ -449,6 +450,27 @@ public class Path {
             return true;
         }
         return hasSumPath(node.left, sum-node.data) || hasSumPath(node.right, sum-node.data);
+    }
+
+    /**
+     * Maximum path sum in binary tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int maxPathSum(Node node) {
+        maxPathSumUtil(node);
+        return maxSum;
+    }
+    private static int maxSum=Integer.MIN_VALUE;
+    private static int maxPathSumUtil(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        int left = Math.max(0, maxPathSumUtil(node.left));
+        int right = Math.max(0, maxPathSumUtil(node.right));
+        maxSum = Math.max(maxSum, node.data + left+right);
+        return node.data + Math.max(left, right);
     }
 
 }

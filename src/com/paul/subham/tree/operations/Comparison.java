@@ -19,6 +19,7 @@ import java.util.Stack;
  * 6. Check if two binary trees are identical (Iterative - level order)
  * 7. Check if two binary trees are isomorphic
  * 8. Check if two binary trees are quasi-isomorphic
+ * 9. Check if a binary tree is symmetric
  */
 public class Comparison {
     public static void main(String[] args) {
@@ -286,5 +287,15 @@ public class Comparison {
         }
         return (isQuasiIsomorphic(node1.left, node2.left) && isQuasiIsomorphic(node1.right, node2.right))
                 || (isQuasiIsomorphic(node1.left, node2.right) && isQuasiIsomorphic(node1.right, node2.left));
+    }
+
+    /**
+     * Check if a binary tree is symmetric
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static boolean isSymmetric(BinaryTree binaryTree) {
+        return isMirrorRecursiveUtil(binaryTree.root.left, binaryTree.root.right);
     }
 }
