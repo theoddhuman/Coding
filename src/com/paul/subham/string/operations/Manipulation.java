@@ -1,9 +1,6 @@
 package com.paul.subham.string.operations;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -15,6 +12,7 @@ import java.util.stream.Collectors;
  * 4. Reverse a string using stack
  * 5. Reverse sequence of words in a string (Using stack)
  * 6. Reverse sequence of words in a string (Space optimized)
+ * 7. Sort characters by frequency
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -153,5 +151,43 @@ public class Manipulation {
             }
         }
         return result.trim();
+    }
+
+    /**
+     * Sort characters by frequency
+     *
+     * Given a string s, sort it in decreasing order based on the frequency of the characters.
+     * The frequency of a character is the number of times it appears in the string.
+     * Return the sorted string. If there are multiple answers, return any of them.
+     *
+     * TC: O(nlogn)
+     * SC: O(n)
+     */
+    public String frequencySort(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i=0; i<s.length(); i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i),0)+1);
+        }
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> b.count-a.count);
+        for(Map.Entry<Character, Integer> entry : map.entrySet()) {
+            pq.add(new Pair(entry.getKey(), entry.getValue()));
+        }
+        StringBuilder res = new StringBuilder();
+        while(!pq.isEmpty()) {
+            Pair current = pq.remove();
+            for(int i=0; i<current.count; i++) {
+                res.append(current.c);
+            }
+        }
+        return res.toString();
+    }
+}
+
+class Pair {
+    char c;
+    int count;
+    Pair(char c, int count) {
+        this.c = c;
+        this.count = count;
     }
 }

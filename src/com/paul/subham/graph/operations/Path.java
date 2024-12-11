@@ -201,7 +201,7 @@ public class Path {
     }
 
     public static void weightedShortestPathImproved(AdjacencyListWeightedGraph graph, int s) {
-        Integer[] distance = new Integer[graph.vertex];
+        int[] distance = new int[graph.vertex];
         Arrays.fill(distance, Integer.MAX_VALUE);
         Integer[] path = new Integer[graph.vertex];
 

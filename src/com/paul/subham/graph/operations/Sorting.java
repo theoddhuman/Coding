@@ -168,15 +168,13 @@ public class Sorting {
         visited[s] = true;
         recStack[s] = true;
         List<Integer> list = adjList.get(s);
-        for(Integer i : list) {
-            if(!visited[i]) {
-                if(isCyclic(i, recStack, visited, adjList)) {
+        for (Integer i : list) {
+            if (!visited[i]) {
+                if (isCyclic(i, recStack, visited, adjList)) {
                     return true;
                 }
-            } else {
-                if(recStack[i]) {
-                    return true;
-                }
+            } else if (recStack[i]) {
+                return true;
             }
         }
         recStack[s] = false;

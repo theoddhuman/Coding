@@ -57,7 +57,7 @@ public class Path {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        System.out.println(hasSumPath(bt, 20));
+        System.out.println(lowestCommonAncestorByPath(bt, 6,8));
     }
 
 
