@@ -4,15 +4,7 @@ import com.paul.subham.graph.implementation.AdjacencyListWeightedGraph;
 import com.paul.subham.graph.implementation.Edge;
 import com.paul.subham.set.implementation.QuickFindSet;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 1. Minimum Spanning Tree - Prim's Algorithm (Using Priority Queue)
@@ -29,7 +21,7 @@ public class SpanningTree {
         graph.addEdgeUndirected(1,3,4);
         graph.addEdgeUndirected(2,4,6);
         graph.addEdgeUndirected(3,4,2);
-        spanningTreeBFS(graph);
+        minSpanningTree(graph, 1);
     }
 
     /**
@@ -40,7 +32,9 @@ public class SpanningTree {
      * SC: O(V)
      */
     public static void minSpanningTree(AdjacencyListWeightedGraph graph, int s) {
-        Integer[] distance = new Integer[graph.vertex];
+        int[] distance = new int[graph.vertex];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        boolean[] visited = new boolean[graph.vertex];
         Integer[] path = new Integer[graph.vertex];
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(graph.vertex,
                 Comparator.comparing(o -> distance[o]));
@@ -48,15 +42,12 @@ public class SpanningTree {
         priorityQueue.add(s);
         while(!priorityQueue.isEmpty()) {
             int current = priorityQueue.remove();
+            visited[current] = true;
             LinkedList<Edge> adjList = graph.adjListArray[current];
             for(Edge edge : adjList) {
                 int next = edge.destination;
                 int d = edge.weight;
-                if(Objects.isNull(distance[next])) {
-                    distance[next] = d;
-                    path[next] = current;
-                    priorityQueue.add(next);
-                } else if (distance[next] > d) {
+                if (!visited[next] && distance[next] > d) {
                     priorityQueue.remove(next);
                     distance[next] = d;
                     path[next] = current;
