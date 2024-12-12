@@ -7,9 +7,7 @@ import com.paul.subham.linkedlist.implementation.doubly.DoublyLinkedList;
 import com.paul.subham.linkedlist.implementation.single.LinkedList;
 import com.paul.subham.linkedlist.implementation.single.Node;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 1. Inserting data in sorted linked list
@@ -964,6 +962,49 @@ public class Manipulation {
         return head;
     }
 
+    /**
+     * Merge k sorted lists (Using priority queue)
+     *
+     * TC: O(nk*logk)
+     * SC: O(k)
+     */
+    public Node mergeKLists(Node[] lists) {
+        PriorityQueue<NodeContainer> pq = new PriorityQueue<>(Comparator.comparingInt(nodeContainer -> nodeContainer.node.data));
+        for(int i=0;i<lists.length;i++){
+            if(lists[i] != null){
+                NodeContainer nodeContainer = new NodeContainer(i,lists[i]);
+                pq.add(nodeContainer);
+            }
+        }
+        Node head = null;
+        Node current = null;
+        while(!pq.isEmpty()){
+            NodeContainer temp = pq.remove();
+            Node newNode = new Node(temp.node.data);
+            if(head == null){
+                head = newNode;
+                current = head;
+            } else {
+                current.next = newNode;
+                current = current.next;
+            }
+            lists[temp.index] = lists[temp.index].next;
+            if(lists[temp.index] != null){
+                temp.node = lists[temp.index];
+                pq.add(temp);
+            }
+        }
+        return head;
+    }
+}
+
+class NodeContainer{
+    int index;
+    Node node;
+    NodeContainer(int index, Node node){
+        this.index = index;
+        this.node = node;
+    }
 }
 
 class RandomNode {

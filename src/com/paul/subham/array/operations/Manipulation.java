@@ -8,26 +8,26 @@ import java.util.*;
  * @author subham.paul
  * <p>
  *
- * 7. Reverse an array (Iterative)
- * 8. Reverse an array (Recursive)
- * 9. Merge k sorted arrays (By sorting)
- * 10. Merge k sorted arrays (Merging)
- * 11. Merge k sorted arrays (Using priority queue)
- * 12. Re-arrange an array such that a[i] = i
- * 13. Re-arrange an array such that a[i] = i (Efficient)
- * 14. Re-arrange an array such that a[i] = i (Hashing)
- * 15. Re-arrange an array such that a[i] = i (Swapping)
- * 16. Remove adjacent duplicates from an array
- * 17. Merge two sorted arrays
- * 18. Move zeros to end of an array
- * 19. Move zeros to end of an array (Single traversal)
- * 20. Delete array elements which are smaller than next or become smaller
- * 21. Delete array elements which are smaller than next or become smaller (Using stack)
- * 22. Next greater element with same set of digits
- * 23. Union of two sorted arrays
- * 24. Rearrange Array Elements by Sign I (Using Temporary array)
- * 25. Rearrange Array Elements by Sign I (Space optimized)
- * 26. Rearrange Array Elements by Sign II (Using Temporary array)
+ * 1. Reverse an array (Iterative)
+ * 2. Reverse an array (Recursive)
+ * 3. Merge k sorted arrays (By sorting)
+ * 4. Merge k sorted arrays (Merging)
+ * 5. Merge k sorted arrays (Using priority queue)
+ * 6. Re-arrange an array such that a[i] = i
+ * 7. Re-arrange an array such that a[i] = i (Efficient)
+ * 8. Re-arrange an array such that a[i] = i (Hashing)
+ * 9. Re-arrange an array such that a[i] = i (Swapping)
+ * 10. Remove adjacent duplicates from an array
+ * 11. Merge two sorted arrays
+ * 12. Move zeros to end of an array
+ * 13. Move zeros to end of an array (Single traversal)
+ * 14. Delete array elements which are smaller than next or become smaller
+ * 15. Delete array elements which are smaller than next or become smaller (Using stack)
+ * 16. Next greater element with same set of digits
+ * 17. Union of two sorted arrays
+ * 18. Rearrange Array Elements by Sign I (Using Temporary array)
+ * 19. Rearrange Array Elements by Sign I (Space optimized)
+ * 20. Rearrange Array Elements by Sign II (Using Temporary array)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -145,7 +145,7 @@ public class Manipulation {
      * All arrays may be of different size
      *
      * TC: O(nk*log(k))
-     * SC: O(nk*log(k))
+     * SC: O(k)
      */
     public static int[] mergeKSortedArraysPQ(int[][] a) {
         PriorityQueue<ArrayContainer> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> a[o.aIndex][o.index]));

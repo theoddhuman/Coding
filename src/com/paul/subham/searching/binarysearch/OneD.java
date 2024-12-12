@@ -319,7 +319,7 @@ public class OneD {
      * SC: O(1)
      */
     public static int countOccurrencesBinarySearch(int[] a, int data) {
-        int index = OneD.search(a, a.length, data);
+        int index = search(a, a.length, data);
         int count = 1;
         int left = index - 1;
         while (left >= 0 && a[left] == data) {

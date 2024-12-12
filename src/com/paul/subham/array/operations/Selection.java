@@ -254,7 +254,7 @@ public class Selection {
     /**
      * The largest K elements in an array (Priority Queue)
      *
-     * TC: O(nlogn)
+     * TC: O(nlogk)
      * SC: O(n)
      */
     public static void kLargestElementsPriorityQueue(int[] a, int k) {
@@ -273,7 +273,7 @@ public class Selection {
     /**
      * The smallest K elements in an array (Priority Queue)
      *
-     * TC: O(nlogn)
+     * TC: O(nlogk)
      * SC: O(n)
      */
     public static void kSmallestElementsPriorityQueue(int[] a, int k) {
@@ -345,7 +345,7 @@ public class Selection {
         }
     }
 
-    private static int partition(int[] a, int l, int r, int k, boolean reverse) {
+    private static int partition(int[] a, int l, int r, boolean reverse) {
         int pIndex = l;
         for(int i=l; i<r; i++) {
             if(reverse) {
@@ -525,7 +525,7 @@ public class Selection {
     }
 
     private static int kthLargestQuickSort(int[] a, int l, int r, int k) {
-        int pivot = partition(a, l, r, k, false);
+        int pivot = partition(a, l, r, false);
         if(pivot == r - k +1) {
             return pivot;
         } else if (pivot > r - k + 1) {
@@ -546,7 +546,7 @@ public class Selection {
     }
 
     private static int kthSmallestQuickSort(int[] a, int l, int r, int k) {
-        int pivot = partition(a, l, r, k, true);
+        int pivot = partition(a, l, r, true);
         if(pivot == r - k +1) {
             return pivot;
         } else if (pivot > r - k + 1) {

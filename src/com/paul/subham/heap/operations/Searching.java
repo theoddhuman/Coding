@@ -8,8 +8,8 @@ import com.paul.subham.heap.implementation.HeapType;
  *
  * 1. Find max in Min Heap
  * 2. Print all elements less than K in Min Heap
- * 3. Find kth smallest element in min heap (by deletion)
- * 4. Find kth smallest element in min heap (By reducing heap size)
+ * 3. Find kth the smallest element in min heap (by deletion)
+ * 4. Find kth the smallest element in min heap (By reducing heap size)
  */
 public class Searching {
     public static void main(String[] args) {
