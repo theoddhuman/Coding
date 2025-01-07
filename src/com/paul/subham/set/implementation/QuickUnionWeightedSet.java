@@ -10,14 +10,14 @@ package com.paul.subham.set.implementation;
  * 5. find a set by path compression
  */
 public class QuickUnionWeightedSet {
-    int[] s;
+    public int[] s;
     int[] weight;
     int size;
 
     /**
      * make set
      */
-    void makeSet(int size) {
+    public void makeSet(int size) {
         s = new int[size];
         weight = new int[size];
         this.size = size;
@@ -32,7 +32,7 @@ public class QuickUnionWeightedSet {
      * TC: O(log n)
      * SC: O(1)
      */
-    int find(int x) {
+    public int find(int x) {
         if(!(x>=0 && x<size)) {
             return -1;
         }
@@ -47,7 +47,7 @@ public class QuickUnionWeightedSet {
      * TC: O(log n)
      * SC: O(1)
      */
-    void unionByWeight(int a, int b) {
+    public void unionByWeight(int a, int b) {
         int rootA = find(a);
         int rootB = find(b);
         if(rootA == rootB) {
@@ -67,7 +67,7 @@ public class QuickUnionWeightedSet {
      * TC: O(log n)
      * SC: O(1)
      */
-    void unionByRank(int a, int b) {
+    public void unionByRank(int a, int b) {
         int rootA = find(a);
         int rootB = find(b);
         if(rootA == rootB) {
@@ -107,4 +107,6 @@ public class QuickUnionWeightedSet {
             System.out.print(weight[i] + " ");
         }
     }
+
+
 }
