@@ -11,6 +11,7 @@ import java.util.*;
  * 6. Word break (Backtracking, hashing, Tabulation)
  * 7. M-coloring graph
  * 8. Sudoku solver
+ * 9. Expression Add Zeros
  */
 public class Backtracking {
     public static void main(String[] args) {
@@ -355,6 +356,90 @@ public class Backtracking {
             if(board[3*(row/3) + i/3][3*(col/3) + i%3]==c) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    /**
+     * Expression Add Zeros
+     *
+     * Given a string num that contains only digits and an integer target,
+     * return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num
+     * so that the resultant expression evaluates to the target value.
+     *
+     * Note that operands in the returned expressions should not contain leading zeros.
+     *
+     * TC: O(N*4^N)
+     * SC: O(N)
+     */
+    public static List<String> addOperators(String num, int target) {
+        List<String> res = new ArrayList<>();
+        addOperators(num, 1, target, num.substring(0,1), res);
+        return res;
+    }
+
+    private static void addOperators(String num, int i, int target, String comb, List<String> res) {
+        if(i==num.length()) {
+            if(evaluate(comb) == target) {
+                res.add(comb);
+            }
+            return;
+        }
+        addOperators(num, i+1, target, comb + "*" + num.charAt(i), res);
+        addOperators(num, i+1, target, comb + "+" + num.charAt(i), res);
+        addOperators(num, i+1, target, comb + "-" + num.charAt(i), res);
+        addOperators(num, i+1, target, comb + num.charAt(i), res);
+    }
+
+    private static long evaluate(String exp){
+        Stack<Long> valueStack = new Stack<>();
+        Stack<Character> opStack = new Stack<>();
+        for(int i=0; i<exp.length(); i++) {
+            char c = exp.charAt(i);
+            if(Character.isDigit(c)) {
+                int x = i;
+                while(i < exp.length()) {
+                    if(!Character.isDigit(exp.charAt(i))) {
+                        break;
+                    }
+                    i++;
+                }
+                String number = exp.substring(x,i);
+                if(number.length() > 1 && number.startsWith("0")) {
+                    return Long.MIN_VALUE;
+                }
+                valueStack.push(Long.parseLong(number));
+                i--;
+            } else {
+                while(!opStack.isEmpty() && hasPrecedence(opStack.peek(), c)) {
+                    valueStack.push(applyOperator(opStack.pop(), valueStack.pop(), valueStack.pop()));
+                }
+                opStack.push(c);
+            }
+        }
+        while(!opStack.isEmpty()) {
+            valueStack.push(applyOperator(opStack.pop(), valueStack.pop(), valueStack.pop()));
+        }
+        return valueStack.pop();
+    }
+
+    private static long applyOperator(char operator, long value2, long value1) {
+        switch(operator) {
+            case '+':
+                return value1 + value2;
+            case '-':
+                return value1 - value2;
+            case '*':
+                return value1 * value2;
+            case '/':
+                return value1 / value2;
+        }
+        return 0;
+    }
+
+    private static boolean hasPrecedence(char op1, char op2) {
+        if((op2 == '*' || op2 == '/') && (op1 == '+' || op1 == '-')) {
+            return false;
         }
         return true;
     }

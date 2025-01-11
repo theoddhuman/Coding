@@ -10,6 +10,8 @@ import java.util.Map;
  * 3. Length of the longest substring without repeating characters (Binary search)
  * 4. Length of the longest substring without repeating characters (Storing last index)
  * 5. Length of the longest substring without repeating characters (Storing last index - using hashing)
+ * 6. Number of substrings containing all three characters
+ * 7. Number of substrings containing all three characters (Sliding window)
  */
 public class SubString {
     public static void main(String[] args) {
@@ -155,5 +157,47 @@ public class SubString {
             seen.put(s.charAt(i), i);
         }
         return result;
+    }
+
+    /**
+     * Number of substrings containing all three characters
+     *
+     * Given a string s consisting only of characters a, b and c.
+     * Return the number of substrings containing at least one occurrence of all these characters a, b and c.
+     *
+     * TC: O(n^2)
+     * SC: O(1)
+     */
+    public int numberOfSubstrings(String s) {
+        int count = 0;
+        int n = s.length();
+        for(int i=0; i<n; i++) {
+            int[] hash = new int[3];
+            for(int j=i; j<n; j++) {
+                hash[s.charAt(j)-'a'] = 1;
+                if(hash[0] + hash[1] + hash[2] == 3) {
+                    count = count + n-j;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Number of substrings containing all three characters (Sliding window)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public int numberOfSubstringsSW(String s) {
+        int count = 0;
+        int n = s.length();
+        int[] lastSeen = {-1,-1,-1};
+        for(int i=0; i<n; i++) {
+            lastSeen[s.charAt(i)-'a'] = i;
+            count += Math.min(lastSeen[0], Math.min(lastSeen[1], lastSeen[2])) + 1;
+        }
+        return count;
     }
 }
