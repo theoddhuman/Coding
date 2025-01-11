@@ -22,6 +22,8 @@ import java.util.*;
  * 15. Longest Repeating Character Replacement (Sliding Window - Optimized)
  * 16. Count Binary Sub arrays With Sum
  * 17. Count Number of Nice sub arrays
+ * 18. Count sub arrays with at most K distinct integers
+ * 19. Count sub arrays with K distinct integers
  */
 public class SubArray {
     public static void main(String[] args) {
@@ -442,10 +444,10 @@ public class SubArray {
      * SC: O(1)
      */
     public static int numSubArraysWithSum(int[] a, int goal) {
-        return countBinarySubArrayWithSumGteK(a, goal)- countBinarySubArrayWithSumGteK(a, goal-1);
+        return countBinarySubArrayWithSumLteK(a, goal)- countBinarySubArrayWithSumLteK(a, goal-1);
     }
 
-    public static int countBinarySubArrayWithSumGteK(int[] a, int k) {
+    public static int countBinarySubArrayWithSumLteK(int[] a, int k) {
         if(k < 0) {
             return 0;
         }
@@ -473,10 +475,10 @@ public class SubArray {
      * SC: O(1)
      */
     public int numberOfSubArrays(int[] a, int k) {
-        return countSubArrayWithOddCountGteK(a, k) - countSubArrayWithOddCountGteK(a, k-1);
+        return countSubArrayWithOddCountLteK(a, k) - countSubArrayWithOddCountLteK(a, k-1);
     }
 
-    public static int countSubArrayWithOddCountGteK(int[] a, int k) {
+    public static int countSubArrayWithOddCountLteK(int[] a, int k) {
         if(k < 0) {
             return 0;
         }
@@ -494,4 +496,43 @@ public class SubArray {
         }
         return count;
     }
+
+    /**
+     * Count sub arrays with at most K distinct integers
+     *
+     * TC: O(2n)
+     * SC: O(n)
+     */
+    public static int countSubArrayWithAtMostKDistinct(int[] a, int k) {
+        if(k < 0) {
+            return 0;
+        }
+        int n = a.length;
+        int count = 0;
+        int start = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<n; i++) {
+            map.put(a[i], map.getOrDefault(a[i],0)+1);
+            while(map.size() > k) {
+                map.put(a[start], map.get(a[start]) - 1);
+                if(map.get(a[start])==0) {
+                    map.remove(a[start]);
+                }
+                start++;
+            }
+            count += (i - start + 1);
+        }
+        return count;
+    }
+
+    /**
+     * Count sub arrays with K distinct integers
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public int subArraysWithKDistinct(int[] a, int k) {
+        return countSubArrayWithAtMostKDistinct(a, k) - countSubArrayWithAtMostKDistinct(a, k-1);
+    }
+
 }
