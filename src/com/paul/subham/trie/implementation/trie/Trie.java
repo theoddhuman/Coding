@@ -1,4 +1,4 @@
-package com.paul.subham.trie.implementation;
+package com.paul.subham.trie.implementation.trie;
 
 /**
  * 1. Inserting a word
