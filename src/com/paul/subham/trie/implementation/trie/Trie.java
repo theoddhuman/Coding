@@ -6,7 +6,7 @@ package com.paul.subham.trie.implementation.trie;
  * 3. Searching a prefix
  */
 public class Trie {
-    Node root;
+    public Node root;
 
     public Trie() {
         root = new Node();

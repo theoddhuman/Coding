@@ -2,7 +2,7 @@ package com.paul.subham.trie.implementation.trie;
 
 public class Node {
     Node[] links;
-    boolean end;
+    public boolean end;
 
     public Node() {
         links = new Node[26];
