@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * 5. Reverse sequence of words in a string (Using stack)
  * 6. Reverse sequence of words in a string (Space optimized)
  * 7. Sort characters by frequency
+ * 8. Remove outermost parenthesis
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -180,6 +181,35 @@ public class Manipulation {
             }
         }
         return res.toString();
+    }
+
+    /**
+     * Remove outermost parenthesis
+     *
+     * Input: s = "(()())(())(()(()))"
+     * Output: "()()()()(())"
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static String removeOuterParentheses(String s) {
+        String res = "";
+        int balance = 0;
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            if(c == '(') {
+                if(balance > 0) {
+                    res += s.charAt(i);
+                }
+                balance++;
+            } else {
+                balance--;
+                if(balance > 0) {
+                    res += s.charAt(i);
+                }
+            }
+        }
+        return res;
     }
 }
 

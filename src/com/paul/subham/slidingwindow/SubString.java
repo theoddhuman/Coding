@@ -15,8 +15,10 @@ import java.util.Map;
  * 8. Longest substring with at most k distinct characters
  * 9. Longest substring with at most k distinct characters (Sliding Window)
  * 10. Longest substring with at most k distinct characters (Sliding Window - optimized)
- * 11. Minimum window substring
- * 12. Minimum window substring (Sliding window)
+ * 11. Count substring with at most k distinct characters
+ * 12. Count substring with exactly k distinct characters
+ * 13. Minimum window substring
+ * 14. Minimum window substring (Sliding window)
  */
 public class SubString {
     public static void main(String[] args) {
@@ -288,6 +290,44 @@ public class SubString {
         }
         return max;
     }
+
+    /**
+     * Count substring with at most k distinct characters
+     *
+     * TC: O(2n)
+     * SC: O(1)
+     */
+    public static int countSubstringAtMostKCharSWOpt(String s, int k) {
+        int n = s.length();
+        Map<Character, Integer> map = new HashMap<>();
+        int count = 0;
+        int start = 0;
+        for(int i=0; i<n; i++) {
+            char c = s.charAt(i);
+            map.put(c, map.getOrDefault(c, 0)+1);
+            while(map.size() > k) {
+                char startc = s.charAt(start);
+                map.put(startc, map.get(startc)-1);
+                if(map.get(startc) == 0) {
+                    map.remove(startc);
+                }
+                start++;
+            }
+            count += (i-start+1);
+        }
+        return count;
+    }
+
+    /**
+     * Count substring with exactly k distinct characters
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static int countSubstrK(String s, int k) {
+        return countSubstringAtMostKCharSWOpt(s, k) - countSubstringAtMostKCharSWOpt(s,k-1);
+    }
+
 
     /**
      * Minimum window substring

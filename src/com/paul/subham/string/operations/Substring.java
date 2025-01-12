@@ -12,11 +12,13 @@ import java.util.Stack;
  * 2. Length of the longest valid substring (Using stack - single loop)
  * 3. Length of the longest valid substring (Using array)
  * 4. Length of the longest valid substring (Space optimization)
+ * 5. Longest common prefix
+ * 6. Largest odd number in a string
  */
 public class Substring {
     public static void main(String[] args) {
-        System.out.println(longestValidSubstring(")()((())())("));
-        //System.out.println(longestValidSubstringSingleLoop("((("));
+        //System.out.println(longestValidSubstring(")()((())())("));
+        System.out.println(longestValidSubstringSingleLoop("((("));
     }
 
 
@@ -140,6 +142,47 @@ public class Substring {
             }
         }
         return maxLength;
+    }
+
+    /**
+     * Longest common prefix
+     *
+     * TC: O(nlogn + k)
+     * SC: O(1)
+     */
+    public static String longestCommonPrefix(String[] strs) {
+        Arrays.sort(strs);
+        String first = strs[0];
+        String last = strs[strs.length-1];
+        int count = 0;
+        while(count < first.length() && count< last.length()) {
+            if(first.charAt(count)== last.charAt(count)) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return first.substring(0,count);
+    }
+
+    /**
+     * Largest odd number in a string
+     *
+     * i/p: "234568"
+     * o/p: "2345"
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public String largestOddNumber(String num) {
+        int i;
+        for(i=num.length()-1; i>=0; i--) {
+            int c = Character.getNumericValue(num.charAt(i));
+            if(c % 2 == 1) {
+                return num.substring(0,i+1);
+            }
+        }
+        return "";
     }
 
 }

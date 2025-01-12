@@ -1,6 +1,9 @@
 package com.paul.subham.string.operations;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author subham.paul
@@ -8,8 +11,9 @@ import java.util.Arrays;
  * 1. Check if two strings are anagram (Sorting)
  * 2. Check if two strings are anagram (Counting characters)
  * 3. Check if two strings are anagram (Using one array for count)
+ * 4. Check if two strings are isomorphic
  */
-public class Anagram {
+public class Structure {
     public static void main(String[] args) {
 
     }
@@ -77,6 +81,31 @@ public class Anagram {
         }
         for (int i = 0; i < 256; i++) {
             if (count[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check if two strings are isomorphic
+     *
+     * "egg" and "add" are isomorphic
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public boolean isIsomorphic(String s, String t) {
+        if(s.length() != t.length()) {
+            return false;
+        }
+        Map<Character, Integer> sMap = new HashMap<>();
+        Map<Character, Integer> tMap = new HashMap<>();
+
+        for(int i=0; i<s.length(); i++) {
+            sMap.putIfAbsent(s.charAt(i), i);
+            tMap.putIfAbsent(t.charAt(i), i);
+            if(!Objects.equals(sMap.get(s.charAt(i)), tMap.get(t.charAt(i)))) {
                 return false;
             }
         }
