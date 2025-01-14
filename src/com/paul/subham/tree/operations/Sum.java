@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
  * 18. Sum of all nodes of the given perfect binary tree (Efficient)
  * 19. Diagonal sum of a binary tree
  * 20. Diagonal sum of a binary tree (diagonal relation in matrices)
+ * 21. Children Sum in a Binary Tree
+ *
  *
  */
 public class Sum {
@@ -578,5 +580,37 @@ public class Sum {
         }
         constructGrid(node.left, level+1, index-1, grid);
         constructGrid(node.right, level+1, index+1, grid);
+    }
+
+    /**
+     * Children Sum in a Binary Tree
+     *
+     * Given a binary tree having n nodes. Check whether all of its nodes have a value equal to the sum of their child nodes
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean isSumProperty(Node node) {
+        if(node == null) {
+            return true;
+        }
+        if(node.left == null && node.right == null) {
+            return true;
+        }
+        int sum = 0;
+        if(node.left != null) {
+            sum += node.left.data;
+            if(!isSumProperty(node.left)) {
+                return false;
+            }
+        }
+        if(node.right != null) {
+            sum += node.right.data;
+            if(!isSumProperty(node.right)){
+                return false;
+            }
+        }
+        return node.data == sum;
+
     }
 }

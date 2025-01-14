@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * @author subham.paul
@@ -31,6 +32,8 @@ import java.util.Stack;
  * 13. Distance between two nodes of a binary tree (Single traversal)
  * 14. Check existence of a path with given sum in binary tree
  * 15. Maximum path sum in binary tree
+ * 16. All nodes distance k in a binary tree
+ * 17. Burning tree
  */
 public class Path {
     /**
@@ -471,6 +474,117 @@ public class Path {
         int right = Math.max(0, maxPathSumUtil(node.right));
         maxSum = Math.max(maxSum, node.data + left+right);
         return node.data + Math.max(left, right);
+    }
+
+    /**
+     * All nodes distance k in a binary tree
+     *
+     * Given the root of a binary tree, the value of a target node target, and an integer k,
+     * return an array of the values of all nodes that have a distance k from the target node
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static List<Integer> distanceK(Node root, Node target, int k) {
+        Map<Node, Node> parentMap = new HashMap<>();
+        markParents(root, parentMap);
+        Map<Node, Boolean> visited = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(target);
+        visited.put(target, true);
+        int currentLevel = 0;
+        while(!queue.isEmpty()) {
+            int nodeCount = queue.size();
+            if(currentLevel == k) {
+                break;
+            }
+            while(nodeCount-- > 0) {
+                Node current = queue.remove();
+                if(current.left != null && visited.get(current.left) == null) {
+                    queue.add(current.left);
+                    visited.put(current.left, true);
+                }
+                if(current.right != null && visited.get(current.right) == null) {
+                    queue.add(current.right);
+                    visited.put(current.right, true);
+                }
+                if(parentMap.containsKey(current) && visited.get(parentMap.get(current))==null) {
+                    queue.add(parentMap.get(current));
+                    visited.put(parentMap.get(current), true);
+                }
+            }
+            currentLevel++;
+        }
+        return queue.stream().map(node -> node.data).collect(Collectors.toList());
+    }
+
+    private static void markParents(Node node, Map<Node, Node> parentMap) {
+        if(node == null) {
+            return;
+        }
+        if(node.left != null) {
+            parentMap.put(node.left, node);
+            markParents(node.left, parentMap);
+        }
+        if(node.right != null) {
+            parentMap.put(node.right, node);
+            markParents(node.right, parentMap);
+        }
+    }
+
+    /**
+     * Burning tree
+     *
+     * Given a binary tree and a node data called target. Find the minimum time required to burn the complete binary tree if the target is set on fire.
+     * It is known that in 1 second all nodes connected to a given node get burned. That is its left child, right child, and parent.
+     * Note: The tree contains unique values.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int minTime(Node root, int target) {
+        Map<Node, Node> parentMap = new HashMap<>();
+        markParents(root, parentMap);
+        Map<Node, Boolean> visited = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        Node start=search(root, target);
+        queue.add(start);
+        visited.put(start, true);
+        int time = 0;
+        while(!queue.isEmpty()) {
+            int nodeCount = queue.size();
+            while(nodeCount-- > 0) {
+                Node current = queue.remove();
+                if(current.left != null && visited.get(current.left) == null) {
+                    queue.add(current.left);
+                    visited.put(current.left, true);
+                }
+                if(current.right != null && visited.get(current.right) == null) {
+                    queue.add(current.right);
+                    visited.put(current.right, true);
+                }
+                if(parentMap.containsKey(current) && visited.get(parentMap.get(current))==null) {
+                    queue.add(parentMap.get(current));
+                    visited.put(parentMap.get(current), true);
+                }
+            }
+            time++;
+        }
+        return time-1;
+    }
+
+    private static Node search(Node node, int data) {
+        if(node == null) {
+            return null;
+        }
+        if(node.data == data) {
+            return node;
+        }
+        Node ans = search(node.left, data);
+        if(ans != null) {
+            return ans;
+        }
+        return search(node.right, data);
     }
 
 }

@@ -31,11 +31,11 @@ import java.util.Queue;
  * 16. Diameter of a binary tree
  * 17. Diameter of a binary tree (Recursive optimized approach)
  * 18. Diameter of a binary tree (Recursive optimized approach - using static variable)
- * 19. Width of a level in a binary tree (Recursive)
- * 20. Width of a level in a binary tree (Iterative)
- * 21. Maximum width of a binary tree
- * 22. Maximum width of a binary tree (Using level order)
- * 23. Maximum width of a binary tree (Using preorder)
+ * 19. Node count of a level in a binary tree (Recursive)
+ * 20. Node count of a level in a binary tree (Iterative)
+ * 21. Maximum nodes at a level of a binary tree
+ * 22. Maximum nodes at a level of a binary tree (Using level order)
+ * 23. Maximum nodes at a level of a binary tree (Using preorder)
  * 24. Level of a node in a binary tree (Recursive)
  * 25. Level of a node in a binary tree (Iterative)
  * 26. Check if given binary tree is a BST (Naive approach)
@@ -56,6 +56,7 @@ import java.util.Queue;
  * 41. Postorder successor of a binary tree (Using parent pointer)
  * 42. Is a binary tree height balanced
  * 43. Is a binary tree height balanced (Space optimized)
+ * 44. Maximum width of a binary tree
  */
 
 public class Structure {
@@ -531,7 +532,7 @@ public class Structure {
     }
 
     /**
-     * Width of a level in a binary tree (Recursive)
+     * Node count of a level in a binary tree (Recursive)
      *
      * TC: O(n)
      * SC: O(n)
@@ -553,7 +554,7 @@ public class Structure {
     }
 
     /**
-     * Width of a level in a binary tree (Iterative)
+     * Node count of a level in a binary tree (Iterative)
      *
      * TC: O(n)
      * SC: O(n)
@@ -581,7 +582,7 @@ public class Structure {
     }
 
     /**
-     * Maximum width of a binary tree
+     * Maximum nodes at a level of a binary tree
      *
      * TC: O(n^2)
      * SC: O(n)
@@ -598,7 +599,7 @@ public class Structure {
     }
 
     /**
-     * Maximum width of a binary tree (Using level order)
+     * Maximum nodes at a level of a binary tree (Using level order)
      *
      * TC: O(n)
      * SC: O(n)
@@ -626,7 +627,7 @@ public class Structure {
     }
 
     /**
-     * Maximum width of a binary tree (Using preorder)
+     * Maximum nodes at a level of a binary tree (Using preorder)
      *
      * TC: O(n)
      * SC: O(n)
@@ -1191,6 +1192,44 @@ public class Structure {
         return Math.max(lHeight, rHeight) + 1;
     }
 
+    /**
+     * Maximum width of a binary tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int widthOfBinaryTree(Node root) {
+        Queue<Pair> queue = new LinkedList<>();
+        queue.add(new Pair(root, 1));
+        int maxWidth = 0;
+        while(!queue.isEmpty()) {
+            System.out.println(true);
+            int nodeCount = queue.size();
+            int min = queue.peek().index;
+            int first = 0;
+            int last = 0;
+            for(int i=0; i<nodeCount; i++) {
+                Pair current = queue.remove();
+                Node node = current.node;
+                int index = current.index-min;
+                if(i==0) {
+                    first = index;
+                }
+                if(i==nodeCount-1) {
+                    last = index;
+                }
+                if(node.left != null) {
+                    queue.add(new Pair(node.left, 2*index+1));
+                }
+                if(node.right != null) {
+                    queue.add(new Pair(node.right, 2*index+2));
+                }
+            }
+            maxWidth = Math.max(maxWidth, last-first+1);
+        }
+        return maxWidth;
+    }
+
 }
 
 class Height {
@@ -1203,5 +1242,14 @@ class BNSNode {
     BNSNode(int data) {
         this.data = data;
         left = right = nextSibling = null;
+    }
+}
+
+class Pair {
+    Node node;
+    int index;
+    Pair(Node node, int index) {
+        this.node = node;
+        this.index = index;
     }
 }
