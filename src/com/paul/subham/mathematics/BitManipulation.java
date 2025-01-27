@@ -1,5 +1,8 @@
 package com.paul.subham.mathematics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 1. Is kth bit set
  * 2. Setting kth bit
@@ -13,6 +16,9 @@ package com.paul.subham.mathematics;
  * 10. Counting number of 1 bit in a number (Toggling approach)
  * 11. Counting number of 1 bit in a number (Modulo approach)
  * 12. Masking trailing zeros
+ * 13. Count no of set bits from  1 to n
+ * 14. Set the rightmost unset bit
+ * 15. Swap two numbers
  */
 
 public class BitManipulation {
@@ -123,5 +129,51 @@ public class BitManipulation {
      */
     public static int maskTrailingZeros(int n) {
         return (n & -n) - 1;
+    }
+
+    /**
+     * Count no of set bits from  1 to n
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int countSetBits(int n){
+        int count = 0;
+        n++;
+        for(int i=1; i<n; i = i*2) {
+            int quotient = n / (2*i);
+            count += quotient * i;
+            int remainder = n % (2*i);
+            if(remainder > i) {
+                count += remainder - i;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Set the rightmost unset bit
+     *
+     * TC: O(1)
+     * SC: O(1)
+     */
+    static int setBit(int n) {
+        return n | (n+1);
+    }
+
+    /**
+     * Swap two numbers
+     *
+     * TC: O(1)
+     * SC: O(1)
+     */
+    static List<Integer> get(int a, int b) {
+        List<Integer> list = new ArrayList<>();
+        a = a ^ b;
+        b = a ^ b;
+        a = a ^ b;
+        list.add(a);
+        list.add(b);
+        return list;
     }
 }

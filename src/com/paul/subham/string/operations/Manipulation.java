@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
  * 6. Reverse sequence of words in a string (Space optimized)
  * 7. Sort characters by frequency
  * 8. Remove outermost parenthesis
+ * 9. Check if one string is rotation of another
+ * 10. Check if one string is rotation of another (Concatenation Check)
  */
 public class Manipulation {
     public static void main(String[] args) {
@@ -210,6 +212,47 @@ public class Manipulation {
             }
         }
         return res;
+    }
+
+    /**
+     * Check if one string is rotation of another
+     * <p>
+     * TC: O(n^2)
+     * SC: O(n)
+     */
+    public static boolean rotateString(String s, String goal) {
+        if(s.length() != goal.length()) {
+            return false;
+        }
+        char[] sChars = s.toCharArray();
+        for(int i=0; i<s.length(); i++) {
+            sChars = rotateOnce(sChars);
+            if(new String(sChars).equals(goal)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static char[] rotateOnce(char[] a) {
+        char first = a[0];
+        System.arraycopy(a, 1, a, 0, a.length-1);
+        a[a.length-1] = first;
+        return a;
+    }
+
+    /**
+     * Check if one string is rotation of another (Concatenation Check)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean rotateStringConcatenationCheck(String s, String goal) {
+        if(s.length() != goal.length()) {
+            return false;
+        }
+        String doubleString = s+s;
+        return doubleString.contains(goal);
     }
 }
 
