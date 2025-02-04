@@ -735,18 +735,18 @@ public class Structure {
      * TC: O(n)
      * SC: O(n)
      */
-    public static boolean isBSTRecursive(BinaryTree binaryTree) {
-        return isBSTRecursive(binaryTree.root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    public boolean isValidBST(Node root) {
+        return isBST(root, null, null);
     }
 
-    private static boolean isBSTRecursive(Node node, int min, int max) {
+    private boolean isBST(Node node, Integer min, Integer max) {
         if(node == null) {
             return true;
         }
-        if(node.data < min || node.data > max) {
+        if((min != null && node.data <= min) || (max != null && node.data >= max)) {
             return false;
         }
-        return isBSTRecursive(node.left, min, node.data-1) && isBSTRecursive(node.right, node.data + 1, max);
+        return isBST(node.left, min, node.data) && isBST(node.right, node.data, max);
     }
 
     /**
@@ -758,7 +758,7 @@ public class Structure {
     public static boolean isBSTInorder(BinaryTree binaryTree) {
         return isBSTInorder(binaryTree.root);
     }
-    private static int prev = Integer.MIN_VALUE;
+    private static Integer prev = Integer.MIN_VALUE;
     private static boolean isBSTInorder(Node node) {
         if(node == null) {
             return true;
@@ -766,7 +766,7 @@ public class Structure {
         if(!isBSTInorder(node.left)) {
             return false;
         }
-        if(node.data < prev) {
+        if(prev != null && node.data <= prev) {
             return false;
         }
         prev = node.data;

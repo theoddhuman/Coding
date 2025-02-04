@@ -209,7 +209,7 @@ public class Subset {
      * find all unique combinations in candidates where the candidate numbers sum to target. Each number in candidates may only be used once in the combination.
      * The solution set must not contain duplicate combinations.
      *
-     * Input: candidates = [10,1,2,7,6,1,5], target = 8
+     * Input: candidates = [1,1,2,7,6,1,5], target = 8
      * Output:[[1,1,6],[1,2,5],[1,7],[2,6]]
      *
      * TC: O(2^n*k+n^2) ~ O(2^n), 2^n is required to traverse all subsets, n^2 is required to sort array, k is avg size of subset or combination
