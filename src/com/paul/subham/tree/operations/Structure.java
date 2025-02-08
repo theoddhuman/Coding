@@ -57,6 +57,8 @@ import java.util.Queue;
  * 42. Is a binary tree height balanced
  * 43. Is a binary tree height balanced (Space optimized)
  * 44. Maximum width of a binary tree
+ * 45. Count no of nodes in a complete binary tree
+ * 46. Inorder successor of a binary search tree
  */
 
 public class Structure {
@@ -1228,6 +1230,64 @@ public class Structure {
             maxWidth = Math.max(maxWidth, last-first+1);
         }
         return maxWidth;
+    }
+
+    /**
+     * Count no of nodes in a complete binary tree
+     *
+     * TC: O((logn)^2)
+     * SC: O(1)
+     */
+    public static int countNodes(Node root) {
+        if(root == null) {
+            return 0;
+        }
+        int lHeight = leftHeight(root);
+        int rHeight = rightHeight(root);
+        if(lHeight == rHeight) {
+            return (1<<lHeight) - 1;
+        }
+        return 1 + countNodes(root.left) + countNodes(root.right);
+    }
+
+    private static int leftHeight(Node node) {
+        int height = 0;
+        while(node != null) {
+            height++;
+            node = node.left;
+        }
+        return height;
+    }
+
+    private static int rightHeight(Node node) {
+        int height = 0;
+        while(node != null) {
+            height++;
+            node = node.right;
+        }
+        return height;
+    }
+
+    /**
+     * Inorder successor of a binary search tree
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static Node inorderSuccessorBST(Node root, Node p) {
+        if(root == null) {
+            return null;
+        }
+        Node successor = null;
+        while(root != null) {
+            if(p.data >= root.data) {
+                root = root.right;
+            } else {
+                successor = root;
+                root = root.left;
+            }
+        }
+        return successor;
     }
 
 }

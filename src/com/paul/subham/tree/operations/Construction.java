@@ -16,7 +16,6 @@ import java.util.Stack;
  *
  * 1. Construct binary tree from preorder and inorder traversal
  * 2. Construct binary tree from preorder and inorder traversal (Using hashing)
- * 3. Construct binary tree from preorder and inorder traversal (using stack and set)
  * 4. Construct binary tree from postorder and inorder traversal
  * 5. Construct binary tree from postorder and inorder traversal (Hashing)
  * 6. Construct binary tree from levelorder and inorder traversal
@@ -31,6 +30,10 @@ import java.util.Stack;
  * 15. Construct binary tree from preorder traversal and leaf node information
  * 16. Construct a binary tree from inorder traversal where child nodes are less than parent node.
  * 17. Construct binary tree from parent array
+ * 18. Flatten a binary tree (Recursion)
+ * 19. Flatten a binary tree (Using stack)
+ * 20. Flatten a binary tree (Morris)
+ * 21. Construct binary search tree from preorder
  */
 public class Construction {
     public static void main(String[] args) {
@@ -51,7 +54,8 @@ public class Construction {
 //        BinaryTree binaryTree = constructTree(pre, preC);
 //        binaryTree.levelOrder();
         int[] parent = {6,4,4,2,-1,1,1,2};
-        buildTreeFromParentArray(parent).levelOrder();
+        int[] pre = {1,2,3,4,5,6,7};
+        int[] in = {4,2,5,1,6,3,7};
     }
 
     /**
@@ -125,49 +129,6 @@ public class Construction {
         node.left = buildBT(pre, in, inStart, index-1, inMap);
         node.right = buildBT(pre, in, index+1, inEnd, inMap);
         return node;
-    }
-
-    /**
-     * Construct binary tree from preorder and inorder traversal (using stack and set)
-     *
-     * TC: O(n)
-     * SC: O(n)
-     */
-    public static BinaryTree constructBinaryTreeStackAndSet(int[] pre, int[] in) {
-        // To start the path we visited while traversing preorder array
-        Stack<Node> stack = new Stack<>();
-        //To maintain the node in which right subtree expected
-        Set<Node> set = new HashSet<>();
-        BinaryTree binaryTree = new BinaryTree();
-        for(int p=0, i=0; p<pre.length;) {
-            Node node = null;
-            do {
-                node = new Node(pre[p]);
-                if(binaryTree.root == null) {
-                    binaryTree.root = node;
-                }
-                if(!stack.isEmpty()) {
-                    if(set.contains(stack.peek())) {
-                        set.remove(stack.peek());
-                        stack.pop().right = node;
-                    } else {
-                        stack.peek().left = node;
-                    }
-                }
-                stack.push(node);
-            } while (pre[p++] != in[i] && p < pre.length);
-
-            // To find the node with right subtree
-            while(i < in.length && !stack.isEmpty() && in[i] == stack.peek().data) {
-                node = stack.pop();
-                i++;
-            }
-            if(node != null) {
-                set.add(node);
-                stack.push(node);
-            }
-        }
-        return binaryTree;
     }
 
     /**
@@ -626,5 +587,95 @@ public class Construction {
         }
     }
 
+    /**
+     * Flatten a binary tree (Recursion)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    private static Node prev = null;
+    public static void flatten(Node root) {
+        if(root == null) {
+            return;
+        }
+        flatten(root.right);
+        flatten(root.left);
+        root.right = prev;
+        root.left = null;
+        prev = root;
+    }
+
+    /**
+     * Flatten a binary tree (Using stack)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void flattenStack(Node root) {
+        if(root == null) {
+            return;
+        }
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            Node current = stack.pop();
+            if(current.right != null) {
+                stack.push(current.right);
+            }
+            if(current.left != null) {
+                stack.push(current.left);
+            }
+            if(!stack.isEmpty()) {
+                current.right = stack.peek();
+            }
+            current.left = null;
+        }
+    }
+
+    /**
+     * Flatten a binary tree (Morris)
+     *
+     * TC: O(n)
+     * SC: O(1)
+     */
+    public static void flattenMorris(Node root) {
+        if(root == null) {
+            return;
+        }
+        Node current = root;
+        while(current != null) {
+            if(current.left != null) {
+                Node pred = current.left;
+                while(pred.right != null) {
+                    pred = pred.right;
+                }
+                pred.right = current.right;
+                current.right = current.left;
+                current.left = null;
+            }
+            current = current.right;
+        }
+    }
+
+    /**
+     * Construct binary search tree from preorder
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static Node bstFromPreorder(int[] preorder) {
+        pIndex = 0;
+        return bstFromPreorder(preorder, Integer.MAX_VALUE);
+    }
+
+    private static Node bstFromPreorder(int[] pre, int bound) {
+        if(pIndex == pre.length || pre[pIndex] > bound) {
+            return null;
+        }
+        Node node = new Node(pre[pIndex++]);
+        node.left = bstFromPreorder(pre, node.data);
+        node.right = bstFromPreorder(pre, bound);
+        return node;
+    }
 
 }

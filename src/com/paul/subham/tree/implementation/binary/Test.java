@@ -17,6 +17,5 @@ public class Test {
         //bt.postOrderIterative();
         bt.inOrderMorris();
         System.out.println();
-        bt.zigzagTraversal();
     }
 }
