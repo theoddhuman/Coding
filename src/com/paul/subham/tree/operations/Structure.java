@@ -59,6 +59,7 @@ import java.util.Queue;
  * 44. Maximum width of a binary tree
  * 45. Count no of nodes in a complete binary tree
  * 46. Inorder successor of a binary search tree
+ * 47. Largest BST in a binary tree
  */
 
 public class Structure {
@@ -1290,6 +1291,28 @@ public class Structure {
         return successor;
     }
 
+    /**
+     * Largest BST in a binary tree
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static int largestBst(Node root) {
+        return validBST(root).size;
+    }
+
+    private static NodeValue validBST(Node node) {
+        if (node == null) {
+            return new NodeValue(Integer.MAX_VALUE, Integer.MIN_VALUE, 0);
+        }
+        NodeValue left = validBST(node.left);
+        NodeValue right = validBST(node.right);
+        if (left.max < node.data && node.data < right.min) {
+            return new NodeValue(Math.min(left.min, node.data), Math.max(right.max, node.data), left.size + right.size + 1);
+        }
+        return new NodeValue(Integer.MIN_VALUE, Integer.MAX_VALUE, Math.max(left.size, right.size));
+    }
+
 }
 
 class Height {
@@ -1311,5 +1334,16 @@ class Pair {
     Pair(Node node, int index) {
         this.node = node;
         this.index = index;
+    }
+}
+
+class NodeValue {
+    int min;
+    int max;
+    int size;
+    NodeValue(int min, int max, int size) {
+        this.min = min;
+        this.max = max;
+        this.size = size;
     }
 }

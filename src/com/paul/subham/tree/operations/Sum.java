@@ -37,7 +37,8 @@ import java.util.stream.Collectors;
  * 19. Diagonal sum of a binary tree
  * 20. Diagonal sum of a binary tree (diagonal relation in matrices)
  * 21. Children Sum in a Binary Tree
- *
+ * 22. Two sum in binary search tree (inorder)
+ * 23. Two sum in binary search tree (Using iterator)
  *
  */
 public class Sum {
@@ -612,5 +613,61 @@ public class Sum {
         }
         return node.data == sum;
 
+    }
+
+    /**
+     * Two sum in binary search tree (inorder)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static boolean findTarget(Node node, int k) {
+        List<Integer> in = new ArrayList<>();
+        inorder(node, in);
+        int low = 0;
+        int high = in.size()-1;
+        while(low < high) {
+            int sum = in.get(low) + in.get(high);
+            if(sum == k) {
+                return true;
+            } else if(sum > k) {
+                high--;
+            } else {
+                low++;
+            }
+        }
+        return false;
+    }
+
+    private static void inorder(Node node, List<Integer> in) {
+        if(node == null) {
+            return;
+        }
+        inorder(node.left, in);
+        in.add(node.data);
+        inorder(node.right, in);
+    }
+
+    /**
+     * Two sum in binary search tree (Using iterator)
+     *
+     * TC: O(n)
+     * SC: O(h)
+     */
+    public static boolean findTargetItr(Node node, int k) {
+        BSTIterator itr = new BSTIterator(node);
+        int next = itr.next();
+        int before = itr.before();
+        while(next != before) {
+            int sum = next + before;
+            if(sum == k) {
+                return true;
+            } else if (sum > k) {
+                before = itr.before();
+            } else {
+                next = itr.next();
+            }
+        }
+        return false;
     }
 }

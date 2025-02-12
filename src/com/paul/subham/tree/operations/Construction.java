@@ -34,6 +34,7 @@ import java.util.Stack;
  * 19. Flatten a binary tree (Using stack)
  * 20. Flatten a binary tree (Morris)
  * 21. Construct binary search tree from preorder
+ * 22. Recover binary search tree
  */
 public class Construction {
     public static void main(String[] args) {
@@ -676,6 +677,42 @@ public class Construction {
         node.left = bstFromPreorder(pre, node.data);
         node.right = bstFromPreorder(pre, bound);
         return node;
+    }
+
+    /**
+     * Recover binary search tree
+     *
+     * You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake.
+     * Recover the tree without changing its structure.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void recoverTree(Node root) {
+        inorder(root);
+        if(first != null && second != null) {
+            int x = first.data;
+            first.data = second.data;
+            second.data = x;
+        }
+    }
+
+    static Node first;
+    static Node second;
+
+    private static void inorder(Node node) {
+        if(node == null) {
+            return;
+        }
+        inorder(node.left);
+        if(prev != null && node.data < prev.data) {
+            if(first == null) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+        inorder(node.right);
     }
 
 }

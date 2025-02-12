@@ -15,6 +15,7 @@ import java.util.*;
  * 5. kth node of postorder traversal of binary tree
  * 6. kth node of inorder traversal of binary tree
  * 7. Vertical order traversal
+ * 8. Binary search tree inorder iterator
  */
 public class Traversal {
     public static void main(String[] args) {
@@ -223,3 +224,4 @@ class Tuple {
         this.hLevel = hLevel;
     }
 }
+
