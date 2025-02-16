@@ -6,9 +6,13 @@ package com.paul.subham.string.operations;
  * 3. Searching Pattern (RKnuth-Morris-Pratt (KMP) algorithm)
  * 4. Repeated String Match (Rabin-karp)
  * 5. Shortest Palindrome (Two pointer)
+ * 6. Shortest Palindrome (KMP)
+ * 7. Shortest Palindrome (Rabin-karp)
+ * 8. Longest Happy Prefix
  */
 public class Pattern {
     public static void main(String[] args) {
+        constructPrefixTable("aacecaaa#aaacecaa");
         System.out.println(searchRK("abcdgdhjd", "gdh"));
     }
 
@@ -89,22 +93,9 @@ public class Pattern {
     public int serchPatternKMP(String text, String pattern) {
         int n = text.length();
         int m = pattern.length();
-        int[] pTable = new int[m];
+        int[] pTable = constructPrefixTable(pattern);
         int j = 0;
-        int i = 1;
-        while(i < m) {
-            if(pattern.charAt(j) == pattern.charAt(i)) {
-                pTable[i++] = ++j;
-            } else {
-                if (j != 0) {
-                    j = pTable[j-1];
-                } else {
-                    pTable[i++]=0;
-                }
-            }
-        }
-        i = 0;
-        j=0;
+        int i = 0;
         while (i < n) {
             if (pattern.charAt(j) == text.charAt(i)) {
                 j++;
@@ -121,6 +112,25 @@ public class Pattern {
             }
         }
         return -1;
+    }
+
+    private static int[] constructPrefixTable(String s) {
+        int n = s.length();
+        int[] pTable = new int[n];
+        int j = 0;
+        int i = 1;
+        while(i < n) {
+            if(s.charAt(j) == s.charAt(i)) {
+                pTable[i++] = ++j;
+            } else {
+                if (j != 0) {
+                    j = pTable[j-1];
+                } else {
+                    pTable[i++]=0;
+                }
+            }
+        }
+        return pTable;
     }
 
     /**
@@ -185,5 +195,68 @@ public class Pattern {
                 .append(shortestPalindrome(s.substring(0,left)))
                 .append(nonPalindromeSuffix)
                 .toString();
+    }
+
+    /**
+     * Shortest Palindrome (KMP)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String shortestPalindromeKMP(String s) {
+        String reverse = new StringBuilder(s).reverse().toString();
+        String cString = s + "#" + reverse;
+        int[] pTable = constructPrefixTable(cString);
+        int palindromeLength = pTable[cString.length() -1];
+        StringBuilder suffix = new StringBuilder(s.substring(palindromeLength)).reverse();
+        return suffix.append(s).toString();
+    }
+
+    /**
+     * Shortest Palindrome (Rabin-karp)
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String shortestPalindromeRK(String s) {
+        long q = 1000000007;
+        int base = 26;
+        long fHash = 0;
+        long rHash = 0;
+        int pIndex = -1;
+        long powerValue = 1;
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            fHash = ((fHash*base)%q + (c-'a'+1))%q;
+            rHash = (rHash + ((c-'a'+1) * powerValue)%q)%q;
+            powerValue = (powerValue * base) % q;
+            if(powerValue<0) {
+                powerValue +=q;
+            }
+            if(fHash == rHash) {
+                pIndex = i;
+            }
+        }
+        System.out.println(pIndex);
+        if(pIndex == s.length()-1) {
+            return s;
+        }
+        StringBuilder suffix = new StringBuilder(s.substring(pIndex+1)).reverse();
+        return suffix.append(s).toString();
+    }
+
+    /**
+     * Longest Happy Prefix
+     *
+     * A string is called a happy prefix if is a non-empty prefix which is also a suffix (excluding itself).
+     * Given a string s, return the longest happy prefix of s. Return an empty string "" if no such prefix exists.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static String longestPrefix(String s) {
+        int[] pTable = constructPrefixTable(s);
+        int index = pTable[s.length()-1];
+        return s.substring(0, index);
     }
 }

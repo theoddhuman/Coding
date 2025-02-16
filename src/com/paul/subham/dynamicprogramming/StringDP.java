@@ -27,6 +27,8 @@ import java.util.List;
  * 20. Wildcard matching (Tabulation - Space optimized)
  * 21. Palindrome Partitioning - list of all partitions (Recursion)
  * 22. Palindrome Partitioning - list of all partitions (Memoization)
+ * 23. Count palindromic subsequences (Memoization)
+ * 24. Count palindromic subsequences (Tabulation)
  */
 public class StringDP {
     public static void main(String[] args) {
@@ -670,5 +672,61 @@ public class StringDP {
             }
         }
         return dp[i][j] = true;
+    }
+
+    /**
+     * Count palindromic subsequences (Memoization)
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static int countPS(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for(int i=0; i<n; i++) {
+            Arrays.fill(dp[i],-1);
+        }
+        return countPSUtil(0, n-1, s, dp);
+    }
+
+    private static int countPSUtil(int i, int j, String s, int[][] dp) {
+        if(i > j) {
+            return 0;
+        }
+        if(i == j) {
+            return 1;
+        }
+        if(dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        if(s.charAt(i) == s.charAt(j)) {
+            return dp[i][j] = 1 + countPSUtil(i+1, j, s, dp) + countPSUtil(i, j-1, s, dp);
+        }
+        return dp[i][j] = countPSUtil(i+1, j, s, dp) + countPSUtil(i, j-1, s, dp) - countPSUtil(i+1, j-1, s, dp);
+    }
+
+    /**
+     * Count palindromic subsequences (Tabulation)
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static int countPSTab(String s) {
+        int n = s.length();
+        int[][] dp = new int[n+1][n+1];
+        for(int i=0; i<n; i++) {
+            dp[i][i] = 1;
+        }
+        for(int l=2; l<=n; l++) {
+            for(int i=0; i<=n-l; i++) {
+                int j = l+i-1;
+                if(s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = 1 + dp[i][j-1] + dp[i+1][j];
+                } else {
+                    dp[i][j] = dp[i][j-1] + dp[i+1][j] - dp[i+1][j-1];
+                }
+            }
+        }
+        return dp[0][n-1];
     }
 }
