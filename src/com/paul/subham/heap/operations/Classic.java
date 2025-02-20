@@ -11,6 +11,8 @@ import java.util.*;
  * 6. Hand of straights (using map)
  * 7. Hand of straights (using map and start queue)
  * 8. Hand of straights (using map - optimized)
+ * 9. Maximum sum combinations
+ * 10. Most frequent k elements
  */
 public class Classic {
     public static void main(String[] args) {
@@ -266,5 +268,93 @@ public class Classic {
             }
         }
         return true;
+    }
+
+    /**
+     * Maximum sum combinations
+     *
+     * iven two equally sized 1-D arrays A, B containing N integers each.
+     * A sum combination is made by adding one element from array A and another element of array B.
+     * Return the maximum C valid sum combinations from all the possible sum combinations.
+     *
+     * A = [1, 4, 2, 3]
+     *  B = [2, 5, 1, 6]
+     *  C = 4
+     *  o/p: [10, 9, 9, 8]
+     *
+     *  TC: O(nlogn)
+     *  SC: O(1)
+     */
+    public int[] solve(int[] a, int[] b, int c) {
+        int n = a.length;
+        Arrays.sort(a);
+        Arrays.sort(b);
+        Set<String> set = new HashSet<>();
+        PriorityQueue<Combination> priorityQueue = new PriorityQueue<>((x,y)-> y.sum-x.sum);
+        priorityQueue.add(new Combination(n-1, n-1, a[n-1]+b[n-1]));
+        set.add((n - 1) + " " + (n - 1));
+
+        int[] res = new int[c];
+        int i = n-1;
+        int j = n-1;
+        int y = 0;
+        for(int p=0; p<c; p++) {
+            Combination current = priorityQueue.remove();
+            res[y++] = current.sum;
+            i = current.i;
+            j = current.j;
+            if(i > 0 && j > 0) {
+                if(!set.contains((i - 1) + " " + j)) {
+                    priorityQueue.add(new Combination(i-1,j,a[i-1]+b[j]));
+                    set.add((i - 1) + " " + j);
+                }
+                if(!set.contains(i + " " + (j - 1))) {
+                    priorityQueue.add(new Combination(i,j-1,a[i]+b[j-1]));
+                    set.add(i + " " + (j - 1));
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Most frequent k elements
+     *
+     * TC: O(nlogk)
+     * SC: O(n+k)
+     */
+    public static int[] topKFrequent(int[] a, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((x,y) -> map.get(x) - map.get(y));
+        for(int i=0; i<a.length; i++) {
+            map.put(a[i], map.getOrDefault(a[i], 0)+1);
+        }
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if(priorityQueue.size() < k) {
+                priorityQueue.add(entry.getKey());
+            } else {
+                if(map.get(priorityQueue.peek()) < map.get(entry.getKey())) {
+                    priorityQueue.remove();
+                    priorityQueue.add(entry.getKey());
+                }
+            }
+        }
+        int[] res = new int[k];
+        int i = 0;
+        while(!priorityQueue.isEmpty()) {
+            res[i++] = priorityQueue.poll();
+        }
+        return res;
+    }
+}
+
+class Combination {
+    int i;
+    int j;
+    int sum;
+    Combination(int i, int j, int sum) {
+        this.i = i;
+        this.j = j;
+        this.sum = sum;
     }
 }
