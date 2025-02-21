@@ -162,7 +162,7 @@ public class TwoD {
      * Count all possible paths from top left to bottom right of a matrix (Dynamic programming - tabulation - space optimized)
      *
      * TC: O(mn)
-     * SC: O(mn)
+     * SC: O(n)
      */
     private static int pathCountSpaceOptimized(int m, int n) {
         int[] dp = new int[n];

@@ -138,7 +138,7 @@ public class OneD {
      * Frog Jump (Tabulation - Space optimized)
      * <p>
      * TC: O(n)
-     * SC: O(n)
+     * SC: O(1)
      */
     public int minimumEnergyTabSpaceOpt(int a[], int n) {
         int jump2 = 0;
