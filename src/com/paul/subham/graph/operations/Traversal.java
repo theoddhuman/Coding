@@ -77,47 +77,40 @@ public class Traversal {
      * SC: O(mn)
      */
     public int orangesRotting(int[][] grid) {
-        int r = grid.length;
-        int c = grid[0].length;
+        int m = grid.length;
+        int n = grid[0].length;
         Queue<IndexPair> queue = new LinkedList<>();
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 2) {
                     queue.add(new IndexPair(i, j));
                 }
             }
         }
+        int[] delRow = { -1, 0, 1, 0 };
+        int[] delCol = { 0, 1, 0, -1 };
         int time = 0;
         while (!queue.isEmpty()) {
             int nodeCount = queue.size();
-            while (nodeCount > 0) {
-                IndexPair idxPair = queue.remove();
-                int i = idxPair.r;
-                int j = idxPair.c;
-                if (i - 1 >= 0 && !(grid[i - 1][j] == 0 || grid[i - 1][j] == 2)) {
-                    grid[i - 1][j] = 2;
-                    queue.add(new IndexPair(i - 1, j));
+            while (nodeCount-- > 0) {
+                IndexPair current = queue.remove();
+                int r = current.r;
+                int c = current.c;
+                for (int i = 0; i < 4; i++) {
+                    int nr = r + delRow[i];
+                    int nc = c + delCol[i];
+                    if (nr >= 0 && nr < m && nc >= 0 && nc < n && grid[nr][nc] == 1) {
+                        grid[nr][nc] = 2;
+                        queue.add(new IndexPair(nr, nc));
+                    }
                 }
-                if (j + 1 < c && !(grid[i][j + 1] == 0 || grid[i][j + 1] == 2)) {
-                    grid[i][j + 1] = 2;
-                    queue.add(new IndexPair(i, j + 1));
-                }
-                if (i + 1 < r && !(grid[i + 1][j] == 0 || grid[i + 1][j] == 2)) {
-                    grid[i + 1][j] = 2;
-                    queue.add(new IndexPair(i + 1, j));
-                }
-                if (j - 1 >= 0 && !(grid[i][j - 1] == 0 || grid[i][j - 1] == 2)) {
-                    grid[i][j - 1] = 2;
-                    queue.add(new IndexPair(i, j - 1));
-                }
-                nodeCount--;
             }
-            if (!queue.isEmpty()) {
+            if(!queue.isEmpty()) {
                 time++;
             }
         }
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 1) {
                     return -1;
                 }
@@ -184,7 +177,6 @@ public class Traversal {
     public static int[][] floodFillDFS(int[][] image, int sr, int sc, int color) {
         int m = image.length;
         int n = image[0].length;
-        int preColor = image[sr][sc];
         int[] delRow = {-1,0,1,0};
         int[] delCol = {0,1,0,-1};
         dfs(image,color,image[sr][sc],delRow,delCol,sr,sc,m,n);

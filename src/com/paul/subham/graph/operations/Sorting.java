@@ -293,63 +293,78 @@ public class Sorting {
      *
      * Given a sorted dictionary of an alien language having N words and k starting alphabets of a standard dictionary.
      * Find the order of characters in the alien language.
-     * Input:  n = 5, k = 4, dict = {"baa","abcd","abca","cab","cad"}
-     * Output: 1
+     * Input:  n = 5, dict = {"baa","abcd","abca","cab","cad"}
+     * Output: "bdac"
      * Explanation: Here order of characters is 'b', 'd', 'a', 'c'
      * Note that words are sorted and in the given language "baa" comes before "abcd", therefore 'b' is before 'a' in output.
      * Similarly, we can find other orders.
      *
-     * TC: O(n*len+K^2)
-     * SC: O(k^2)
+     * TC: O(n*len+26^2)
+     * SC: O(26^2)
      */
-    public static String findOrder(String[] dict, int n, int k) {
-        List<List<Integer>> adj = new ArrayList<>();
-        for(int i=0;i<k;i++) {
-            adj.add(new ArrayList<>());
+    public String alienOrder(String[] words) {
+        List<List<Integer>> list = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        for(int i=0; i<words.length; i++) {
+            for(int j=0; j<words[i].length(); j++) {
+                set.add(words[i].charAt(j)-'a');
+            }
         }
-        for (int i = 0; i < n - 1; i++) {
-            String s1 = dict[i];
-            String s2 = dict[i + 1];
-            int len = Math.min(s1.length(), s2.length());
-            for (int ptr = 0; ptr < len; ptr++) {
-                if (s1.charAt(ptr) != s2.charAt(ptr)) {
-                    adj.get(s1.charAt(ptr) - 'a').add(s2.charAt(ptr) - 'a');
+        for(int i=0; i<26; i++) {
+            list.add(new ArrayList<>());
+        }
+        for(int i=0; i<words.length-1; i++) {
+            String s = words[i];
+            String t = words[i+1];
+            if(s.length() > t.length() && s.startsWith(t)) {
+                return "";
+            }
+            int l = Math.min(s.length(), t.length());
+            for(int j=0; j<l; j++) {
+                if(s.charAt(j) != t.charAt(j)) {
+                    list.get(s.charAt(j)-'a').add(t.charAt(j)-'a');
                     break;
                 }
             }
         }
-        List<Integer> topo = topoSort(k, adj);
-        String ans = "";
-        for (int it : topo) {
-            ans = ans + (char)(it + (int)('a'));
+        List<Integer> order = topoSort(list);
+        String str = "";
+        for(Integer i : order) {
+            if(set.contains(i)) {
+                str += (char)(i+'a');
+            }
         }
-        return ans;
+        if(str.length() != set.size()) {
+            return "";
+        }
+        return str;
     }
 
-    private static List<Integer> topoSort(int V, List<List<Integer>> adj) {
-        int indegree[] = new int[V];
-        for (int i = 0; i < V; i++) {
-            for (int it : adj.get(i)) {
-                indegree[it]++;
+    private List<Integer> topoSort(List<List<Integer>> adjList) {
+        int[] indegree = new int[26];
+        for(int i=0; i<26; i++) {
+            List<Integer> list = adjList.get(i);
+            for(Integer j : list) {
+                indegree[j]++;
             }
         }
-
-        Queue<Integer> q = new LinkedList<>();
-        for (int i = 0; i < V; i++) {
-            if (indegree[i] == 0) {
-                q.add(i);
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i=0; i<26; i++) {
+            if(indegree[i]==0){
+                queue.add(i);
             }
         }
-        List<Integer> topo = new ArrayList<>();
-        while (!q.isEmpty()) {
-            int current = q.remove();
-            topo.add(current);
-            for (int it : adj.get(current)) {
-                if (--indegree[it] == 0) {
-                    q.add(it);
+        List<Integer> order = new ArrayList<>();
+        while(!queue.isEmpty()) {
+            int current = queue.remove();
+            order.add(current);
+            List<Integer> list = adjList.get(current);
+            for(Integer i : list) {
+                if(--indegree[i] == 0) {
+                    queue.add(i);
                 }
             }
         }
-        return topo;
+        return order;
     }
 }
