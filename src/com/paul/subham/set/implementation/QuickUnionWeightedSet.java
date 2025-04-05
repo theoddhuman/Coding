@@ -11,7 +11,7 @@ package com.paul.subham.set.implementation;
  */
 public class QuickUnionWeightedSet {
     public int[] s;
-    int[] weight;
+    public int[] weight;
     int size;
 
     /**

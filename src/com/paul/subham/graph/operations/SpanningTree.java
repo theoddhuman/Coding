@@ -18,6 +18,10 @@ import java.util.*;
  * 8. Most Stones Removed with Same Row or Column
  * 9. Account Merge
  * 10. Number of Islands II
+ * 11. Making A Large Island
+ * 12. Swim in Rising Water (using priority queue)
+ * 13. Swim in Rising Water (using binary search)
+ * 14. Swim in Rising Water (using disjoint set)
  */
 public class SpanningTree {
     public static void main(String[] args) {
@@ -142,7 +146,7 @@ public class SpanningTree {
     }
 
     /**
-     * Spanning Tree of an undirected graph
+     * Spanning Tree of an undirected unweighted graph
      *
      * TC: O(E)
      * SC: O(V)
@@ -367,7 +371,7 @@ public class SpanningTree {
     /**
      * Number of Islands II
      *
-     * ou are given an n, m which means the row and column of the 2D matrix, and an array of size k denoting the number of operations.
+     * you are given an n, m which means the row and column of the 2D matrix, and an array of size k denoting the number of operations.
      * Matrix elements are 0 if there is water or 1 if there is land.
      * Originally, the 2D matrix is all 0 which means there is no land in the matrix.
      * The array has k operator(s) and each operator has two integers A[i][0],
@@ -409,5 +413,202 @@ public class SpanningTree {
             ans.add(count);
         }
         return ans;
+    }
+
+    /**
+     * Making A Large Island
+     *
+     * You are given an n x n binary matrix grid. You are allowed to change at most one 0 to be 1.
+     * Return the size of the largest island in grid after applying this operation.
+     * An island is a 4-directionally connected group of 1s.
+     *
+     * Input: grid = [[1,0],[0,1]]
+     * Output: 3
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static int largestIsland(int[][] grid) {
+        int n = grid.length;
+        QuickUnionWeightedSet set = new QuickUnionWeightedSet();
+        set.makeSet(n*n);
+        int[] delRow = {-1, 0, 1, 0};
+        int[] delCol = {0, 1, 0, -1};
+        for(int i=0; i<n; i++) {
+            for(int j = 0; j<n; j++) {
+                if(grid[i][j] == 0) {
+                    continue;
+                }
+                int indexSet = i*n+j;
+                for(int k=0; k<4; k++) {
+                    int ni = i + delRow[k];
+                    int nj = j + delCol[k];
+                    int nIndexSet = ni*n+nj;
+                    if(ni >=0 && nj>=0 && ni<n && nj<n && grid[ni][nj] == 1) {
+                        set.unionByWeight(indexSet, nIndexSet);
+                    }
+                }
+            }
+        }
+        int max = 0;
+        for(int i=0; i<n; i++) {
+            for(int j = 0; j<n; j++) {
+                if(grid[i][j] == 1) {
+                    continue;
+                }
+                Set<Integer> parentSet = new HashSet<>();
+                int size = 1;
+                for(int k=0; k<4; k++) {
+                    int ni = i + delRow[k];
+                    int nj = j + delCol[k];
+                    int nIndexSet = ni*n+nj;
+                    if(ni >=0 && nj>=0 && ni<n && nj<n && grid[ni][nj] == 1 && !parentSet.contains(set.find(nIndexSet))) {
+                        size += set.weight[set.find(nIndexSet)];
+                        parentSet.add(set.find(nIndexSet));
+                    }
+                }
+                max = Math.max(max, size);
+            }
+        }
+        return max == 0? n*n : max;
+    }
+
+    /**
+     * Swim in Rising Water (using priority queue)
+     *
+     * You are given an n x n integer matrix grid where each value grid[i][j] represents the elevation at that point (i, j).
+     * The rain starts to fall. At time t, the depth of the water everywhere is t.
+     * You can swim from a square to another 4-directionally adjacent square
+     * if and only if the elevation of both squares individually are at most t.
+     * You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.
+     * Return the least time until you can reach the bottom right square (n - 1, n - 1) if you start at the top left square (0, 0).
+     *
+     * Input: grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
+     * Output: 16
+     *
+     * TC: O(n^2*(log(n^2)) = O(n^2*logn)
+     * SC: O(n^2)
+     */
+    public int swimInWater(int[][] grid) {
+        int n = grid.length;
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(k -> grid[k / n][k % n]));
+        Set<Integer> seen = new HashSet<>();
+        priorityQueue.add(0);
+        seen.add(0);
+        int ans = 0;
+        int[] delRow = {-1, 0, 1, 0};
+        int[] delCol = {0, 1, 0, -1};
+        while(!priorityQueue.isEmpty()) {
+            int current = priorityQueue.remove();
+            int r = current/n;
+            int c = current%n;
+            ans = Math.max(ans, grid[r][c]);
+            if(r == n-1 && c == n-1) {
+                return ans;
+            }
+            for(int i=0; i<4; i++) {
+                int nr = r + delRow[i];
+                int nc = c + delCol[i];
+                int nIndex = nr*n+nc;
+                if(nr >= 0 && nc >= 0 && nr < n && nc < n && !seen.contains(nIndex)) {
+                    priorityQueue.add(nIndex);
+                    seen.add(nIndex);
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Swim in Rising Water (using binary search)
+     *
+     * TC: O(n^2*(log(n^2)) = O(n^2*logn)
+     * SC: O(n^2)
+     */
+    public static int swimInWaterBS(int[][] grid) {
+        int n = grid.length;
+        int l = grid[0][0];
+        int h = n*n;
+        while(l < h) {
+            int mid = l + (h-l)/2;
+            if(!isPossible(grid, mid)) {
+                l = mid+1;
+            } else {
+                h = mid;
+            }
+        }
+        return l;
+    }
+
+    private static boolean isPossible(int[][] grid, int t) {
+        int n = grid.length;
+        Stack<Integer> stack = new Stack<>();
+        Set<Integer> seen = new HashSet<>();
+        stack.add(0);
+        seen.add(0);
+        int ans = 0;
+        int[] delRow = {-1, 0, 1, 0};
+        int[] delCol = {0, 1, 0, -1};
+        while(!stack.isEmpty()) {
+            int current = stack.pop();
+            int r = current/n;
+            int c = current%n;
+            ans = Math.max(ans, grid[r][c]);
+            if(r == n-1 && c == n-1) {
+                return true;
+            }
+            for(int i=0; i<4; i++) {
+                int nr = r + delRow[i];
+                int nc = c + delCol[i];
+                int nIndex = nr*n+nc;
+                if(nr >= 0 && nc >= 0 && nr < n && nc < n && !seen.contains(nIndex) && grid[nr][nc] <=t) {
+                    stack.add(nIndex);
+                    seen.add(nIndex);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Swim in Rising Water (using disjoint set)
+     *
+     * TC: O(n^2*(log(n^2)) = O(n^2*logn)
+     * SC: O(n^2)
+     */
+    public static int swimInWaterDS(int[][] grid) {
+        int n = grid.length;
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(k -> grid[k / n][k % n]));
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                priorityQueue.add(i*n+j);
+            }
+        }
+        QuickUnionWeightedSet set = new QuickUnionWeightedSet();
+        boolean[][] visited = new boolean[n][n];
+        set.makeSet(n*n);
+        int[] delRow = {-1, 0, 1, 0};
+        int[] delCol = {0, 1, 0, -1};
+        while(!priorityQueue.isEmpty()) {
+            int current = priorityQueue.remove();
+            int r = current/n;
+            int c = current%n;
+            visited[r][c] = true;
+            int cIndex = r*n + c;
+            for(int i=0; i<4; i++) {
+                int nr = r + delRow[i];
+                int nc = c + delCol[i];
+                if(nr >= 0 && nc >= 0 && nr < n && nc < n && visited[nr][nc]) {
+                    int nIndex = nr*n+nc;
+                    if(set.find(cIndex) != set.find(nIndex)) {
+                        set.unionByWeight(cIndex, nIndex);
+                    }
+                }
+                if(set.find(0) == set.find(n*n-1)) {
+                    return grid[r][c];
+                }
+            }
+        }
+        return -1;
     }
 }
