@@ -19,6 +19,7 @@ import java.util.Map;
  * 12. Count substring with exactly k distinct characters
  * 13. Minimum window substring
  * 14. Minimum window substring (Sliding window)
+ * 15. Minimum window subsequence
  */
 public class SubString {
     public static void main(String[] args) {
@@ -128,7 +129,7 @@ public class SubString {
      * Length of the longest substring without repeating characters (Storing last index)
      *
      * TC: O(n)
-     * SC: O(n)
+     * SC: O(1)
      */
     public static int longestUniqueSubstringLastIndex(String s) {
         int result = 1;
@@ -402,5 +403,42 @@ public class SubString {
             }
         }
         return min == Integer.MAX_VALUE? "" : s.substring(start, start+min);
+    }
+
+    /**
+     * Minimum window subsequence
+     *
+     * Given strings s1 and s2, return the minimum contiguous substring part of s1, so that s2 is a subsequence of the part.
+     * If there is no such window in s1 that covers all characters in s2, return the empty string "".
+     * If there are multiple such minimum-length windows, return the one with the left-most starting index.
+     *
+     * TC: O(mn)
+     * SC: O(mn)
+     */
+    public String minWindowSS(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        int[][] dp = new int[m+1][n+1];
+        for(int i=0; i<=m; i++) {
+            Arrays.fill(dp[i], 1000000000);
+        }
+        dp[0][0]=0;
+        int min = m + 1;
+        int end = 0;
+        for(int i=1; i<=m; i++) {
+            dp[i][0] = 0;
+            for(int j=1; j<=n; j++) {
+                if(s.charAt(i-1) == t.charAt(j-1)) {
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                } else {
+                    dp[i][j] = 1 + dp[i-1][j];
+                }
+            }
+            if(dp[i][n] < min) {
+                min = dp[i][n];
+                end = i;
+            }
+        }
+        return min > m  ? "" : s.substring(end-min, end);
     }
 }

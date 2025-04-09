@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
  * @author subham.paul
  *
  * 1. Sum of all subsets (Sorting)
- * 2. Sum of all subsets
+ * 2. Sum of all subsets 2
  * 3. All unique subsets of an array with duplicate elements
  * 4. All unique subsets of an array with duplicate elements (Add subset at each iteration)
  * 5. Combination Sum I
@@ -58,7 +58,7 @@ public class Subset {
         }
     }
     /**
-     * Sum of all subsets 2
+     * Sum of all subsets
      * [5,2,1] -> [0,1,2,3,5,6,7,8]
      *
      * TC: O(2^n)
@@ -223,7 +223,6 @@ public class Subset {
     }
 
     private static void combinationSum2(int[] a, int i, int target, List<List<Integer>> res, List<Integer> combination) {
-        System.out.println(i + " " + target);
         if(target == 0) {
             res.add(new ArrayList<>(combination));
             return;

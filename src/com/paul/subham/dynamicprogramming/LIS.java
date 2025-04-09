@@ -23,10 +23,10 @@ import java.util.*;
 public class LIS {
     public static void main(String[] args) {
         //int[] a = { 3, 34, 4, 12, 5, 2 };
-        int[] a = {4,10,4,3,8,9};
+        int[] a = {10,9,2,5,3,7,101,18};
         String s1 = "abcde";
         String s2 = "ace";
-        System.out.println(lengthOfLISMem(a));
+        System.out.println(longestIncreasingSubsequenceBinarySearch(a));
     }
 
     /**
