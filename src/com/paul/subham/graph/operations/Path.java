@@ -27,6 +27,7 @@ import java.util.*;
  * 17. No of ways to arrive at a destination in minimum time (BFS)
  * 18. Minimum Multiplications to reach End (BFS)
  * 19. Find the City With the Smallest Number of Neighbors at a Threshold Distance (Floyd Warshall Algorithm)
+ * 20. Existence of arbitrage in a list of conversion rates (Using Bellman Ford Algorithm)
  */
 public class Path {
     public static void main(String[] args) {
@@ -50,15 +51,20 @@ public class Path {
 //        graph.addEdge(4,2, -20);
 //        weightedShortestPath(graph, 1);
 //        weightedShortestPathImproved(graph, 1);
-//        weightedShortestPathUsingArray(graph, 1);
-        AdjacencyMatrixWeightedGraph graph = new AdjacencyMatrixWeightedGraph(10);
-        graph.addEdge(1,2,1);
-        graph.addEdge(2,3,2);
-        graph.addEdge(3,5,3);
-        graph.addEdge(5,6,4);
-        graph.addEdge(5,4,2);
-        graph.addEdge(3,4,7);
-        allPairShortestPath(graph);
+////        weightedShortestPathUsingArray(graph, 1);
+//        AdjacencyMatrixWeightedGraph graph = new AdjacencyMatrixWeightedGraph(10);
+//        graph.addEdge(1,2,1);
+//        graph.addEdge(2,3,2);
+//        graph.addEdge(3,5,3);
+//        graph.addEdge(5,6,4);
+//        graph.addEdge(5,4,2);
+//        graph.addEdge(3,4,7);
+//        allPairShortestPath(graph);
+        List<Rate> rates = new ArrayList<>();
+        rates.add(new Rate("USD", "EUR", 0.9));
+        rates.add(new Rate("EUR", "GBP", 0.8));
+        rates.add(new Rate("GBP", "USD", 1.5));
+        System.out.println(canArbitrageExist(rates, "USD"));
     }
 
     /**
@@ -851,6 +857,44 @@ public class Path {
             }
         }
         return index;
+    }
+
+    /**
+     * Existence of arbitrage in a list of conversion rates (Using Bellman Ford Algorithm)
+     *
+     * TC: O(n^3)
+     * SC: O(n)
+     */
+    public static boolean canArbitrageExist(List<Rate> rates, String start) {
+        Map<String, List<Rate>> adjMap = new HashMap<>();
+        for(Rate rate : rates) {
+            rate.rate = -Math.log(rate.rate);
+            adjMap.putIfAbsent(rate.from, new ArrayList<>());
+            adjMap.get(rate.from).add(rate);
+        }
+        Map<String, Double> distances = new HashMap<>();
+        for(String currency : adjMap.keySet()) {
+            distances.put(currency, Double.MAX_VALUE);
+        }
+        distances.put(start, 0.0);
+        for(int i=0; i<adjMap.size()-1; i++) {
+            for(String currency : adjMap.keySet()) {
+                for(Rate rate : adjMap.get(currency)) {
+                    if(distances.get(rate.to) > distances.get(currency) + rate.rate) {
+                        distances.put(rate.to, distances.get(currency) + rate.rate);
+                    }
+                }
+            }
+        }
+        //finding negative cycle
+        for(String currency : adjMap.keySet()) {
+            for(Rate rate : adjMap.get(currency)) {
+                if(distances.get(rate.to) > distances.get(rate.from) + rate.rate) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 

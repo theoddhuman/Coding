@@ -17,14 +17,20 @@ import java.util.*;
  * 10. Word Ladder - I (BFS)
  * 11. Word Ladder - II (BFS+DFS)
  * 12. Number of Distinct Islands (Multi-source)(DFS)
+ * 13. Currency Conversion
  */
 public class Traversal {
     public static void main(String[] args) {
-        int[][] grid =  {
-                {0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 1, 1, 0, 1, 0}
-        };
-        System.out.println(numIslands(grid));
+//        int[][] grid =  {
+//                {0, 1, 1, 1, 0, 0, 0},
+//                {0, 0, 1, 1, 0, 1, 0}
+//        };
+//        System.out.println(numIslands(grid));
+        List<Rate> rates = new ArrayList<>();
+        rates.add(new Rate("USD", "JPY", 110));
+        rates.add(new Rate("USD", "AUD", 1.45));
+        rates.add(new Rate("JPY", "GBP", 0.0070));
+        System.out.println(conversionRate(rates, "GBP", "AUD"));
     }
 
     /**
@@ -561,6 +567,75 @@ public class Traversal {
                 isIsland(a,ni,nj,visited,delRow,delCol);
             }
         }
+    }
+
+    /**
+     * Currency Conversion
+     *
+     * Paramenters:
+     * array of currency conversion rates. E.g. ['USD', 'GBP', 0.77] which means 1 USD is equal to 0.77 GBP
+     * an array containing a 'from' currency and a 'to' currency
+     * Given the above parameters, find the conversion rate that maps to the 'from' currency to the 'to' currency.
+     * Your return value should be a number.
+     *
+     * Example:
+     * You are given the following parameters:
+     *
+     * Rates: ['USD', 'JPY', 110] ['US', 'AUD', 1.45] ['JPY', 'GBP', 0.0070]
+     * To/From currency ['GBP', 'AUD']
+     * Find the rate for the 'To/From' curency. In this case, the correct result is 1.89
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static double conversionRate(List<Rate> rates, String from, String to) {
+        Map<String, List<Rate>> adjMap = new HashMap<>();
+        Set<String> visited = new HashSet<>();
+        for(Rate rate : rates) {
+            adjMap.putIfAbsent(rate.from, new ArrayList<>());
+            adjMap.putIfAbsent(rate.to, new ArrayList<>());
+            adjMap.get(rate.from).add(rate);
+            adjMap.get(rate.to).add(new Rate(rate.to, rate.from, 1/rate.rate));
+        }
+        Queue<RateTuple> queue = new LinkedList<>();
+        queue.add(new RateTuple(from, 1.0));
+        visited.add(from);
+        while(!queue.isEmpty()) {
+            RateTuple currentTuple = queue.remove();
+            List<Rate> currentTos = adjMap.get(currentTuple.from);
+            double currentRate = currentTuple.rate;
+            for(Rate rate : currentTos) {
+                if(to.equals(rate.to)) {
+                    return rate.rate * currentRate;
+                }
+                if(!visited.contains(rate.to)) {
+                    queue.add(new RateTuple(rate.to, rate.rate * currentRate));
+                    visited.add(rate.to);
+                }
+            }
+        }
+        return 0.0;
+    }
+}
+
+class RateTuple {
+    String from;
+    double rate;
+    RateTuple(String from, double rate) {
+        this.from = from;
+        this.rate = rate;
+    }
+}
+
+class Rate {
+    String from;
+    String to;
+    double rate;
+
+    public Rate(String from, String to, double rate) {
+        this.from = from;
+        this.to = to;
+        this.rate = rate;
     }
 }
 

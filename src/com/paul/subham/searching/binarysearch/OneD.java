@@ -7,8 +7,9 @@ package com.paul.subham.searching.binarysearch;
  * 4. Ceil(Upper bound) of a number in a sorted array (Iterative)
  * 3. Floor(Lower bound) of a number in a sorted array (Recursive)
  * 4. Floor(Lower bound) of a number in a sorted array (Iterative)
- * 5. Search insert position (Iterative)
- * 6. Search insert position (Iterative)
+ * 5. Search insert position (Recursive)
+ * 6. Search insert position (Iterative - upper bound)
+ * 7. Search insert position (Iterative - lower bound)
  * 7. First occurrence of an element in an array (Binary Search - Recursive)
  * 8. First occurrence of an element in an array (Binary Search - Iterative)
  * 9. Last occurrence of an element in an array (Binary Search - Recursive)
@@ -21,6 +22,7 @@ package com.paul.subham.searching.binarysearch;
  * 16. Searching an element in sorted and rotated array (Binary Search - Iterative)
  * 17. Maximum in sorted and rotated array (Binary Search)
  * 18. Minimum in sorted and rotated array (Binary Search)
+ * 19. Minimum in sorted and rotated array (Binary Search - iterative)
  * 19. Searching an element in sorted and rotated array - duplicate elements (Binary Search - Iterative)
  * 20. Rotation count in sorted and rotated array (Binary Search - Recursive)
  * 21. Rotation count in sorted and rotated array (Binary Search - Iterative)
@@ -33,8 +35,8 @@ package com.paul.subham.searching.binarysearch;
  */
 public class OneD {
     public static void main(String[] args) {
-        int[] a = {1,2,3,4,5,6};
-        System.out.println(searchRecursive(a, 0, a.length-1, 5));
+        int[] a = {1,2,4,5,6};
+        System.out.println(lowerBoundIterative(a,5, 12));
     }
 
     /**
@@ -132,7 +134,7 @@ public class OneD {
      * SC: O(logn)
      */
     public static int lowerBound(int[] a, int n, int x) {
-        return lowerBoundRec(a, n, x, 0, n-1, n);
+        return lowerBoundRec(a, n, x, 0, n-1, -1);
     }
 
     public static int lowerBoundRec(int[] a, int n, int x, int low, int high, int ans) {
@@ -155,7 +157,7 @@ public class OneD {
     public static int lowerBoundIterative(int[] a, int n, int x) {
         int low = 0;
         int high = n-1;
-        int ans = n;
+        int ans = -1;
         while(low <= high) {
             int mid = (low+high)/2;
             if(a[mid]<=x) {
@@ -190,22 +192,43 @@ public class OneD {
     }
 
     /**
-     * Search insert position (Iterative)
+     * Search insert position (Iterative - lower bound)
      *
      * TC: O(logn)
-     * SC: O(logn)
+     * SC: O(1)
      */
-    public static int searchInsertIter(int[] a, int target) {
+    public static int searchInsertX(int[] a, int target) {
         int low = 0;
         int high = a.length-1;
         int ans = 0;
         while(low <= high) {
             int mid = (low+high)/2;
             if(a[mid] >= target) {
-                ans = mid;
                 high = mid-1;
             } else {
                 ans = mid+1;
+                low = mid+1;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * Search insert position (Iterative - upper bound)
+     *
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int searchInsert(int[] a, int target) {
+        int low = 0;
+        int high = a.length-1;
+        int ans = a.length;
+        while(low <= high) {
+            int mid = (low+high)/2;
+            if(a[mid] >= target) {
+                ans = mid;
+                high = mid-1;
+            } else {
                 low = mid+1;
             }
         }
@@ -479,6 +502,32 @@ public class OneD {
             return findMin(a, mid+1, high);
         }
         return findMin(a, low, mid-1);
+    }
+
+    /**
+     * Minimum in sorted and rotated array (Binary Search - iterative)
+     * <p>
+     * TC: O(logn)
+     * SC: O(1)
+     */
+    public static int findMin(int[] a) {
+        int low = 0;
+        int high = a.length-1;
+        while(low < high) {
+            int mid = (low+high)/2;
+            if(mid < high && a[mid] > a[mid+1]) {
+                return a[mid+1];
+            }
+            if(mid > low && a[mid] < a[mid-1]) {
+                return a[mid];
+            }
+            if(a[mid] >= a[high]) {
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return a[low];
     }
 
     /**
