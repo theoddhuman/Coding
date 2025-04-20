@@ -204,7 +204,6 @@ public class BinaryHeap {
         capacity *= 2;
         a = new int[capacity];
         System.arraycopy(aOld, 0, a, 0, aOld.length);
-        aOld = null;
     }
 
     /**
