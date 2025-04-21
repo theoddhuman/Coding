@@ -16,7 +16,9 @@ import java.util.*;
  */
 public class Classic {
     public static void main(String[] args) {
-
+        char[] tasks = {'A', 'A', 'A', 'B', 'B', 'B'};
+        int n = 2;
+        System.out.println(leastIntervalFillslots(tasks, n));
     }
 
     /**
@@ -62,7 +64,7 @@ public class Classic {
      * TC: O(n*logk), k = 26 so, O(n)
      * SC: O(k) = O(1)
      */
-    public int leastInterval(char[] tasks, int n) {
+    public static int leastInterval(char[] tasks, int n) {
         int[] freq = new int[26];
         for(int i=0; i<tasks.length; i++) {
             freq[tasks[i] - 'A']++;
@@ -97,7 +99,7 @@ public class Classic {
      * TC: O(n + klogk), k = 26 so, O(n)
      * SC: O(k) = O(1)
      */
-    public int leastIntervalFillslots(char[] tasks, int n) {
+    public static int leastIntervalFillslots(char[] tasks, int n) {
         int[] freq = new int[26];
         for(int i=0; i<tasks.length; i++) {
             freq[tasks[i] - 'A']++;
@@ -273,7 +275,7 @@ public class Classic {
     /**
      * Maximum sum combinations
      *
-     * iven two equally sized 1-D arrays A, B containing N integers each.
+     * Given two equally sized 1-D arrays A, B containing N integers each.
      * A sum combination is made by adding one element from array A and another element of array B.
      * Return the maximum C valid sum combinations from all the possible sum combinations.
      *
@@ -295,8 +297,8 @@ public class Classic {
         set.add((n - 1) + " " + (n - 1));
 
         int[] res = new int[c];
-        int i = n-1;
-        int j = n-1;
+        int i;
+        int j;
         int y = 0;
         for(int p=0; p<c; p++) {
             Combination current = priorityQueue.remove();
@@ -325,18 +327,14 @@ public class Classic {
      */
     public static int[] topKFrequent(int[] a, int k) {
         Map<Integer, Integer> map = new HashMap<>();
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((x,y) -> map.get(x) - map.get(y));
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(map::get));
         for(int i=0; i<a.length; i++) {
             map.put(a[i], map.getOrDefault(a[i], 0)+1);
         }
-        for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            if(priorityQueue.size() < k) {
-                priorityQueue.add(entry.getKey());
-            } else {
-                if(map.get(priorityQueue.peek()) < map.get(entry.getKey())) {
-                    priorityQueue.remove();
-                    priorityQueue.add(entry.getKey());
-                }
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            priorityQueue.add(entry.getKey());
+            if (priorityQueue.size() > k) {
+                priorityQueue.remove();
             }
         }
         int[] res = new int[k];

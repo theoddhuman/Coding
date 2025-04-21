@@ -114,7 +114,7 @@ public class Manipulation {
             return merge(a[i], a[j], n, n);
         }
         int mid = (i+j)/2;
-        int[] output1 = mergeKSortedArraysUtil(a, 0, mid, n);
+        int[] output1 = mergeKSortedArraysUtil(a, i, mid, n);
         int[] output2 = mergeKSortedArraysUtil(a, mid+1, j, n);
         return merge(output1, output2, output1.length, output2.length);
     }
