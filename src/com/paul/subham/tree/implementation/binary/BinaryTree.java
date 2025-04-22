@@ -149,7 +149,6 @@ public class BinaryTree {
         while(!queue.isEmpty()) {
             current = queue.remove();
             if(current == node) {
-                current = null;
                 return;
             }
             if(current.left != null) {
@@ -431,10 +430,7 @@ public class BinaryTree {
         if(node.data == data) {
             return true;
         }
-        if(searchRecursive(node.left, data)) {
-            return true;
-        }
-        return searchRecursive(node.right, data);
+        return searchRecursive(node.left, data) || searchRecursive(node.right, data);
     }
 
     //search an element iterative, TC:O(n), SC:O(n)

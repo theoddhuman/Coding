@@ -37,8 +37,9 @@ import java.util.stream.Collectors;
  * 19. Diagonal sum of a binary tree
  * 20. Diagonal sum of a binary tree (diagonal relation in matrices)
  * 21. Children Sum in a Binary Tree
- * 22. Two sum in binary search tree (inorder)
- * 23. Two sum in binary search tree (Using iterator)
+ * 22. Convert binary tree to follow child sum property
+ * 23. Two sum in binary search tree (inorder)
+ * 24. Two sum in binary search tree (Using iterator)
  *
  */
 public class Sum {
@@ -64,8 +65,9 @@ public class Sum {
         bt.root.left.right.left = new Node(6);
         bt.root.left.right.right = new Node(8);
         bt.root.left.right.left.right = new Node(7);
-        System.out.println(diagonalSumMatrix(bt));
-//        bt.levelOrder();
+        convertToChildSumProperty(bt.root);
+        //System.out.println(diagonalSumMatrix(bt));
+        bt.levelOrder();
 //        System.out.println();
 //        System.out.println(rightLeavesSumIterative(bt));
         //System.out.println(sumPerfectBinaryTreeEfficient(3));
@@ -601,18 +603,56 @@ public class Sum {
         int sum = 0;
         if(node.left != null) {
             sum += node.left.data;
-            if(!isSumProperty(node.left)) {
-                return false;
-            }
         }
         if(node.right != null) {
             sum += node.right.data;
-            if(!isSumProperty(node.right)){
-                return false;
+        }
+        return node.data == sum && isSumProperty(node.left) && isSumProperty(node.right);
+
+    }
+
+    /**
+     * Convert binary tree to follow child sum property
+     *
+     * The node values can be increased by any positive integer any number of times, but decrementing any node value is not allowed.
+     * A value for a NULL node can be assumed as 0.
+     * We cannot change the structure of the given binary tree.
+     *
+     * TC: O(n)
+     * SC: O(n)
+     */
+    public static void convertToChildSumProperty(Node node) {
+        if(node == null) {
+            return;
+        }
+        int childSum = 0;
+        if(node.left != null) {
+            childSum += node.left.data;
+        }
+        if(node.right != null) {
+            childSum += node.right.data;
+        }
+        if(childSum >= node.data) {
+            node.data = childSum;
+        } else {
+            if(node.left != null) {
+                node.left.data = node.data;
+            } else if(node.right != null) {
+                node.right.data = node.data;
             }
         }
-        return node.data == sum;
-
+        convertToChildSumProperty(node.left);
+        convertToChildSumProperty(node.right);
+        childSum = 0;
+        if(node.left != null) {
+            childSum += node.left.data;
+        }
+        if(node.right != null) {
+            childSum += node.right.data;
+        }
+        if(node.left != null || node.right != null) {
+            node.data = childSum;
+        }
     }
 
     /**

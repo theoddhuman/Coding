@@ -60,7 +60,7 @@ public class Path {
         bt.root.left.right.left.right = new Node(7);
         bt.levelOrder();
         System.out.println();
-        System.out.println(lowestCommonAncestorByPath(bt, 6,8));
+        printAncestorsIterative(bt,8);
     }
 
 
@@ -555,15 +555,15 @@ public class Path {
             int nodeCount = queue.size();
             while(nodeCount-- > 0) {
                 Node current = queue.remove();
-                if(current.left != null && visited.get(current.left) == null) {
+                if(current.left != null && !visited.containsKey(current.left)) {
                     queue.add(current.left);
                     visited.put(current.left, true);
                 }
-                if(current.right != null && visited.get(current.right) == null) {
+                if(current.right != null && !visited.containsKey(current.right)) {
                     queue.add(current.right);
                     visited.put(current.right, true);
                 }
-                if(parentMap.containsKey(current) && visited.get(parentMap.get(current))==null) {
+                if(parentMap.containsKey(current) && !visited.containsKey(parentMap.get(current))) {
                     queue.add(parentMap.get(current));
                     visited.put(parentMap.get(current), true);
                 }

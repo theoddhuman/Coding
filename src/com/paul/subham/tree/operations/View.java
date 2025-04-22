@@ -123,7 +123,7 @@ public class View {
     /**
      * Bottom view of a binary tree (level order)
      *
-     * TC: O(nlogn)
+     * TC: O(n)
      * SC: O(n)
      */
     public static void bottomView(BinaryTree binaryTree) {
@@ -154,7 +154,7 @@ public class View {
     /**
      * Bottom view of a binary tree (Preorder)
      *
-     * TC: O(nlogn)
+     * TC: O(n)
      * SC: O(n)
      */
     public static void bottomViewPreorder(BinaryTree binaryTree) {
@@ -188,7 +188,7 @@ public class View {
     /**
      * Top view of a binary tree (Preorder)
      *
-     * TC: O(nlogn)
+     * TC: O(n)
      * SC: O(n)
      */
     static void topView(BinaryTree binaryTree) {
@@ -222,7 +222,7 @@ public class View {
     /**
      * Top view of a binary tree (level order)
      *
-     * TC: O(nlogn)
+     * TC: O(n)
      * SC: O(n)
      */
     public static void topViewLevelOrder(BinaryTree binaryTree) {
@@ -255,7 +255,7 @@ public class View {
     /**
      * Top view of a binary tree (level order - optimized)
      *
-     * TC: O(nlogn)
+     * TC: O(n)
      * SC: O(n)
      */
     public static void topViewLevelOrderOptimized(BinaryTree binaryTree) {
@@ -307,7 +307,9 @@ public class View {
         List<Integer> res = new ArrayList<>();
         res.add(root.data);
         leftBoundary(root.left, res);
-        leafBoundary(root, res);
+        if(root.left != null || root.right != null) {
+            leafBoundary(root, res);
+        }
         rightBoundary(root.right, res);
         return res;
     }

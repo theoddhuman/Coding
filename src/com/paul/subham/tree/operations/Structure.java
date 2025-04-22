@@ -123,9 +123,7 @@ public class Structure {
         if (node == null) {
             return 0;
         }
-        int leftHeight = heightUtil(node.left);
-        int rightHeight = heightUtil(node.right);
-        return (leftHeight > rightHeight) ? leftHeight + 1 : rightHeight + 1;
+        return 1 + Math.max(heightUtil(node.left), heightUtil(node.right));
     }
 
     /**
@@ -1206,7 +1204,6 @@ public class Structure {
         queue.add(new Pair(root, 1));
         int maxWidth = 0;
         while(!queue.isEmpty()) {
-            System.out.println(true);
             int nodeCount = queue.size();
             int min = queue.peek().index;
             int first = 0;
