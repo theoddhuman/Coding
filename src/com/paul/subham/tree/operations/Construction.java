@@ -81,9 +81,6 @@ public class Construction {
             return null;
         }
         Node node = new Node(pre[pIndex++]);
-        if(inStart == inEnd) {
-            return node;
-        }
         int index = search(in, inStart, inEnd, node.data);
         node.left = buildBT(pre, in, inStart, index-1);
         node.right = buildBT(pre, in, index+1, inEnd);
@@ -123,9 +120,6 @@ public class Construction {
             return null;
         }
         Node node = new Node(pre[pIndex++]);
-        if(inStart == inEnd) {
-            return node;
-        }
         int index = inMap.get(node.data);
         node.left = buildBT(pre, in, inStart, index-1, inMap);
         node.right = buildBT(pre, in, index+1, inEnd, inMap);
@@ -150,9 +144,6 @@ public class Construction {
             return null;
         }
         Node node = new Node(post[pIndex--]);
-        if(inStart == inEnd) {
-            return node;
-        }
         int index = search(in, inStart, inEnd, node.data);
         node.right = buildBTPost(post, in, index+1, inEnd);
         node.left = buildBTPost(post, in, inStart, index-1);
@@ -181,9 +172,6 @@ public class Construction {
             return null;
         }
         Node node = new Node(post[pIndex--]);
-        if(inStart == inEnd) {
-            return node;
-        }
         int index = inMap.get(node.data);
         node.right = buildBTPost(post, in, index+1, inEnd, inMap);
         node.left = buildBTPost(post, in, inStart, index-1, inMap);

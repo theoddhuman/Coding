@@ -54,22 +54,19 @@ public class Backtracking {
     }
 
     public static boolean exist(char[][] board, String word, int i, int j, int k, int[] delRow, int[] delCol) {
-        if(k==word.length()) {
+        if(board[i][j] != word.charAt(k)) {
+            return false;
+        }
+        if(k == word.length()-1) {
             return true;
         }
         int m = board.length;
         int n = board[0].length;
-        if(i<0 || j<0 || i>=m || j>=n) {
-            return false;
-        }
-        if(board[i][j] != word.charAt(k)) {
-            return false;
-        }
         board[i][j] = '!';
         for(int p=0;p<4;p++) {
             int ni = i+delRow[p];
             int nj = j+delCol[p];
-            if(exist(board,word,ni,nj, k+1, delRow, delCol)) {
+            if(ni>=0 && nj>=0 && ni<m && nj<n && exist(board,word,ni,nj, k+1, delRow, delCol)) {
                 return true;
             }
         }

@@ -665,7 +665,6 @@ public class StringDP {
         if(dp[i][j] != null) {
             return dp[i][j];
         }
-        int n = s.length();
         for(int k=i; k<=(i+j)/2;k++) {
             if(s.charAt(k) != s.charAt((i+j-k))) {
                 return dp[i][j] = false;
