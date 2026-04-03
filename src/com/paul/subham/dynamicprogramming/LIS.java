@@ -245,7 +245,7 @@ public class LIS {
      */
     public static int longestStrChain(String[] words) {
         int n = words.length;
-        Arrays.sort(words, (s1,s2) -> s1.length()-s2.length());
+        Arrays.sort(words, Comparator.comparingInt(String::length));
         int[] dp = new int[n];
         Arrays.fill(dp, -1);
         int longest = 1;

@@ -9,7 +9,7 @@ package com.paul.subham.stack.implementation;
  * 6. print stack
  */
 public class LinkedListStack {
-    public Node top = null;
+    public SNode top = null;
 
     //is empty
     boolean isEmpty() {
@@ -18,7 +18,7 @@ public class LinkedListStack {
 
     //push an element
     public void push(int data) {
-        Node newNode = new Node(data);
+        SNode newNode = new SNode(data);
         if(isEmpty()) {
             top = newNode;
             return;
@@ -50,7 +50,7 @@ public class LinkedListStack {
 
     //print stack
     public void print() {
-        Node current = top;
+        SNode current = top;
         while(current != null) {
             System.out.print(current.data + " ");
             current = current.next;

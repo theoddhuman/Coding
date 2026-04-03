@@ -11,12 +11,12 @@ import java.util.Arrays;
  * 4. Frog Jump (Memoization)
  * 5. Frog Jump (Tabulation)
  * 6. Frog Jump (Tabulation - Space optimized)
- * 7. Frog Jump K times (Memoization)
+ * 7. ***Frog Jump K times (Memoization)
  * 8. Frog Jump K times (Tabulation)
  * 9. Maximum sum of non-adjacent elements (Memoization)
  * 10. Maximum sum of non-adjacent elements (Tabulation)
  * 11. Maximum sum of non-adjacent elements (Tabulation - Space Optimized)
- * 12. Maximum sum of non-adjacent elements of a circular array (Memoization)
+ * 12. ***Maximum sum of non-adjacent elements of a circular array (Memoization)
  * 13. Maximum sum of non-adjacent elements of a circular array (Tabulation)
  */
 public class OneD {

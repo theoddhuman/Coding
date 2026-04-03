@@ -7,7 +7,7 @@ import java.util.Arrays;
  * 2. Subset sum equal to k (Tabulation)
  * 3. Subset sum equal to k (Tabulation - Space Optimized)
  * 4. Partition equal subset sum (Tabulation - Space Optimized)
- * 5. Partition Set Into 2 Subsets With Min Absolute Sum Diff (Tabulation - space optimized)
+ * 5.*Partition Set Into 2 Subsets With Min Absolute Sum Diff (Tabulation - space optimized)
  * 6. Count subsets with sum k (Memoization)
  * 7. Count subsets with sum k (Tabulation)
  * 8. Count subsets with sum k (Tabulation - Space optimized)
@@ -95,7 +95,7 @@ public class Subsequence {
      * Subset sum equal to k (Tabulation - Space Optimized)
      * <p>
      * TC: O(nk)
-     * SC: O(nk)
+     * SC: O(k)
      */
     public static boolean subsetSumToK(int[] a, int k) {
         int n = a.length;
@@ -376,15 +376,10 @@ public class Subsequence {
     }
 
     private static int minCoins(int[] a, int i, int target, int[][] dp) {
-        if (target == 0) {
-            return 0;
-        }
-        if (i == 0) {
-            return Integer.MAX_VALUE;
-        }
-        if (dp[i][target] != -1) {
-            return dp[i][target];
-        }
+        if (target == 0) return 0;
+        if (i == 0) return Integer.MAX_VALUE;
+        if (dp[i][target] != -1) return dp[i][target];
+
         int notTake = minCoins(a, i - 1, target, dp);
         if (a[i - 1] > target) {
             return dp[i][target] = notTake;
@@ -477,7 +472,7 @@ public class Subsequence {
      * Coin change - Minimum coins (Tabulation - space optimized - take/not-take approach)
      *
      * TC: O(nk)
-     * SC: O(nk)
+     * SC: O(k)
      */
     public static int coinChange(int[] a, int k) {
         int n = a.length;

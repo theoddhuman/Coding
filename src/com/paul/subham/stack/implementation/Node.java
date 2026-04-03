@@ -5,7 +5,7 @@ package com.paul.subham.stack.implementation;
  */
 public class Node {
     public int data;
-    public Node next;
+    public SNode next;
 
     Node(int data) {
         this.data = data;

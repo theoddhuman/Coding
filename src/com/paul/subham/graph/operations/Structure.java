@@ -697,10 +697,12 @@ public class Structure {
         for(int i=0; i<graph.vertex; i++) {
             if(indegree[i] == 0) {
                 queue.add(i);
+                counter++;
             }
         }
         while(!queue.isEmpty()) {
             int current = queue.remove();
+            counter++;
             List<Integer> adjList = graph.adjListArray[current];
             for(Integer i : adjList) {
                 if(--indegree[i] == 0) {

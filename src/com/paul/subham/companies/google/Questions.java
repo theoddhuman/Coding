@@ -1,7 +1,11 @@
 package com.paul.subham.companies.google;
 
+import java.util.PriorityQueue;
+
 /**
  * 1. Minimum Number of Increments on Sub arrays to Form a Target Array (Monotonic stack)
+ * 2.a. Reorganize String (Using priority queue)
+ * 2.b. Reorganize String (Counting and Odd/Even)
  */
 public class Questions {
 
@@ -35,5 +39,96 @@ public class Questions {
             count+= Math.max(a[i]-a[i-1], 0);
         }
         return count;
+    }
+
+    /**
+     * Reorganize String (Using priority queue)
+     *
+     * Given a string s, rearrange the characters of s so that any two adjacent characters are not the same.
+     * Return any possible rearrangement of s or return "" if not possible.
+     *
+     * Input: s = "aab"
+     * Output: "aba"
+     *
+     * Input: s = "aaab"
+     * Output: ""
+     *
+     * TC: O(nlog26)
+     * SC: O(26)
+     */
+    public static String reorganizeString(String s) {
+        int[] count = new int[26];
+        for(int i=0; i<s.length(); i++) {
+            count[s.charAt(i)-'a']++;
+        }
+        PriorityQueue<Character> priorityQueue = new PriorityQueue<>((a, b) -> count[b-'a']-count[a-'a']);
+        for(char i='a'; i<='z'; i++) {
+            if(count[i-'a'] >0) {
+                priorityQueue.add(i);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!priorityQueue.isEmpty()) {
+            char first = priorityQueue.remove();
+            if(sb.length()==0 || sb.charAt(sb.length()-1) != first) {
+                sb.append(first);
+                if(--count[first-'a']>0) {
+                    priorityQueue.add(first);
+                }
+            } else {
+                if(priorityQueue.isEmpty()) {
+                    return "";
+                }
+                char second = priorityQueue.remove();
+                sb.append(second);
+                if(--count[second-'a'] > 0) {
+                    priorityQueue.add(second);
+                }
+                priorityQueue.add(first);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Reorganize String (Counting and Odd/Even)
+     *
+     * TC: O(n)
+     * SC: O(26)
+     */
+    public static String reorganizeStringOddEven(String s) {
+        int[] count = new int[26];
+        for(int i=0; i<s.length(); i++) {
+            count[s.charAt(i)-'a']++;
+        }
+        int max = 0;
+        int letter = 0;
+        for(int i=0; i<26; i++) {
+            if(count[i] > max) {
+                max = count[i];
+                letter = i;
+            }
+        }
+        if(max > (s.length()+1)/2) {
+            return "";
+        }
+        char[] ans = new char[s.length()];
+        int index = 0;
+        while(count[letter] > 0) {
+            ans[index] = (char)(letter + 'a');
+            index += 2;
+            count[letter]--;
+        }
+        for(int i=0; i<26; i++) {
+            while(count[i] > 0) {
+                if(index >= s.length()) {
+                    index = 1;
+                }
+                ans[index] = (char)(i+'a');
+                index += 2;
+                count[i]--;
+            }
+        }
+        return new String(ans);
     }
 }

@@ -6,31 +6,33 @@ import java.util.List;
 /**
  * @author subham.paul
  *
- * 1.*Ninja's Training (Memoization)
+ * 1. (IMP) Ninja's Training (Memoization)
  * 2. Ninja's Training (Tabulation)
  * 3. Ninja's Training (Tabulation - Space optimized)
- * 4.*Count all possible paths from top left to bottom right of a matrix (Dynamic programming - memoization)
+ * 4. Count all possible paths from top left to bottom right of a matrix (Dynamic programming - memoization)
  * 5. Count all possible paths from top left to bottom right of a matrix (Dynamic programming - tabulation)
  * 6. Count all possible paths from top left to bottom right of a matrix (Dynamic programming - tabulation - space optimized)
  * 7. Count all possible paths from top left to bottom right of a matrix (Combinations)
- * 8.*Count all possible paths from top left to bottom right of a matrix of 0's and 1's (0 pass through)(dynamic Programming - Memoization)
+ * 8. (IMP) Count all possible paths from top left to bottom right of a matrix of 0's and 1's (0 pass through)(dynamic Programming - Memoization)
  * 9. Count all possible paths from top left to bottom right of a matrix of 0's and 1's (1 pass through)(dynamic Programming - Tabulation)
  * 10. Minimum path sum in a grid (Memoization)
  * 11. Minimum path sum in a grid (Tabulation)
  * 12. Minimum path sum in a grid (Tabulation - Space optimized)
- * 13.*Minimum path sum in Triangular Grid (Memoization)
+ * 13. (IMP) Minimum path sum in Triangular Grid (Memoization)
  * 14. Minimum path sum in Triangular Grid (Tabulation)
  * 15. Minimum path sum in Triangular Grid (Tabulation - Space optimized)
  * 16. Minimum falling path sum (Memoization)
  * 17. Minimum falling path sum (Tabulation)
  * 18. Minimum falling path sum (Tabulation - Space optimized)
- * 19. Ninja and his friends - chocolate pickup (Memoization)
+ * 19. (IMP) Ninja and his friends - chocolate pickup (Memoization)
  * 20. Ninja and his friends - chocolate pickup (Tabulation)
  * 21. Ninja and his friends - chocolate pickup (Tabulation - Space optimized)
  */
 public class TwoD {
     public static void main(String[] args) {
-
+        int n = 3;
+        int[][] a = {{1,2,5}, {3,1,1}, {3,3,3}};
+        System.out.println(maximumPointsTab(a,3));
 
     }
 
@@ -50,7 +52,7 @@ public class TwoD {
      * SC: O(3n)
      */
     public int maximumPoints(int[][] arr, int N) {
-        int[][] dp = new int[N][4];
+        int[][] dp = new int[N][3];
         for(int i=0; i<N; i++) {
             Arrays.fill(dp[i], -1);
         }
@@ -122,12 +124,12 @@ public class TwoD {
      * SC: O(mn)
      */
     public static int pathCountMemoization(int m, int n){
-        int[][] dp = new int[m+1][n+1];
-        return pathCount(m, n, dp);
+        int[][] dp = new int[m][n];
+        return pathCount(m-1, n-1, dp);
     }
 
     private static int pathCount(int m, int n, int[][] dp) {
-        if(m==1 || n==1) {
+        if(m==0 || n==0) {
             return dp[m][n] = 1;
         }
         if(dp[m][n] != 0) {

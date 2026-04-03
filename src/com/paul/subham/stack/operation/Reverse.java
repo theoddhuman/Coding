@@ -2,6 +2,7 @@ package com.paul.subham.stack.operation;
 
 import com.paul.subham.stack.implementation.LinkedListStack;
 import com.paul.subham.stack.implementation.Node;
+import com.paul.subham.stack.implementation.SNode;
 
 import java.util.Stack;
 
@@ -59,10 +60,10 @@ public class Reverse {
         stack.top = reverse(stack.top);
     }
 
-    public static Node reverse(Node node) {
-        Node prev = null;
-        Node current = node;
-        Node next;
+    public static SNode reverse(SNode node) {
+        SNode prev = null;
+        SNode current = node;
+        SNode next;
         while(current != null) {
             next = current.next;
             current.next = prev;

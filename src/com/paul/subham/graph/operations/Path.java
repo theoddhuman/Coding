@@ -101,7 +101,7 @@ public class Path {
      * TC: O(V+E), more than E as some edges can be repeated
      * SC: O(V)
      */
-    public void shortestPath(int V, int E, List<List<Edge>> adj, int s) {
+    public void shortestPath(int V, List<List<Edge>> adj, int s) {
         int[] distance = new int[V];
         int[] path = new int[V];
         Arrays.fill(distance, Integer.MAX_VALUE);
@@ -128,6 +128,8 @@ public class Path {
 
     /**
      * Shortest path in a directed acyclic weighted graph (Topological Sorting)
+     *
+     * NB: It won't work for graph with cycles because they can't be topologically sorted
      *
      * TC: O(V+E), more than E as some edges can be repeated
      * SC: O(V)
