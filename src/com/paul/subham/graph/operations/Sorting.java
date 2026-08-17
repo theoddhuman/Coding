@@ -191,7 +191,7 @@ public class Sorting {
      * Find the order of tasks you should pick to finish all tasks.
      *
      * TC: O(2V+(V+E))
-     * SC: O(E+V), E-> to create adjacency list, V-> visited, recStack and recursive stack
+     * SC: O(E+V), E-> to create adjacency list, V-> visited
      */
     public static int[] findOrder(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adjList = new ArrayList<>();

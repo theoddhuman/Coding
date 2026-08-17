@@ -287,6 +287,7 @@ public class Path {
      * If V = n, total possible edge = n*(n-1)/2, O(n * n*(n-1)/2) = O(n^3)
      * SC: O(V)
      * It doesn't work if total weight of the circle is negative, it goes into infinite loop.
+     * If the graph is undirected convert it to directed.
      */
     public static void weightedShortestPathBF(AdjacencyListWeightedGraph graph, int s) {
         Integer[] distance = new Integer[graph.vertex];
