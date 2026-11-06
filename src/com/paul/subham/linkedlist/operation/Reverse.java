@@ -45,7 +45,7 @@ public class Reverse {
     public static void reverseIterative(LinkedList linkedList) {
         Node prev = null;
         Node current = linkedList.head;
-        Node next = null;
+        Node next;
         while(current != null) {
             next = current.next;
             current.next = prev;

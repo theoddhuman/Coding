@@ -31,8 +31,8 @@ import java.util.List;
 public class TwoD {
     public static void main(String[] args) {
         int n = 3;
-        int[][] a = {{1,2,5}, {3,1,1}, {3,3,3}};
-        System.out.println(maximumPointsTab(a,3));
+        int[][] a = {{10, 40, 70}, {20,50, 80}, {30,60,90}};
+        System.out.println(maximumPoints(a,3));
 
     }
 
@@ -51,28 +51,22 @@ public class TwoD {
      * TC: O(3n)
      * SC: O(3n)
      */
-    public int maximumPoints(int[][] arr, int N) {
+    public static int maximumPoints(int[][] arr, int N) {
         int[][] dp = new int[N][3];
         for(int i=0; i<N; i++) {
             Arrays.fill(dp[i], -1);
         }
-        return maximumPoints(arr, N-1, -1, dp);
+        return Math.max(Math.max(maximumPoints(arr, N-1, 0, dp), maximumPoints(arr, N-1, 1, dp)), maximumPoints(arr, N-1, 2, dp));
     }
 
-    int maximumPoints(int[][] a, int i, int last, int[][] dp) {
-        if(i<0) {
-            return 0;
+    private static int maximumPoints(int[][] a, int i, int j, int[][] dp) {
+        if(i==0) {
+            return a[i][j];
         }
-        if(dp[i][last+1] != -1) {
-            return dp[i][last+1];
+        if(dp[i][j] != -1) {
+            return dp[i][j];
         }
-        int max = 0;
-        for(int k=0; k<3; k++) {
-            if(k != last) {
-                max = Math.max(max, a[i][k] + maximumPoints(a, i-1, k, dp));
-            }
-        }
-        return dp[i][last+1] = max;
+        return dp[i][j] = a[i][j] + Math.max(maximumPoints(a, i-1, (j+1)%3, dp), maximumPoints(a, i-1, (j+2)%3, dp));
     }
 
     /**
@@ -449,7 +443,7 @@ public class TwoD {
     }
 
     private static int minFallingPathSum(int[][] a, int i, int j, int[][] dp) {
-        if(j == -1 || j == a.length) {
+        if(j == -1 || j == a[0].length) {
             return Integer.MAX_VALUE;
         }
         if(i==0) {
@@ -673,4 +667,51 @@ public class TwoD {
         }
         return pre[0][n-1];
     }
+
+    /**
+     * Count Square Sub matrices with All Ones
+     *
+     * Input: a =
+     * [
+     *   [0,1,1,1],
+     *   [1,1,1,1],
+     *   [0,1,1,1]
+     * ]
+     * Output: 15
+     * Explanation:
+     * There are 10 squares of side 1.
+     * There are 4 squares of side 2.
+     * There is  1 square of side 3.
+     * Total number of squares = 10 + 4 + 1 = 15.
+     *
+     * TC: O(n^2)
+     * SC: O(n^2)
+     */
+    public static int countSquares(int[][] a) {
+        int m = a.length;
+        int n = a[0].length;
+        int[][] dp = new int[m][n];
+        for(int i=0; i<m; i++) {
+            dp[i][0] = a[i][0];
+        }
+        for(int i=0; i<n; i++) {
+            dp[0][i] = a[0][i];
+        }
+        for(int i=1; i<m; i++) {
+            for(int j=1; j<n; j++) {
+                if(a[i][j] == 0) {
+                    continue;
+                }
+                dp[i][j] = Math.min(dp[i-1][j], Math.min(dp[i][j-1], dp[i-1][j-1])) +1;
+            }
+        }
+        int sum = 0;
+        for(int i=0; i<m; i++) {
+            for(int j=0; j<n; j++) {
+                sum += dp[i][j];
+            }
+        }
+        return sum;
+    }
+
 }
